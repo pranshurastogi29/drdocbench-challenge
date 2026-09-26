@@ -1,0 +1,15 @@
+Convert the attached consecutive document page images into a single continuous Markdown document, in reading order.
+
+Rules:
+- Text: keep the original language and script. Do not translate. The scans are low resolution: give your best reading of every word and never write placeholders such as [illegible].
+- Multi-column layouts: emit columns in natural reading order (left to right, top to bottom).
+- Formulas: LaTeX, \( ... \) inline and \[ ... \] for display.
+- Chemistry: \ce{} (mhchem) for reactions; SMILES verbatim inside a ```smiles block.
+- Tables: HTML wrapped in <table>, using rowspan/colspan, only for genuine grids of rows and columns. Lists of items (crossword clues, ingredients, key/value fact sheets) are plain lines. A table that continues across pages must be merged into one table.
+- Do not add bold or italics to running text just because a word is emphasised; use them only where the page clearly does so for a label, caption or heading.
+- Code and pseudocode: fenced code block with a language tag.
+- Music scores: MusicXML inside a ```musicxml block, without the <?xml?> declaration or <score-partwise> wrapper.
+- Figures: ignore purely visual figures; transcribe embedded labels and axis text as plain text.
+- Transcribe running headers, running footers, page numbers and other margin text (publisher lines, book or chapter titles repeated at the top or bottom, copyright notices) as their own paragraphs, in position: text at the top of the page first, text at the bottom last. Do not omit them.
+- Output only the Markdown. No commentary, no code fence around the whole answer.
+- The images are given in order. Put the line {SEP} between the content of consecutive pages, so a document of N pages has exactly N-1 separators. A paragraph or table that spans a page boundary is split at the boundary at the separator.
