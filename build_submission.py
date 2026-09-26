@@ -8,6 +8,7 @@ Pipelines (each adds one step to the previous):
   best         : + Paddle tables added where no candidate has a table                      (leaderboard 77.39)
   final5       : medoid of v6,v7,v8,paddle,v7c (contrast-processed v7) + the same steps    (leaderboard 78.66)
   final7       : medoid of all 3 plain + 3 contrast-processed prompts + paddle (dev +0.39 vs final5, CI includes 0)
+  final7t      : final7 + table vote: medoid of 3 crop-pass transcriptions + Paddle's table replaces our table (dev Table_TEDS 70.0 -> 77.0)
   final5_wd    : + duplicate $\\textit{..}$ copy of every short standalone line (formula channel)
 The LLM outputs themselves (runs/test_all_*.jsonl) are archived, not regenerable byte-for-byte.
 """
@@ -28,7 +29,10 @@ CFG = {"medoid4_snap": (["v6", "v7", "v8", "paddle"], False, False),
        "final5": (["v6", "v7", "v8", "paddle", "v7c"], True, False),
        "final5_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True),
        "final7": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, False),
-       "final7_wd": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, True)}
+       "final7_wd": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, True),
+       "final7t": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, False, True),
+       "final7t_wd": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, True, True)}
+TABLE_CROPS = ["runs/tables_test_t1.jsonl", "runs/tables_test_t2.jsonl", "runs/tables_test_t3.jsonl"]
 MAX_ADD = 9
 para = lambda m: len([p for p in re.split(r"\n\s*\n", m.strip()) if p.strip()])
 nz = lambda s: re.sub(r"\s+", " ", s.lower())[:6000]
@@ -44,7 +48,11 @@ def medoid(texts, names):
 
 
 def build(name):
-    names, tables, wrap = CFG[name]
+    names, tables, wrap, *rest = CFG[name]; tv = bool(rest and rest[0])
+    if tv:      # table vote: needs the scorer checkout (its table normaliser) and the crop-pass outputs
+        from table_merge import load_crops
+        from table_vote import vote_page
+        crops = [{st: {i: t for i, t in v} for st, v in load_crops(os.path.join(ROOT, f)).items()} for f in TABLE_CROPS]
     R = {n: rd(TEST[n]) for n in names}
     out = []
     for k, base in R["v7"].items():
@@ -55,6 +63,8 @@ def build(name):
             s = md
         if tables:
             s, _ = fix(s, stem, replace=False)
+        if tv:
+            s = vote_page(stem, s, [c.get(stem, {}) for c in crops], {}, True, "place")
         if wrap:
             s = wrapdup(s, "short")
         out.append({"subject": base["subject"], "document_id": k[0], "page": k[1], "markdown": s})

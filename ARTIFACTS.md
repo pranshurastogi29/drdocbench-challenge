@@ -10,4 +10,5 @@
 
 Small archives that ARE tracked: `artifacts/candidates_dev.tar.gz` and `artifacts/candidates_test.tar.gz` (the LLM, Paddle and MinerU
 candidate outputs used to build every submission).
+`artifacts/table_crops.tar.gz` (256 KB) holds the table crop-pass outputs (dev and test, passes t1-t3) that `final7t` needs.
 External resources to disclose in a technical report: `stealth/space-bunny-alpha` (OpenRouter), PaddleOCR-VL 1.6 with PP-DocLayoutV3.

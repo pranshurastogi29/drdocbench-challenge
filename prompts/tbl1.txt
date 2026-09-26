@@ -1,0 +1,10 @@
+The image shows ONE table cropped from a scanned document page. Transcribe it exactly as a single HTML table.
+
+Rules:
+- Output only the table: <table><tbody><tr><td>...</td></tr></tbody></table>. No markdown fences, no commentary, no text outside the table.
+- Use <td> for every cell (also for header cells). Do not use <thead> or <th>.
+- Keep every row and every column, including empty cells (<td></td>). Do not drop or merge empty rows or columns.
+- Where a cell visibly spans several columns or rows, use colspan="N" / rowspan="N" on that cell and leave out the cells it covers. Do not repeat a spanned cell's text.
+- Copy the text of each cell exactly as printed (same spelling, numbers, symbols, capitalisation). Separate lines inside one cell with <br>.
+- Text that is printed bold goes inside <strong>...</strong>, italic inside <em>...</em>. Write formulas as LaTeX inside $...$.
+- Read the table left-to-right, top-to-bottom. Do not invent content that is not visible.
