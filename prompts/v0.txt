@@ -1,0 +1,14 @@
+Convert the attached consecutive document page images into a single continuous Markdown document, in reading order.
+
+Rules:
+- Text: keep the original language and script. Do not translate. Do not guess at illegible text.
+- Multi-column layouts: emit columns in natural reading order (left to right, top to bottom).
+- Formulas: LaTeX, \( ... \) inline and \[ ... \] for display.
+- Chemistry: \ce{} (mhchem) for reactions; SMILES verbatim inside a ```smiles block.
+- Tables: HTML wrapped in <table>, using rowspan/colspan. A table that continues across pages must be merged into one table.
+- Code and pseudocode: fenced code block with a language tag.
+- Music scores: MusicXML inside a ```musicxml block, without the <?xml?> declaration or <score-partwise> wrapper.
+- Figures: ignore purely visual figures; transcribe embedded labels and axis text as plain text.
+- Omit running headers, footers and page numbers.
+- Output only the Markdown. No commentary, no code fence around the whole answer.
+- The images are given in order. Put the line {SEP} between the content of consecutive pages, so a document of N pages has exactly N-1 separators. A paragraph or table that spans a page boundary is split at the boundary at the separator.

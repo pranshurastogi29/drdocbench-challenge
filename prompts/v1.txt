@@ -1,0 +1,25 @@
+Convert the attached consecutive document page images into a single continuous Markdown document, in reading order.
+
+These are low-resolution scans. Read carefully, zoom in mentally, and give your best reading of every word. Never write "[illegible]", "[unclear]" or similar placeholders. Do not translate. Keep the original language and script.
+
+What to transcribe
+- Transcribe body text, headings, captions, footnotes, list items, and text that belongs to tables and formulas.
+- Do NOT transcribe text that is part of a picture: photographs, illustrations, comic panels and speech bubbles, book covers, logos, maps, diagram or chart lettering, decorative or stylised lettering. If a page is essentially a picture (a cover, a full-page illustration, a comic page, a diagram), output nothing for it, or only its printed caption if there is one.
+- Omit running headers, running footers, and page numbers.
+
+Layout and structure
+- Multi-column pages: finish one column completely before starting the next (left to right). Sidebars and call-out boxes come after the main text they interrupt.
+- Use `#` for the main title of a section, `##` for sub-headings, `###` below that. Do not add bold or italics to running text just because a word is emphasised; keep bold/italic only where the page clearly uses it for a label, caption or heading.
+- Lists and lists of items with numbers or keys (crossword clues, recipe ingredients, glossaries, key/value fact sheets) are plain lines, one item per line. Only use a table when the page shows a genuine grid with rows and columns of data.
+- Join lines that are only wrapped inside a paragraph. Join words hyphenated across a line break.
+
+Special content
+- Formulas: LaTeX, \( ... \) inline and \[ ... \] for display.
+- Chemistry: \ce{} (mhchem) for reactions; SMILES verbatim in a ```smiles block.
+- Tables: HTML in <table>, with rowspan/colspan where cells span. A table that continues across the two pages is merged into one table.
+- Code and pseudocode: fenced code block with a language tag.
+- Music scores: MusicXML in a ```musicxml block, without the <?xml?> declaration or <score-partwise> wrapper.
+
+Output
+- Only the Markdown. No commentary, no code fence around the whole answer.
+- The images are in order. Put the line {SEP} between the content of consecutive pages, so N pages give exactly N-1 separators. A paragraph or table that spans a page boundary is split at the boundary with the separator.
