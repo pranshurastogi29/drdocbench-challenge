@@ -7,6 +7,7 @@ Pipelines (each adds one step to the previous):
   medoid4_snap : medoid of v6,v7,v8,paddle -> split-snap to Paddle layout blocks (cap 9 new paragraphs/page)
   best         : + Paddle tables added where no candidate has a table                      (leaderboard 77.39)
   final5       : medoid of v6,v7,v8,paddle,v7c (contrast-processed v7) + the same steps    (leaderboard 78.66)
+  final7       : medoid of all 3 plain + 3 contrast-processed prompts + paddle (dev +0.39 vs final5, CI includes 0)
   final5_wd    : + duplicate $\\textit{..}$ copy of every short standalone line (formula channel)
 The LLM outputs themselves (runs/test_all_*.jsonl) are archived, not regenerable byte-for-byte.
 """
@@ -20,11 +21,14 @@ from wrapdup import add as wrapdup
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 TEST = {"v6": "runs/test_all_v6.jsonl", "v7": "runs/test_all_v7.jsonl", "v8": "runs/test_all_v8.jsonl",
-        "paddle": "runs/paddle_test.jsonl", "v7c": "runs/test_all_v7c_test.jsonl"}
+        "paddle": "runs/paddle_test.jsonl", "v7c": "runs/test_all_v7c_test.jsonl",
+        "v6c": "runs/test_all_v6c_test.jsonl", "v8c": "runs/test_all_v8c_test.jsonl"}
 CFG = {"medoid4_snap": (["v6", "v7", "v8", "paddle"], False, False),
        "best": (["v6", "v7", "v8", "paddle"], True, False),
        "final5": (["v6", "v7", "v8", "paddle", "v7c"], True, False),
-       "final5_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True)}
+       "final5_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True),
+       "final7": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, False),
+       "final7_wd": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, True)}
 MAX_ADD = 9
 para = lambda m: len([p for p in re.split(r"\n\s*\n", m.strip()) if p.strip()])
 nz = lambda s: re.sub(r"\s+", " ", s.lower())[:6000]

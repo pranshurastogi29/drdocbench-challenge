@@ -1,0 +1,9 @@
+pages scored in every candidate: 950
+v6+v7+v8+paddle+v7c                   84.41  vs final5     +0.00 [+0.00, +0.00]  picks {'v8': 223, 'v6': 215, 'v7': 347, 'v7c': 142, 'paddle': 23}
+v6+v7+v8+paddle                       84.08  vs final5     -0.33 [-0.71, +0.06]  picks {'v8': 256, 'v7': 397, 'v6': 261, 'paddle': 36}
+v6c+v7c+v8c+paddle                    84.72  vs final5     +0.31 [-0.35, +0.97]  picks {'v6c': 345, 'v8c': 279, 'v7c': 304, 'paddle': 22}
+v6+v7+v8+paddle+v6c+v7c+v8c           84.80  vs final5     +0.39 [-0.03, +0.80]  picks {'v7': 261, 'v6': 167, 'v7c': 120, 'v8': 162, 'paddle': 7, 'v8c': 116, 'v6c': 117}
+v6+v7+v8+v6c+v7c+v8c                  84.66  vs final5     +0.25 [-0.23, +0.71]  picks {'v7': 268, 'v6': 160, 'v8c': 124, 'v6c': 153, 'v8': 130, 'v7c': 115}
+v6c+v7c+v8c+paddle+v7                 84.65  vs final5     +0.24 [-0.32, +0.78]  picks {'v7': 279, 'v8c': 203, 'v7c': 218, 'paddle': 15, 'v6c': 235}
+v6+v6c+v7c+v8c+paddle                 84.40  vs final5     -0.01 [-0.67, +0.62]  picks {'v6c': 247, 'v6': 257, 'v8c': 201, 'v7c': 229, 'paddle': 16}
+v6c+v8c+paddle+v7c+v7+v8              84.81  vs final5     +0.40 [-0.12, +0.91]  picks {'v7': 282, 'v8c': 188, 'v7c': 149, 'v8': 127, 'v6c': 194, 'paddle': 10}
