@@ -1,0 +1,4 @@
+repo: https://github.com/2077AI/DrDocBench
+commit: 87b06ea3676e52366a08066cb104b56da83ec1c6
+local path: scorer/   (git clone --depth 1; not vendored in this repo)
+notes: run via run_md2md_eval.py, which stubs out mmeval (unused by md2md) and skips CDM (needs a LaTeX toolchain).

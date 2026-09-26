@@ -1,0 +1,20 @@
+# environments, secrets, raw data
+.venv/
+__pycache__/
+.env
+data/
+# third-party scorer clone (pinned in SCORER_PIN.txt) and scratch dirs
+scorer/
+eval_tmp/
+# generated prediction files: bulk lives in runs/; only small reports are tracked
+predictions*.jsonl
+runs/*
+!runs/*.txt
+!runs/*.usage.json
+# Kaggle: notebooks and scripts are tracked; staging, downloads and the image package are not
+kaggle/results/
+kaggle/stage/
+kaggle/*.zip
+kaggle/*.log
+kaggle/manifest.csv
+.DS_Store
