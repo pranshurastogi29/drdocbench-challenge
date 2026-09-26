@@ -32,6 +32,10 @@ CFG = {"medoid4_snap": (["v6", "v7", "v8", "paddle"], False, False),
        "final7_wd": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, True),
        "final7t": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, False, True),
        "final7t_wd": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, True, True)}
+DEV = {"v6": "runs/dev_all_full_bunny.jsonl", "v7": "runs/dev_all_v7_final.jsonl", "v8": "runs/dev_all_v8_final.jsonl",
+       "paddle": "runs/paddle_dev.jsonl", "v7c": "runs/dev_all_v7c_final.jsonl", "v6c": "runs/dev_all_v6c_final.jsonl", "v8c": "runs/dev_all_v8c_final.jsonl"}
+TABLE_CROPS_DEV = ["runs/tables_dev_t1.jsonl", "runs/tables_dev_t2.jsonl", "runs/tables_dev_t3.jsonl"]
+SPLIT = "test"      # `--split dev` rebuilds the same pipeline on the dev pages (jsonl out) so it can be scored with the official scorer
 TABLE_CROPS = ["runs/tables_test_t1.jsonl", "runs/tables_test_t2.jsonl", "runs/tables_test_t3.jsonl"]
 MAX_ADD = 9
 para = lambda m: len([p for p in re.split(r"\n\s*\n", m.strip()) if p.strip()])
@@ -52,8 +56,8 @@ def build(name):
     if tv:      # table vote: needs the scorer checkout (its table normaliser) and the crop-pass outputs
         from table_merge import load_crops
         from table_vote import vote_page
-        crops = [{st: {i: t for i, t in v} for st, v in load_crops(os.path.join(ROOT, f)).items()} for f in TABLE_CROPS]
-    R = {n: rd(TEST[n]) for n in names}
+        crops = [{st: {i: t for i, t in v} for st, v in load_crops(os.path.join(ROOT, f)).items()} for f in (TABLE_CROPS_DEV if SPLIT == 'dev' else TABLE_CROPS)]
+    R = {n: rd((DEV if SPLIT == 'dev' else TEST)[n]) for n in names}
     out = []
     for k, base in R["v7"].items():
         t = {n: strip_sections(R[n][k]["markdown"]).strip() for n in names}
@@ -85,11 +89,17 @@ def zip_rows(path):
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(); ap.add_argument("pipeline", choices=list(CFG)); ap.add_argument("--verify", action="store_true")
+    ap = argparse.ArgumentParser(); ap.add_argument("pipeline", choices=list(CFG)); ap.add_argument("--verify", action="store_true"); ap.add_argument("--split", default="test", choices=["test", "dev"])
     a = ap.parse_args()
+    SPLIT = a.split
     rows = build(a.pipeline)
-    want = {(s, d, p) for (s, d), pages in list_pages("test").items() for p, _ in pages}
+    want = {(s, d, p) for (s, d), pages in list_pages(a.split).items() for p, _ in pages}
     assert {(r["subject"], r["document_id"], r["page"]) for r in rows} == want, "page set differs from the test set"
+    if a.split == "dev":
+        dst = os.path.join(ROOT, "runs", f"dev_all_rebuilt_{a.pipeline}.jsonl")
+        with open(dst, "w", encoding="utf-8") as f:
+            for r in rows: f.write(json.dumps(r, ensure_ascii=False) + "\n")
+        print(f"{a.pipeline} (dev): {len(rows)} rows -> {dst}"); sys.exit()
     dst = os.path.join(ROOT, "submissions", f"rebuilt_{a.pipeline}.zip"); write_zip(rows, dst)
     print(f"{a.pipeline}: {len(rows)} rows -> {dst}")
     if a.verify:
