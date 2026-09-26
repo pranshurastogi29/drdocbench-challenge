@@ -9,6 +9,7 @@ Pipelines (each adds one step to the previous):
   final5       : medoid of v6,v7,v8,paddle,v7c (contrast-processed v7) + the same steps    (leaderboard 78.66)
   final7       : medoid of all 3 plain + 3 contrast-processed prompts + paddle (dev +0.39 vs final5, CI includes 0)
   final7t      : final7 + table vote: medoid of 3 crop-pass transcriptions + Paddle's table replaces our table (dev Table_TEDS 70.0 -> 77.0)
+  final8       : final7t + rule-line removal (cleanlines.py); dev overall 85.89
   final5_wd    : + duplicate $\\textit{..}$ copy of every short standalone line (formula channel)
 The LLM outputs themselves (runs/test_all_*.jsonl) are archived, not regenerable byte-for-byte.
 """
@@ -19,6 +20,7 @@ from postprocess import strip_sections
 from snap import snap
 from tablefix import fix
 from wrapdup import add as wrapdup
+from cleanlines import clean as cleanlines
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 TEST = {"v6": "runs/test_all_v6.jsonl", "v7": "runs/test_all_v7.jsonl", "v8": "runs/test_all_v8.jsonl",
@@ -31,7 +33,9 @@ CFG = {"medoid4_snap": (["v6", "v7", "v8", "paddle"], False, False),
        "final7": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, False),
        "final7_wd": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, True),
        "final7t": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, False, True),
-       "final7t_wd": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, True, True)}
+       "final7t_wd": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, True, True),
+       "final8": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, False, True, True),
+       "final8_wd": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, True, True, True)}
 DEV = {"v6": "runs/dev_all_full_bunny.jsonl", "v7": "runs/dev_all_v7_final.jsonl", "v8": "runs/dev_all_v8_final.jsonl",
        "paddle": "runs/paddle_dev.jsonl", "v7c": "runs/dev_all_v7c_final.jsonl", "v6c": "runs/dev_all_v6c_final.jsonl", "v8c": "runs/dev_all_v8c_final.jsonl"}
 TABLE_CROPS_DEV = ["runs/tables_dev_t1.jsonl", "runs/tables_dev_t2.jsonl", "runs/tables_dev_t3.jsonl"]
@@ -52,7 +56,7 @@ def medoid(texts, names):
 
 
 def build(name):
-    names, tables, wrap, *rest = CFG[name]; tv = bool(rest and rest[0])
+    names, tables, wrap, *rest = CFG[name]; tv = bool(rest and rest[0]); cl = bool(len(rest) > 1 and rest[1])
     if tv:      # table vote: needs the scorer checkout (its table normaliser) and the crop-pass outputs
         from table_merge import load_crops
         from table_vote import vote_page
@@ -69,6 +73,8 @@ def build(name):
             s, _ = fix(s, stem, replace=False)
         if tv:
             s = vote_page(stem, s, [c.get(stem, {}) for c in crops], {}, True, "place")
+        if cl:
+            s = cleanlines(s)       # drop standalone ____ / ..... / ---- paragraphs: 0 in the dev reference, 73 in our output
         if wrap:
             s = wrapdup(s, "short")
         out.append({"subject": base["subject"], "document_id": k[0], "page": k[1], "markdown": s})
