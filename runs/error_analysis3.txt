@@ -1,0 +1,69 @@
+RUN DEVR_final7t: 950 scored pages, mean overall 85.84, total lost points 13448
+
+== 1. Score distribution: where the lost points are
+  >=97   pages  390 (41.1%)  mean  99.7  share of lost points  0.9%
+  90-97  pages  131 (13.8%)  mean  93.3  share of lost points  6.5%
+  80-90  pages  175 (18.4%)  mean  85.2  share of lost points 19.2%
+  60-80  pages  170 (17.9%)  mean  72.0  share of lost points 35.3%
+  30-60  pages   62 ( 6.5%)  mean  48.0  share of lost points 24.0%
+  <30    pages   22 ( 2.3%)  mean  14.0  share of lost points 14.1%
+  component share of lost overall points (page loss split by component): {'text': '43%', 'order': '52%', 'teds': '5%'}
+
+== 2. Text loss by kind (character edits from the scorer's paragraph matching)
+  matched pair: real wording/OCR differences             86424 chars   44.5%
+  reference paragraph not output / not matched           66195 chars   34.1%
+  extra predicted paragraph not in reference             39590 chars   20.4%
+  matched pair: markup/format only                        2002 chars    1.0%
+
+  by reference category (share of all text edits | own edit rate | dominant kind):
+    text_block                  79.6% of edits    10.1% of its chars   n=10688   mostly matched_real (56%)
+    (extra prediction)          20.4% of edits   100.0% of its chars   n=  190   mostly extra (100%)
+
+== 3. Character-level errors inside matched paragraphs (real OCR-type differences)
+  ops: {'delete (we dropped chars)': 40727, 'insert (we added chars)': 40262, 'replace': 7437}
+  single-char substitutions by class: [('letter->letter', 1418), ('digit->digit', 108), ('letter->accented/non-ascii letter', 83), ('digit->punctuation/symbol', 43), ('letter->digit', 25), ('accented/non-ascii letter->letter', 23)]
+  most common substitutions (gt -> ours): [('b->h', 32), ('1->½', 27), ('m->n', 25), ('a->e', 25), ('c->e', 24), ('l->t', 23), ('G->Γ', 23), ('r->n', 21), ('r->t', 19), ('l->I', 18), ('o->a', 17), ('l->h', 15), ('n->r', 15), ('c->t', 13)]
+
+== 4. Reading order
+  pages 925, mean order loss 15.4%; pages with any error 424 (46%), with >=0.3: 204
+  pages whose whole error is <=2 block moves: 241; share of the total order loss from pages with edit>=0.3: 73%
+  order loss by number of ordered blocks: {'10-19': 'n=271 mean 21.4%', '5-9': 'n=359 mean 12.3%', '<=4 blocks': 'n=196 mean 9.6%', '>=20': 'n=99 mean 22.2%'}
+  pages with errors: {'first block differs': 116, 'last block differs': 180, 'pages with errors': 423}
+
+== 5. Formulas (reference display formulas, CDM cannot be run locally; edit distance vs our output)
+  reference display formulas 134: wrapper-style ($\textit/$\textbf) 44; real math 90; no prediction paired: 48 (36%)
+  real-math formulas: unpaired 9/90; mean edit of paired real-math 0.55
+
+== 6. Concentration: documents and subjects
+  worst documents by share of lost points:
+    7f1cdfe4 (POETRY                ) pages  15  mean  41.7   6.5% of loss
+    c5e087e7 (GAMES&ACTIVITIES      ) pages  15  mean  49.8   5.6% of loss
+    4d5947df (DESIGN                ) pages  14  mean  54.7   4.7% of loss
+    6acfa608 (PSYCHOLOGY            ) pages  15  mean  60.8   4.4% of loss
+    c18d05a4 (TRANSPORTATION        ) pages  15  mean  66.8   3.7% of loss
+    eb964d7e (CRAFTS&HOBBIES        ) pages  15  mean  71.2   3.2% of loss
+    a32cf9aa (TECHNOLOGY&ENGINEERING) pages  15  mean  72.1   3.1% of loss
+    67587089 (STUDYAIDS             ) pages  14  mean  71.9   2.9% of loss
+  by subject: {'PSYCHOLOGY': '60.8 (n=15)', 'COOKING': '66.3 (n=11)', 'POETRY': '70.4 (n=30)', 'TECHNOLOGY&ENGINEERING': '72.1 (n=15)', 'GAMES&ACTIVITIES': '74.8 (n=45)', 'SELF-HELP': '76.9 (n=15)', 'DESIGN': '77.6 (n=42)', 'TRANSPORTATION': '80.6 (n=30)', 'CRAFTS&HOBBIES': '81.1 (n=29)', 'STUDYAIDS': '81.7 (n=29)', 'MEDICAL': '82.7 (n=15)', 'SPORTS&RECREATION': '82.8 (n=45)', 'SOCIALSCIENCE': '83.3 (n=45)', 'LAW': '83.7 (n=15)', 'JUVENILENONFICTION': '84.1 (n=41)', 'LITERARYCRITICISM': '84.9 (n=15)', 'BIOGRAPHY&AUTOBIOGRAPHY': '85.0 (n=15)', 'COMPUTERS': '85.3 (n=30)', 'HISTORY': '85.6 (n=15)', 'GARDENING': '86.7 (n=29)', 'LANGUAGEARTS&DISCIPLINES': '87.0 (n=15)', 'PETS': '87.1 (n=11)', 'ART': '88.2 (n=15)', 'POLITICALSCIENCE': '88.4 (n=25)', 'BODY,MIND&SPIRIT': '89.7 (n=15)', 'PHILOSOPHY': '89.8 (n=30)', 'PERFORMINGARTS': '90.3 (n=15)', 'HOUSE&HOME': '90.5 (n=52)', 'COMICS&GRAPHICNOVELS': '93.3 (n=14)', 'EDUCATION': '93.6 (n=73)', 'FAMILY&RELATIONSHIPS': '95.2 (n=15)', 'YOUNGADULTFICTION': '96.2 (n=42)', 'FICTION': '96.2 (n=14)', 'HUMOR': '96.3 (n=15)', 'ARCHITECTURE': '96.3 (n=14)', 'YOUNGADULTNONFICTION': '97.5 (n=15)', 'BUSINESS&ECONOMICS': '99.2 (n=30)', 'TRUECRIME': '99.8 (n=14)'}
+
+== 7. Worst pages (lowest overall) with the dominant cause
+    0.0 4d5947df_114.jpg  text   0.0 order   nan teds   nan  cause: wording (extra 0, missing 0, wording 7)
+    0.0 4d5947df_116.jpg  text   0.0 order   nan teds   nan  cause: wording (extra 0, missing 0, wording 1)
+    0.0 4d5947df_118.jpg  text   0.0 order   nan teds   nan  cause: wording (extra 0, missing 0, wording 9)
+    0.0 4d5947df_120.jpg  text   0.0 order   nan teds   nan  cause: wording (extra 0, missing 0, wording 8)
+    0.0 4d5947df_122.jpg  text   0.0 order   nan teds   nan  cause: wording (extra 0, missing 0, wording 1)
+    0.0 4d5947df_124.jpg  text   0.0 order   nan teds   nan  cause: wording (extra 0, missing 0, wording 9)
+    1.7 23bdb6d7_114.jpg  text   3.4 order   0.0 teds   nan  cause: extra text (extra 3914, missing 0, wording 0)
+    3.7 591d786d_18.jpg   text   0.0 order   0.0 teds  11.2  cause: missing text (extra 0, missing 2, wording 0)
+    7.7 11fb213b_81.jpg   text   6.1 order   nan teds   9.3  cause: extra text (extra 876, missing 0, wording 0)
+   10.7 761bb2e8_11.jpg   text  21.4 order   0.0 teds   nan  cause: wording (extra 0, missing 0, wording 537)
+   13.0 4cc5fd14_1.jpg    text   6.5 order  19.5 teds   nan  cause: missing text (extra 0, missing 8117, wording 45)
+   14.3 4cc5fd14_2.jpg    text   7.4 order  21.2 teds   nan  cause: missing text (extra 0, missing 6900, wording 24)
+   19.4 c5e087e7_120.jpg  text  10.1 order  28.6 teds   nan  cause: wording (extra 0, missing 0, wording 1597)
+   21.2 7f1cdfe4_177.jpg  text  33.2 order   9.1 teds   nan  cause: missing text (extra 0, missing 447, wording 447)
+   22.7 7f1cdfe4_184.jpg  text  18.1 order  27.3 teds   nan  cause: wording (extra 0, missing 0, wording 971)
+   25.0 591d786d_14.jpg   text   0.0 order  50.0 teds   nan  cause: missing text (extra 0, missing 4522, wording 0)
+   25.9 7f1cdfe4_178.jpg  text  31.7 order  20.0 teds   nan  cause: missing text (extra 0, missing 468, wording 468)
+   26.5 7f1cdfe4_185.jpg  text  34.9 order  18.2 teds   nan  cause: missing text (extra 0, missing 441, wording 441)
+   27.5 7f1cdfe4_183.jpg  text  38.3 order  16.7 teds   nan  cause: wording (extra 0, missing 418, wording 419)
+   28.5 761bb2e8_10.jpg   text   7.1 order  50.0 teds   nan  cause: wording (extra 0, missing 0, wording 1427)
