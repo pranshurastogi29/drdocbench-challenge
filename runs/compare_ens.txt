@@ -1,0 +1,21 @@
+[ENS] pages=986 scored=950  Text_ED=0.1383  Table_TEDS=71.19  Reading_Order=82.76  Overall~=84.08
+[ENS_S] pages=986 scored=950  Text_ED=0.1311  Table_TEDS=71.19  Reading_Order=84.21  Overall~=85.13
+
+pages scored in both: 950  (ENS_S minus ENS; positive = ENS_S better)
+
+  overall  n= 950  mean  +1.05  95% CI [+0.54, +1.57]  ENS_S better on 68, worse on 23
+  text     n= 950  mean  +0.72  95% CI [+0.06, +1.37]  ENS_S better on 63, worse on 31
+  order    n= 925  mean  +1.44  95% CI [+0.99, +1.94]  ENS_S better on 68, worse on 10
+  teds     n=  68  mean  +0.00  95% CI [+0.00, +0.00]  ENS_S better on 0, worse on 0
+  mean overall ENS: 84.08
+  mean overall ENS_S: 85.13
+
+##### also vs v7
+pages scored in both: 950  (ENS_S minus FINAL_v7; positive = ENS_S better)
+
+  overall  n= 950  mean  +2.09  95% CI [+1.37, +2.82]  ENS_S better on 192, worse on 100
+  text     n= 950  mean  +1.86  95% CI [+0.94, +2.79]  ENS_S better on 161, worse on 92
+  order    n= 925  mean  +2.44  95% CI [+1.52, +3.39]  ENS_S better on 157, worse on 76
+  teds     n=  66  mean  +0.69  95% CI [-1.33, +2.52]  ENS_S better on 13, worse on 6
+  mean overall FINAL_v7: 83.05
+done

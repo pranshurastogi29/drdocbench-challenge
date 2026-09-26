@@ -1,0 +1,47 @@
+[FINAL_v7] pages=986 scored=950  Text_ED=0.1498  Table_TEDS=67.38  Reading_Order=81.77  Overall~=83.05
+[PADDLE] pages=986 scored=950  Text_ED=0.1499  Table_TEDS=73.07  Reading_Order=77.21  Overall~=80.83
+[V7_FMOVE] pages=986 scored=950  Text_ED=0.1498  Table_TEDS=67.38  Reading_Order=81.20  Overall~=82.79
+[V7_FADD] pages=986 scored=950  Text_ED=0.1499  Table_TEDS=67.38  Reading_Order=81.40  Overall~=82.86
+
+##### FINAL_v7 -> V7_FMOVE
+pages scored in both: 950  (V7_FMOVE minus FINAL_v7; positive = V7_FMOVE better)
+
+  overall  n= 950  mean  -0.25  95% CI [-0.51, -0.01]  V7_FMOVE better on 36, worse on 67
+  text     n= 950  mean  -0.00  95% CI [-0.00, +0.00]  V7_FMOVE better on 0, worse on 0
+  order    n= 925  mean  -0.57  95% CI [-1.11, -0.04]  V7_FMOVE better on 36, worse on 68
+  teds     n=  66  mean  +0.00  95% CI [+0.00, +0.00]  V7_FMOVE better on 0, worse on 0
+  mean overall FINAL_v7: 83.05
+  mean overall V7_FMOVE: 82.79
+
+largest gains [25, 25, 20, 20], largest losses [-33, -33, -25, -25]; top 10 pages = 197 of -239 total points gained
+FINAL_v7: header paragraphs out of order 69/471 (15%), placed at top of our output: 25
+V7_FMOVE: header paragraphs out of order 94/471 (20%), placed at top of our output: 17
+
+##### FINAL_v7 -> V7_FADD
+pages scored in both: 950  (V7_FADD minus FINAL_v7; positive = V7_FADD better)
+
+  overall  n= 950  mean  -0.19  95% CI [-0.51, +0.15]  V7_FADD better on 67, worse on 97
+  text     n= 950  mean  -0.02  95% CI [-0.23, +0.25]  V7_FADD better on 16, worse on 25
+  order    n= 925  mean  -0.37  95% CI [-1.03, +0.31]  V7_FADD better on 65, worse on 87
+  teds     n=  66  mean  +0.00  95% CI [+0.00, +0.00]  V7_FADD better on 0, worse on 0
+  mean overall FINAL_v7: 83.05
+  mean overall V7_FADD: 82.86
+
+largest gains [67, 30, 25, 25], largest losses [-37, -33, -28, -25]; top 10 pages = 266 of -176 total points gained
+FINAL_v7: header paragraphs out of order 69/471 (15%), placed at top of our output: 25
+V7_FADD: header paragraphs out of order 96/511 (19%), placed at top of our output: 16
+
+##### FINAL_v7 -> PADDLE
+pages scored in both: 950  (PADDLE minus FINAL_v7; positive = PADDLE better)
+
+  overall  n= 950  mean  -2.22  95% CI [-3.59, -0.90]  PADDLE better on 252, worse on 336
+  text     n= 950  mean  -0.02  95% CI [-1.63, +1.56]  PADDLE better on 257, worse on 254
+  order    n= 925  mean  -4.55  95% CI [-6.16, -2.97]  PADDLE better on 176, worse on 278
+  teds     n=  61  mean  -3.50  95% CI [-9.90, +2.12]  PADDLE better on 18, worse on 21
+  mean overall FINAL_v7: 83.05
+  mean overall PADDLE: 80.83
+
+largest gains [87, 78, 73, 72], largest losses [-100, -100, -100, -100]; top 10 pages = 708 of -2109 total points gained
+FINAL_v7: header paragraphs out of order 69/471 (15%), placed at top of our output: 25
+PADDLE: header paragraphs out of order 92/520 (18%), placed at top of our output: 56
+done

@@ -1,0 +1,25 @@
+##### kimi (pages finished before the credit limit:       14)
+[V7ON_kimi] pages=14 scored=14  Text_ED=0.0850  Table_TEDS=92.44  Reading_Order=95.34  Overall~=94.00
+[PART_kimi] pages=14 scored=14  Text_ED=0.1420  Table_TEDS=68.03  Reading_Order=87.48  Overall~=86.33
+pages scored in both: 14  (PART_kimi minus V7ON_kimi; positive = PART_kimi better)
+
+  overall  n=  14  mean  -7.67  95% CI [-14.59, -1.76]  PART_kimi better on 0, worse on 5
+  text     n=  14  mean  -5.71  95% CI [-13.79, +0.09]  PART_kimi better on 2, worse on 4
+
+##### muse (pages finished before the credit limit:       41)
+[V7ON_muse] pages=41 scored=41  Text_ED=0.1170  Table_TEDS=92.44  Reading_Order=89.88  Overall~=89.28
+[PART_muse] pages=41 scored=41  Text_ED=0.2171  Table_TEDS=67.94  Reading_Order=77.03  Overall~=77.66
+pages scored in both: 41  (PART_muse minus V7ON_muse; positive = PART_muse better)
+
+  overall  n=  41  mean -11.62  95% CI [-20.87, -3.39]  PART_muse better on 4, worse on 15
+  text     n=  41  mean -10.01  95% CI [-19.95, -1.26]  PART_muse better on 6, worse on 8
+
+##### sol (pages finished before the credit limit:       56)
+[V7ON_sol] pages=56 scored=56  Text_ED=0.1415  Table_TEDS=92.44  Reading_Order=86.35  Overall~=86.24
+[PART_sol] pages=56 scored=56  Text_ED=0.1472  Table_TEDS=67.98  Reading_Order=79.40  Overall~=82.28
+pages scored in both: 56  (PART_sol minus V7ON_sol; positive = PART_sol better)
+
+  overall  n=  56  mean  -3.96  95% CI [-7.94, -1.14]  PART_sol better on 3, worse on 12
+  text     n=  56  mean  -0.57  95% CI [-4.60, +2.48]  PART_sol better on 7, worse on 5
+
+done

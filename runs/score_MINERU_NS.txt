@@ -1,0 +1,42 @@
+986 pages staged in /Users/pranshurastogi/Desktop/drdocbench/eval_tmp/MINERU_NS
+DATASET_REGISTRY:  ['recogition_text_dataset', 'omnidocbench_single_module_dataset', 'recogition_formula_dataset', 'recogition_table_dataset', 'end2end_dataset', 'recogition_end2end_base_dataset', 'recogition_end2end_table_dataset', 'detection_dataset', 'detection_dataset_simple_format', 'md2md_dataset', 'multipage_md2md_dataset', 'multipage_end2end_dataset']
+METRIC_REGISTRY:  ['TEDS', 'BLEU', 'METEOR', 'Edit_dist', 'CDM', 'CDM_plain']
+EVAL_TASK_REGISTRY:  ['detection_eval', 'end2end_eval', 'recogition_eval']
+  0%|          | 0/986 [00:00<?, ?it/s]  1%|          | 7/986 [00:00<00:14, 65.84it/s]  4%|▍         | 41/986 [00:00<00:04, 222.28it/s]  7%|▋         | 69/986 [00:00<00:03, 240.75it/s]WARNING: Error in configuration: macro '\frac' failed its substitution!
+WARNING: Error in configuration: macro '\frac' failed its substitution!
+ 10%|▉         | 94/986 [00:00<00:05, 174.54it/s] 12%|█▏        | 117/986 [00:00<00:04, 183.76it/s] 14%|█▍        | 137/986 [00:00<00:04, 185.01it/s] 16%|█▌        | 157/986 [00:00<00:05, 151.52it/s] 19%|█▊        | 183/986 [00:01<00:04, 174.03it/s]WARNING: Error in configuration: macro '\frac' failed its substitution!
+ 20%|██        | 202/986 [00:01<00:05, 154.22it/s] 22%|██▏       | 219/986 [00:01<00:05, 153.30it/s] 25%|██▍       | 242/986 [00:01<00:05, 146.79it/s] 28%|██▊       | 274/986 [00:01<00:03, 185.80it/s]WARNING: Error in configuration: macro '\frac' failed its substitution!
+ 30%|██▉       | 295/986 [00:01<00:04, 164.53it/s] 32%|███▏      | 313/986 [00:01<00:04, 156.31it/s] 35%|███▍      | 344/986 [00:01<00:03, 192.45it/s] 37%|███▋      | 365/986 [00:02<00:03, 177.29it/s] 40%|████      | 398/986 [00:02<00:02, 214.71it/s] 43%|████▎     | 428/986 [00:02<00:02, 225.42it/s] 46%|████▌     | 455/986 [00:02<00:02, 235.53it/s] 49%|████▊     | 480/986 [00:02<00:02, 200.83it/s] 51%|█████▏    | 507/986 [00:02<00:02, 217.44it/s] 54%|█████▍    | 531/986 [00:02<00:02, 212.48it/s] 56%|█████▌    | 554/986 [00:02<00:02, 207.99it/s] 58%|█████▊    | 576/986 [00:03<00:02, 184.27it/s] 60%|██████    | 596/986 [00:03<00:02, 134.22it/s] 63%|██████▎   | 619/986 [00:03<00:02, 135.61it/s] 65%|██████▌   | 642/986 [00:03<00:02, 153.45it/s] 68%|██████▊   | 675/986 [00:03<00:01, 191.83it/s] 71%|███████   | 700/986 [00:03<00:01, 172.05it/s] 74%|███████▎  | 725/986 [00:04<00:01, 188.15it/s] 76%|███████▌  | 748/986 [00:04<00:01, 196.33it/s] 78%|███████▊  | 770/986 [00:04<00:01, 171.05it/s] 80%|████████  | 789/986 [00:04<00:01, 120.02it/s] 82%|████████▏ | 810/986 [00:04<00:01, 134.54it/s] 84%|████████▍ | 829/986 [00:04<00:01, 145.62it/s] 87%|████████▋ | 854/986 [00:04<00:00, 169.37it/s]WARNING: Error in configuration: macro '\frac' failed its substitution!
+WARNING: Error in configuration: macro '\frac' failed its substitution!
+ 89%|████████▊ | 874/986 [00:05<00:00, 127.55it/s] 91%|█████████ | 893/986 [00:05<00:00, 138.61it/s] 94%|█████████▍| 926/986 [00:05<00:00, 163.05it/s] 96%|█████████▌| 945/986 [00:05<00:00, 159.26it/s] 99%|█████████▊| 973/986 [00:05<00:00, 184.76it/s]100%|██████████| 986/986 [00:05<00:00, 167.86it/s]
+TEDS: 0it [00:00, ?it/s]TEDS: 1it [00:00,  6.05it/s]TEDS: 2it [00:00,  1.79it/s]TEDS: 11it [00:01, 13.24it/s]TEDS: 16it [00:01, 12.09it/s]TEDS: 37it [00:01, 36.51it/s]TEDS: 47it [00:01, 43.42it/s]TEDS: 60it [00:01, 57.79it/s]TEDS: 70it [00:02, 36.42it/s]TEDS: 78it [00:02, 28.99it/s]TEDS: 84it [00:03, 21.66it/s]TEDS: 93it [00:04, 18.47it/s]TEDS: 97it [00:04, 17.22it/s]TEDS: 100it [00:04, 16.18it/s]TEDS: 105it [00:04, 19.63it/s]TEDS: 111it [00:04, 24.32it/s]TEDS: 115it [00:05, 24.30it/s]TEDS: 119it [00:05, 25.01it/s]TEDS: 129it [00:05, 36.81it/s]TEDS: 138it [00:05, 38.57it/s]TEDS: 154it [00:05, 60.96it/s]TEDS: 170it [00:05, 79.95it/s]TEDS: 180it [00:05, 74.01it/s]TEDS: 190it [00:05, 79.55it/s]TEDS: 195it [00:06, 32.42it/s]
+GT table is not empty. But pred is empty or its format is different from gt.
+GT table is not empty. But pred is empty or its format is different from gt.
+GT table is not empty. But pred is empty or its format is different from gt.
+Pred table is not empty. But gt is empty or its format is different from pred.
+GT table is not empty. But pred is empty or its format is different from gt.
+Pred table is not empty. But gt is empty or its format is different from pred.
+GT table is not empty. But pred is empty or its format is different from gt.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+GT table is not empty. But pred is empty or its format is different from gt.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+GT table is not empty. But pred is empty or its format is different from gt.
+GT table is not empty. But pred is empty or its format is different from gt.
+Pred table is not empty. But gt is empty or its format is different from pred.
+[MINERU_NS] pages=986 scored=949  Text_ED=0.3028  Table_TEDS=59.73  Reading_Order=68.91  Overall~=68.82

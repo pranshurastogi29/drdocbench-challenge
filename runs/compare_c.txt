@@ -1,0 +1,30 @@
+v7c dev rows:      986  failed windows: 0
+[FINAL_v7] pages=986 scored=950  Text_ED=0.1498  Table_TEDS=67.38  Reading_Order=81.77  Overall~=83.05
+[FINAL_v7C] pages=986 scored=950  Text_ED=0.1461  Table_TEDS=69.08  Reading_Order=82.00  Overall~=83.23
+
+pages scored in both: 950; contrast SD dev median 35.9 (test median was 25.8)
+
+overall: v7 + contrast preprocessing minus v7   (paired, 95% CI)
+  contrast SD < 25 pages  207  +0.20 [-1.81, +2.27]   better on 42, worse on 40
+  25 <= SD < 35    pages  245  +0.13 [-1.80, +2.06]   better on 52, worse on 57
+  SD >= 35         pages  498  +0.19 [-0.97, +1.38]   better on 112, worse on 123
+  ALL pages        pages  950  +0.18 [-0.68, +1.07]   better on 206, worse on 220
+
+text: v7 + contrast preprocessing minus v7   (paired, 95% CI)
+  contrast SD < 25 pages  207  -0.19 [-2.61, +2.34]   better on 26, worse on 44
+  25 <= SD < 35    pages  245  +1.04 [-1.48, +3.56]   better on 50, worse on 44
+  SD >= 35         pages  498  +0.27 [-1.06, +1.64]   better on 85, worse on 101
+  ALL pages        pages  950  +0.37 [-0.71, +1.46]   better on 161, worse on 189
+
+order: v7 + contrast preprocessing minus v7   (paired, 95% CI)
+  contrast SD < 25 pages  192  +0.74 [-2.60, +3.88]   better on 33, worse on 22
+  25 <= SD < 35    pages  239  -0.70 [-3.02, +1.61]   better on 40, worse on 45
+  SD >= 35         pages  494  +0.49 [-1.08, +1.98]   better on 92, worse on 90
+  ALL pages        pages  925  +0.24 [-0.94, +1.41]   better on 165, worse on 157
+
+medoid ensembles (mean overall, paired vs the 4-candidate ensemble):
+  v6+v7+v8+paddle               84.08   vs 4-cand                              picks {'v8': 256, 'v7': 397, 'v6': 261, 'paddle': 36}
+  v6+v7+v8+paddle+v7c           84.41   vs 4-cand       +0.33 [-0.07, +0.71]   picks {'v8': 223, 'v6': 215, 'v7': 347, 'v7c': 142, 'paddle': 23}
+  v7c+v8+paddle                 84.28   vs 4-cand       +0.20 [-0.55, +0.91]   picks {'v8': 414, 'v7c': 455, 'paddle': 81}
+  v6+v7c+v8+paddle              84.78   vs 4-cand       +0.70 [+0.16, +1.27]   picks {'v8': 276, 'v6': 358, 'v7c': 280, 'paddle': 36}
+done

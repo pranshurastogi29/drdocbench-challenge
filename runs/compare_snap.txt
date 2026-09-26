@@ -1,0 +1,42 @@
+[FINAL_v7] pages=986 scored=950  Text_ED=0.1498  Table_TEDS=67.38  Reading_Order=81.77  Overall~=83.05
+[SNAP_snap] pages=986 scored=950  Text_ED=0.1537  Table_TEDS=67.38  Reading_Order=82.11  Overall~=83.00
+[SNAP_snapg] pages=986 scored=950  Text_ED=0.1513  Table_TEDS=67.38  Reading_Order=82.09  Overall~=83.12
+[SNAP_snaps] pages=986 scored=950  Text_ED=0.1429  Table_TEDS=67.38  Reading_Order=83.02  Overall~=83.98
+[SNAP_snapm] pages=986 scored=950  Text_ED=0.1626  Table_TEDS=67.38  Reading_Order=80.72  Overall~=81.90
+
+##### FINAL_v7 -> SNAP_snap
+pages scored in both: 950  (SNAP_snap minus FINAL_v7; positive = SNAP_snap better)
+
+  overall  n= 950  mean  -0.04  95% CI [-0.56, +0.50]  SNAP_snap better on 72, worse on 90
+  text     n= 950  mean  -0.40  95% CI [-1.09, +0.28]  SNAP_snap better on 67, worse on 93
+  order    n= 925  mean  +0.35  95% CI [-0.21, +0.89]  SNAP_snap better on 66, worse on 68
+  teds     n=  66  mean  +0.00  95% CI [+0.00, +0.00]  SNAP_snap better on 0, worse on 0
+  mean overall FINAL_v7: 83.05
+
+##### FINAL_v7 -> SNAP_snapg
+pages scored in both: 950  (SNAP_snapg minus FINAL_v7; positive = SNAP_snapg better)
+
+  overall  n= 950  mean  +0.07  95% CI [-0.41, +0.58]  SNAP_snapg better on 51, worse on 66
+  text     n= 950  mean  -0.16  95% CI [-0.78, +0.48]  SNAP_snapg better on 47, worse on 69
+  order    n= 925  mean  +0.33  95% CI [-0.17, +0.83]  SNAP_snapg better on 48, worse on 51
+  teds     n=  66  mean  +0.00  95% CI [+0.00, +0.00]  SNAP_snapg better on 0, worse on 0
+  mean overall FINAL_v7: 83.05
+
+##### FINAL_v7 -> SNAP_snaps
+pages scored in both: 950  (SNAP_snaps minus FINAL_v7; positive = SNAP_snaps better)
+
+  overall  n= 950  mean  +0.94  95% CI [+0.49, +1.42]  SNAP_snaps better on 64, worse on 23
+  text     n= 950  mean  +0.69  95% CI [+0.10, +1.29]  SNAP_snaps better on 57, worse on 29
+  order    n= 925  mean  +1.25  95% CI [+0.82, +1.70]  SNAP_snaps better on 61, worse on 11
+  teds     n=  66  mean  +0.00  95% CI [+0.00, +0.00]  SNAP_snaps better on 0, worse on 0
+  mean overall FINAL_v7: 83.05
+
+##### FINAL_v7 -> SNAP_snapm
+pages scored in both: 950  (SNAP_snapm minus FINAL_v7; positive = SNAP_snapm better)
+
+  overall  n= 950  mean  -1.15  95% CI [-1.47, -0.84]  SNAP_snapm better on 11, worse on 79
+  text     n= 950  mean  -1.28  95% CI [-1.67, -0.93]  SNAP_snapm better on 8, worse on 76
+  order    n= 925  mean  -1.05  95% CI [-1.42, -0.70]  SNAP_snapm better on 5, worse on 70
+  teds     n=  66  mean  +0.00  95% CI [+0.00, +0.00]  SNAP_snapm better on 0, worse on 0
+  mean overall FINAL_v7: 83.05
+done

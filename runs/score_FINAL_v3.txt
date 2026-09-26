@@ -1,0 +1,29 @@
+986 pages staged in /Users/pranshurastogi/Desktop/drdocbench/eval_tmp/FINAL_v3
+DATASET_REGISTRY:  ['recogition_text_dataset', 'omnidocbench_single_module_dataset', 'recogition_formula_dataset', 'recogition_table_dataset', 'end2end_dataset', 'recogition_end2end_base_dataset', 'recogition_end2end_table_dataset', 'detection_dataset', 'detection_dataset_simple_format', 'md2md_dataset', 'multipage_md2md_dataset', 'multipage_end2end_dataset']
+METRIC_REGISTRY:  ['TEDS', 'BLEU', 'METEOR', 'Edit_dist', 'CDM', 'CDM_plain']
+EVAL_TASK_REGISTRY:  ['detection_eval', 'end2end_eval', 'recogition_eval']
+  0%|          | 0/986 [00:00<?, ?it/s]  0%|          | 3/986 [00:00<00:39, 25.12it/s]  1%|          | 11/986 [00:00<00:18, 53.65it/s]  4%|▍         | 38/986 [00:00<00:06, 146.01it/s]  7%|▋         | 68/986 [00:00<00:04, 203.94it/s]  9%|▉         | 89/986 [00:00<00:05, 156.05it/s] 11%|█         | 107/986 [00:00<00:05, 157.00it/s] 13%|█▎        | 131/986 [00:00<00:04, 179.23it/s] 15%|█▌        | 151/986 [00:00<00:05, 163.03it/s] 17%|█▋        | 171/986 [00:01<00:05, 160.39it/s] 20%|█▉        | 193/986 [00:01<00:04, 164.39it/s] 21%|██▏       | 210/986 [00:01<00:05, 144.38it/s] 23%|██▎       | 226/986 [00:01<00:05, 147.83it/s] 25%|██▍       | 242/986 [00:01<00:05, 143.78it/s] 28%|██▊       | 273/986 [00:01<00:03, 185.98it/s] 30%|██▉       | 293/986 [00:01<00:04, 161.11it/s] 32%|███▏      | 311/986 [00:02<00:04, 145.43it/s] 34%|███▍      | 340/986 [00:02<00:03, 178.58it/s] 37%|███▋      | 360/986 [00:02<00:03, 182.41it/s] 39%|███▊      | 380/986 [00:02<00:03, 176.68it/s] 41%|████      | 406/986 [00:02<00:02, 198.15it/s] 43%|████▎     | 428/986 [00:02<00:02, 189.15it/s] 46%|████▌     | 455/986 [00:02<00:02, 208.53it/s] 48%|████▊     | 477/986 [00:02<00:03, 168.16it/s] 51%|█████     | 504/986 [00:02<00:02, 191.54it/s] 53%|█████▎    | 525/986 [00:03<00:02, 178.10it/s] 56%|█████▋    | 557/986 [00:03<00:02, 212.07it/s] 59%|█████▉    | 580/986 [00:03<00:02, 180.28it/s] 61%|██████    | 600/986 [00:03<00:02, 142.94it/s] 63%|██████▎   | 619/986 [00:03<00:02, 137.65it/s] 64%|██████▍   | 635/986 [00:03<00:02, 141.90it/s] 67%|██████▋   | 657/986 [00:03<00:02, 159.27it/s] 69%|██████▉   | 685/986 [00:04<00:01, 187.92it/s] 72%|███████▏  | 706/986 [00:04<00:01, 172.66it/s] 74%|███████▎  | 727/986 [00:04<00:01, 180.90it/s] 76%|███████▌  | 749/986 [00:04<00:01, 188.97it/s] 78%|███████▊  | 769/986 [00:04<00:01, 155.49it/s] 80%|███████▉  | 787/986 [00:04<00:01, 113.96it/s] 82%|████████▏ | 813/986 [00:05<00:01, 141.01it/s] 84%|████████▍ | 832/986 [00:05<00:01, 139.19it/s] 87%|████████▋ | 855/986 [00:05<00:00, 148.10it/s] 88%|████████▊ | 872/986 [00:05<00:00, 115.36it/s] 91%|█████████ | 895/986 [00:05<00:00, 137.69it/s] 94%|█████████▎| 924/986 [00:05<00:00, 169.74it/s] 96%|█████████▌| 944/986 [00:05<00:00, 163.96it/s] 99%|█████████▊| 972/986 [00:05<00:00, 190.97it/s]100%|██████████| 986/986 [00:06<00:00, 155.74it/s]
+TEDS: 0it [00:00, ?it/s]TEDS: 1it [00:01,  1.11s/it]TEDS: 11it [00:01, 11.93it/s]TEDS: 17it [00:02,  6.46it/s]TEDS: 33it [00:02, 16.25it/s]TEDS: 47it [00:02, 26.15it/s]TEDS: 60it [00:03, 36.92it/s]TEDS: 71it [00:04, 17.74it/s]TEDS: 79it [00:04, 21.22it/s]TEDS: 86it [00:06, 10.50it/s]TEDS: 96it [00:06, 14.07it/s]TEDS: 101it [00:06, 14.19it/s]TEDS: 105it [00:07, 14.45it/s]TEDS: 112it [00:07, 17.29it/s]TEDS: 116it [00:07, 18.24it/s]TEDS: 119it [00:07, 17.82it/s]TEDS: 130it [00:07, 27.91it/s]TEDS: 139it [00:07, 34.30it/s]TEDS: 156it [00:08, 55.53it/s]TEDS: 171it [00:08, 72.51it/s]TEDS: 181it [00:08, 69.70it/s]TEDS: 191it [00:08, 75.74it/s]TEDS: 196it [00:08, 23.08it/s]
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+GT table is not empty. But pred is empty or its format is different from gt.
+GT table is not empty. But pred is empty or its format is different from gt.
+GT table is not empty. But pred is empty or its format is different from gt.
+GT table is not empty. But pred is empty or its format is different from gt.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+GT table is not empty. But pred is empty or its format is different from gt.
+Pred table is not empty. But gt is empty or its format is different from pred.
+GT table is not empty. But pred is empty or its format is different from gt.
+GT table is not empty. But pred is empty or its format is different from gt.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+GT table is not empty. But pred is empty or its format is different from gt.
+Pred table is not empty. But gt is empty or its format is different from pred.
+GT table is not empty. But pred is empty or its format is different from gt.
+[FINAL_v3] pages=986 scored=949  Text_ED=0.2001  Table_TEDS=62.71  Reading_Order=63.55  Overall~=72.24

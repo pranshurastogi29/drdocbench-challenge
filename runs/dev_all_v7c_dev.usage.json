@@ -1,0 +1,9 @@
+{
+ "windows": 525,
+ "api_calls": 631,
+ "prompt": 3268338,
+ "completion": 727973,
+ "reasoning": 0,
+ "cost_usd": 0,
+ "cost_per_window_usd": 0.0
+}

@@ -1,0 +1,27 @@
+v9 dev rows:      986  failed windows: 0
+[FINAL_v7] pages=986 scored=950  Text_ED=0.1498  Table_TEDS=67.38  Reading_Order=81.77  Overall~=83.05
+[FINAL_v9] pages=986 scored=949  Text_ED=0.1548  Table_TEDS=60.95  Reading_Order=77.78  Overall~=80.95
+
+##### paired, official components
+pages scored in both: 949  (FINAL_v9 minus FINAL_v7; positive = FINAL_v9 better)
+
+  overall  n= 949  mean  -2.13  95% CI [-3.17, -1.14]  FINAL_v9 better on 188, worse on 329
+  text     n= 949  mean  -0.59  95% CI [-1.87, +0.61]  FINAL_v9 better on 166, worse on 241
+  order    n= 925  mean  -3.99  95% CI [-5.36, -2.65]  FINAL_v9 better on 135, worse on 265
+  teds     n=  64  mean  -4.28  95% CI [-8.20, -0.83]  FINAL_v9 better on 11, worse on 23
+  mean overall FINAL_v7: 83.08
+  mean overall FINAL_v9: 80.95
+
+
+##### formula-convention check
+pages whose reference has a display formula: 69  (\textbf/\textit wrapper pages: 36, real-math pages: 33)
+  wrapper pages      mean formula edit  v7 0.978 -> FINAL_v9 0.807   pages matched (edit<0.5): 0 -> 8   pages with nothing matched: 32 -> 21
+  real-math pages    mean formula edit  v7 0.646 -> FINAL_v9 0.606   pages matched (edit<0.5): 14 -> 18   pages with nothing matched: 10 -> 8
+  all formula pages  mean formula edit  v7 0.819 -> FINAL_v9 0.711   pages matched (edit<0.5): 14 -> 26   pages with nothing matched: 42 -> 29
+
+paired overall, WITHOUT formula component (FINAL_v9 minus v7, 949 pages): -2.13 [-3.17, -1.14]
+paired overall, WITH proxy formula component (100*(1-edit) on formula pages):  -1.92 [-2.88, -0.93]
+  mean overall with proxy formula component: v7 81.83  FINAL_v9 79.91
+  text   component paired: -0.59 [-1.80, +0.64]
+  order  component paired: -3.99 [-5.34, -2.65]
+done

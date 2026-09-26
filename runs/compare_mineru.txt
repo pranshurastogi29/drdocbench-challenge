@@ -1,0 +1,24 @@
+[FINAL_v7] pages=986 scored=950  Text_ED=0.1498  Table_TEDS=67.38  Reading_Order=81.77  Overall~=83.05
+[ENS_SC] pages=986 scored=950  Text_ED=0.1283  Table_TEDS=71.19  Reading_Order=83.94  Overall~=85.15
+[PADDLE] pages=986 scored=950  Text_ED=0.1499  Table_TEDS=73.07  Reading_Order=77.21  Overall~=80.83
+[MINERU] pages=986 scored=949  Text_ED=0.3028  Table_TEDS=60.34  Reading_Order=68.91  Overall~=68.84
+[MINERU_NS] pages=986 scored=949  Text_ED=0.3028  Table_TEDS=59.73  Reading_Order=68.91  Overall~=68.82
+
+##### FINAL_v7 -> MINERU
+pages scored in both: 949  (MINERU minus FINAL_v7; positive = MINERU better)
+
+  overall  n= 949  mean -14.25  95% CI [-16.20, -12.28]  MINERU better on 193, worse on 544
+  text     n= 949  mean -15.39  95% CI [-17.58, -13.08]  MINERU better on 150, worse on 555
+  order    n= 925  mean -12.85  95% CI [-14.99, -10.76]  MINERU better on 156, worse on 369
+  teds     n=  61  mean  -7.45  95% CI [-11.93, -3.40]  MINERU better on 10, worse on 38
+  mean overall FINAL_v7: 83.08
+
+##### FINAL_v7 -> MINERU_NS
+pages scored in both: 949  (MINERU_NS minus FINAL_v7; positive = MINERU_NS better)
+
+  overall  n= 949  mean -14.26  95% CI [-16.21, -12.29]  MINERU_NS better on 192, worse on 544
+  text     n= 949  mean -15.39  95% CI [-17.58, -13.08]  MINERU_NS better on 150, worse on 555
+  order    n= 925  mean -12.85  95% CI [-14.99, -10.76]  MINERU_NS better on 156, worse on 369
+  teds     n=  61  mean  -8.01  95% CI [-12.72, -3.94]  MINERU_NS better on 10, worse on 39
+  mean overall FINAL_v7: 83.08
+done

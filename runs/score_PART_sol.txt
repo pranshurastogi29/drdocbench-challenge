@@ -1,0 +1,7 @@
+56 pages staged in /Users/pranshurastogi/Desktop/drdocbench/eval_tmp/PART_sol
+DATASET_REGISTRY:  ['recogition_text_dataset', 'omnidocbench_single_module_dataset', 'recogition_formula_dataset', 'recogition_table_dataset', 'end2end_dataset', 'recogition_end2end_base_dataset', 'recogition_end2end_table_dataset', 'detection_dataset', 'detection_dataset_simple_format', 'md2md_dataset', 'multipage_md2md_dataset', 'multipage_end2end_dataset']
+METRIC_REGISTRY:  ['TEDS', 'BLEU', 'METEOR', 'Edit_dist', 'CDM', 'CDM_plain']
+EVAL_TASK_REGISTRY:  ['detection_eval', 'end2end_eval', 'recogition_eval']
+  0%|          | 0/56 [00:00<?, ?it/s] 11%|█         | 6/56 [00:00<00:00, 58.60it/s] 27%|██▋       | 15/56 [00:00<00:00, 74.18it/s] 64%|██████▍   | 36/56 [00:00<00:00, 131.83it/s] 89%|████████▉ | 50/56 [00:00<00:00, 133.25it/s]100%|██████████| 56/56 [00:00<00:00, 126.12it/s]
+TEDS: 0it [00:00, ?it/s]TEDS: 1it [00:00,  9.26it/s]TEDS: 3it [00:00, 11.43it/s]TEDS: 4it [00:00, 14.87it/s]
+[PART_sol] pages=56 scored=56  Text_ED=0.1472  Table_TEDS=67.98  Reading_Order=79.40  Overall~=82.28

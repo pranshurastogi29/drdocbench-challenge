@@ -1,0 +1,32 @@
+986 pages staged in /Users/pranshurastogi/Desktop/drdocbench/eval_tmp/V7_FMOVE
+DATASET_REGISTRY:  ['recogition_text_dataset', 'omnidocbench_single_module_dataset', 'recogition_formula_dataset', 'recogition_table_dataset', 'end2end_dataset', 'recogition_end2end_base_dataset', 'recogition_end2end_table_dataset', 'detection_dataset', 'detection_dataset_simple_format', 'md2md_dataset', 'multipage_md2md_dataset', 'multipage_end2end_dataset']
+METRIC_REGISTRY:  ['TEDS', 'BLEU', 'METEOR', 'Edit_dist', 'CDM', 'CDM_plain']
+EVAL_TASK_REGISTRY:  ['detection_eval', 'end2end_eval', 'recogition_eval']
+  0%|          | 0/986 [00:00<?, ?it/s]  0%|          | 3/986 [00:00<00:55, 17.63it/s]  1%|          | 7/986 [00:00<00:39, 24.78it/s]  3%|▎         | 28/986 [00:00<00:10, 90.68it/s]  5%|▍         | 46/986 [00:00<00:07, 119.21it/s]  6%|▋         | 64/986 [00:00<00:06, 137.83it/s]  8%|▊         | 79/986 [00:00<00:08, 109.44it/s]  9%|▉         | 92/986 [00:01<00:10, 83.97it/s]  10%|█         | 103/986 [00:01<00:10, 88.20it/s] 12%|█▏        | 119/986 [00:01<00:08, 103.72it/s] 14%|█▍        | 137/986 [00:01<00:07, 121.23it/s] 15%|█▌        | 151/986 [00:01<00:08, 102.73it/s] 17%|█▋        | 166/986 [00:01<00:07, 109.62it/s] 18%|█▊        | 181/986 [00:01<00:06, 118.76it/s] 20%|█▉        | 194/986 [00:01<00:06, 119.52it/s] 21%|██        | 207/986 [00:02<00:08, 91.03it/s]  22%|██▏       | 218/986 [00:02<00:08, 92.56it/s] 24%|██▎       | 233/986 [00:02<00:07, 105.34it/s] 25%|██▍       | 245/986 [00:02<00:07, 93.93it/s]  27%|██▋       | 264/986 [00:02<00:08, 86.31it/s] 28%|██▊       | 276/986 [00:02<00:07, 92.62it/s] 29%|██▉       | 287/986 [00:03<00:12, 56.71it/s] 30%|███       | 296/986 [00:03<00:12, 54.09it/s] 32%|███▏      | 316/986 [00:03<00:08, 77.39it/s] 34%|███▍      | 340/986 [00:03<00:06, 107.61it/s] 36%|███▌      | 355/986 [00:03<00:05, 106.34it/s] 37%|███▋      | 369/986 [00:03<00:05, 104.69it/s] 40%|████      | 397/986 [00:04<00:04, 141.60it/s] 42%|████▏     | 414/986 [00:04<00:04, 135.58it/s] 44%|████▎     | 430/986 [00:04<00:04, 131.91it/s] 46%|████▌     | 455/986 [00:04<00:03, 156.10it/s] 48%|████▊     | 472/986 [00:04<00:05, 94.37it/s]  49%|████▉     | 486/986 [00:04<00:04, 101.85it/s] 52%|█████▏    | 517/986 [00:05<00:03, 141.41it/s] 54%|█████▍    | 536/986 [00:05<00:03, 120.05it/s] 57%|█████▋    | 561/986 [00:05<00:02, 143.91it/s] 59%|█████▊    | 579/986 [00:05<00:03, 125.21it/s] 60%|██████    | 595/986 [00:05<00:03, 103.66it/s] 63%|██████▎   | 619/986 [00:05<00:03, 112.85it/s] 64%|██████▍   | 635/986 [00:06<00:02, 121.23it/s] 67%|██████▋   | 660/986 [00:06<00:02, 147.86it/s] 69%|██████▊   | 677/986 [00:06<00:02, 144.05it/s] 70%|███████   | 693/986 [00:06<00:02, 103.99it/s] 72%|███████▏  | 706/986 [00:06<00:02, 105.69it/s] 74%|███████▎  | 726/986 [00:06<00:02, 125.05it/s] 76%|███████▌  | 750/986 [00:06<00:01, 151.43it/s] 78%|███████▊  | 768/986 [00:07<00:01, 138.18it/s] 80%|███████▉  | 784/986 [00:07<00:01, 134.77it/s] 81%|████████  | 799/986 [00:07<00:01, 102.02it/s] 83%|████████▎ | 823/986 [00:07<00:01, 129.53it/s] 87%|████████▋ | 854/986 [00:07<00:00, 168.94it/s] 89%|████████▊ | 874/986 [00:07<00:00, 115.53it/s] 92%|█████████▏| 905/986 [00:08<00:00, 150.20it/s] 94%|█████████▍| 930/986 [00:08<00:00, 164.52it/s] 97%|█████████▋| 952/986 [00:08<00:00, 174.83it/s] 99%|█████████▉| 977/986 [00:08<00:00, 186.20it/s]100%|██████████| 986/986 [00:08<00:00, 113.84it/s]
+TEDS: 0it [00:00, ?it/s]TEDS: 1it [00:00,  4.79it/s]TEDS: 2it [00:01,  1.47it/s]TEDS: 11it [00:01, 11.17it/s]TEDS: 16it [00:02,  8.02it/s]TEDS: 37it [00:02, 24.62it/s]TEDS: 54it [00:02, 40.06it/s]TEDS: 65it [00:03, 30.28it/s]TEDS: 76it [00:03, 38.29it/s]TEDS: 85it [00:04, 17.39it/s]TEDS: 95it [00:04, 21.26it/s]TEDS: 101it [00:05, 18.67it/s]TEDS: 106it [00:05, 18.71it/s]TEDS: 113it [00:05, 22.07it/s]TEDS: 117it [00:05, 22.03it/s]TEDS: 121it [00:05, 22.90it/s]TEDS: 131it [00:06, 33.90it/s]TEDS: 140it [00:06, 42.25it/s]TEDS: 157it [00:06, 66.35it/s]TEDS: 173it [00:06, 85.56it/s]TEDS: 184it [00:06, 85.55it/s]TEDS: 196it [00:06, 93.69it/s]TEDS: 197it [00:06, 29.97it/s]
+Pred table is not empty. But gt is empty or its format is different from pred.
+GT table is not empty. But pred is empty or its format is different from gt.
+Pred table is not empty. But gt is empty or its format is different from pred.
+GT table is not empty. But pred is empty or its format is different from gt.
+GT table is not empty. But pred is empty or its format is different from gt.
+GT table is not empty. But pred is empty or its format is different from gt.
+GT table is not empty. But pred is empty or its format is different from gt.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+GT table is not empty. But pred is empty or its format is different from gt.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+Pred table is not empty. But gt is empty or its format is different from pred.
+GT table is not empty. But pred is empty or its format is different from gt.
+Pred table is not empty. But gt is empty or its format is different from pred.
+GT table is not empty. But pred is empty or its format is different from gt.
+Pred table is not empty. But gt is empty or its format is different from pred.
+[V7_FMOVE] pages=986 scored=950  Text_ED=0.1498  Table_TEDS=67.38  Reading_Order=81.20  Overall~=82.79

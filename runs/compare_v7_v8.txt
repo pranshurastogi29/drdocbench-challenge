@@ -1,0 +1,17 @@
+failed windows in v8 dev run: 0 | rows      986
+[FINAL_v7] pages=986 scored=950  Text_ED=0.1498  Table_TEDS=67.38  Reading_Order=81.77  Overall~=83.05
+[FINAL_v8] pages=986 scored=950  Text_ED=0.1464  Table_TEDS=65.00  Reading_Order=81.48  Overall~=83.01
+
+pages scored in both: 950  (FINAL_v8 minus FINAL_v7; positive = FINAL_v8 better)
+
+  overall  n= 950  mean  -0.04  95% CI [-1.05, +0.93]  FINAL_v8 better on 224, worse on 212
+  text     n= 950  mean  +0.34  95% CI [-0.85, +1.47]  FINAL_v8 better on 181, worse on 175
+  order    n= 925  mean  -0.29  95% CI [-1.59, +0.98]  FINAL_v8 better on 170, worse on 160
+  teds     n=  65  mean  -1.84  95% CI [-4.99, +1.02]  FINAL_v8 better on 15, worse on 24
+  mean overall FINAL_v7: 83.05
+  mean overall FINAL_v8: 83.01
+
+largest gains [100, 79, 73, 72], largest losses [-100, -97, -89, -76]; top 10 pages = 656 of -35 total points gained
+FINAL_v7: header paragraphs out of order 69/471 (15%), placed at top of our output: 25
+FINAL_v8: header paragraphs out of order 80/459 (17%), placed at top of our output: 23
+done
