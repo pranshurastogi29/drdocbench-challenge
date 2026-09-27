@@ -39,7 +39,9 @@ CFG = {"medoid4_snap": (["v6", "v7", "v8", "paddle"], False, False),
        "final8": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, False, True, True),
        "final8_wd": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, True, True, True),
        "final9": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, False, True, True, True),
-       "final9_wd": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, True, True, True, True)}
+       "final9_wd": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, True, True, True, True),
+       "final5t": (["v6", "v7", "v8", "paddle", "v7c"], True, False, True),
+       "final5t_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True, True)}
 DEV = {"v6": "runs/dev_all_full_bunny.jsonl", "v7": "runs/dev_all_v7_final.jsonl", "v8": "runs/dev_all_v8_final.jsonl",
        "paddle": "runs/paddle_dev.jsonl", "v7c": "runs/dev_all_v7c_final.jsonl", "v6c": "runs/dev_all_v6c_final.jsonl", "v8c": "runs/dev_all_v8c_final.jsonl"}
 TABLE_CROPS_DEV = ["runs/tables_dev_t1.jsonl", "runs/tables_dev_t2.jsonl", "runs/tables_dev_t3.jsonl"]
