@@ -1,0 +1,36 @@
+EXTRA predicted (not in reference): top 5 pages hold 37% of 39531 chars (184 pages affected)
+EXTRA predicted (not in reference): top 20 pages hold 67% of 39531 chars (184 pages affected)
+EXTRA predicted (not in reference): top 50 pages hold 87% of 39531 chars (184 pages affected)
+   23bdb6d7_114.jpg   3914 chars in   1 paras | biggest: '**6 READING****a** What symptoms do people have when they feel stressed?**b** Which three of these things do y'
+   23bdb6d7_120.jpg   2999 chars in   1 paras | biggest: '*Explore, compare, contrast, evaluate, create.*You are going to read an article about a job viewed as one of t'
+   6acfa608_68.jpg   2634 chars in   1 paras | biggest: 'bestial degradation. The break-up of the community ties (after the tribal one), took place over a secular peri'
+   6acfa608_66.jpg   2488 chars in   1 paras | biggest: 'in the future. It is a place that does not exist in the present, but the present is sacrificed in order to bui'
+   6acfa608_72.jpg   2442 chars in   1 paras | biggest: 'seeing the overall picture, has already been predicted by science fiction. An example of this is the novel by '
+   6acfa608_70.jpg   2394 chars in   1 paras | biggest: 'and the answer given by Plato leaves no doubt: it is idea that are immortal, that are transmitted from generat'
+   c18d05a4_141.jpg    928 chars in   1 paras | biggest: "## PUERTO FUY (CBL293)NOTE(S): 1. Accepts Ships' Weather Reports addressed to CENMETEOVALP and METEOMAG. 2. Ac"
+   11fb213b_81.jpg    876 chars in   1 paras | biggest: '*Sources of milk*cheeses ice cream sherbet creamed soups milk puddings gravies sauces breads cakes cookies med'
+   eb964d7e_110.jpg    852 chars in   1 paras | biggest: 'Supplies: Shadow-block rubber stamp; Impress Rubber Stamps; Stamping ink: Making Memories; Computer fonts: Bab'
+   591d786d_21.jpg    818 chars in   1 paras | biggest: "<p><b>Matt's patterns</b><br><i>Looking for patterns, being systematic, exploring</i><br>This activity could b"
+   eb964d7e_112.jpg    724 chars in   1 paras | biggest: '# 2001# EuropeSupplies Computer fonts: Carpenter ICG and Thorn and Ink: Roman, Adobe.“IDEA TO NOTE: Add muted '
+   c18d05a4_135.jpg    714 chars in   1 paras | biggest: 'PUNTA ARENAS MRCCMAGALLANES ZONAL RADIO STATION (CBM)NOTE(S): 1. DSC hours of watch: H24. 2. This station is a'
+   eb964d7e_115.jpg    713 chars in   1 paras | biggest: '# Layout InspirationTIMESupplies: Patterned paper; Scrap Easel; Computer font: Times New Roman; Microsoft Word'
+   11fb213b_79.jpg    670 chars in   1 paras | biggest: 'dark circles or puffiness under eyes headache, some migraine dizziness bouts of sneezing coughing when laughin'
+
+MISSING (reference paragraph not matched): top 5 pages hold 37% of 66734 chars (159 pages affected)
+MISSING (reference paragraph not matched): top 20 pages hold 67% of 66734 chars (159 pages affected)
+MISSING (reference paragraph not matched): top 50 pages hold 85% of 66734 chars (159 pages affected)
+   4cc5fd14_1.jpg    8124 chars in 282 paras | biggest: 'Discover the battle against epidemics -- from the Black Death and smallpox to the modern superbugs -- and the '
+   4cc5fd14_2.jpg    6900 chars in 245 paras | biggest: 'Discover the ways technology has transformed everyday life — from the largest structures to the smallest elect'
+   591d786d_14.jpg   4522 chars in   2 paras | biggest: '<div class="tabular"> <p><span>p<span>3.5cm</span>p<span>3cm</span>p<span>9cm</span>p<span>2.5cm</span>p<span>'
+   6acfa608_67.jpg   2626 chars in   6 paras | biggest: 'Modern society that evolved out of the State does not overlap with the community, as Nietzsche and Tönnies fea'
+   6acfa608_69.jpg   2503 chars in   6 paras | biggest: 'This gigantic process of the sublimation of death increased over the centuries and did not fundamentally chang'
+   6acfa608_65.jpg   2491 chars in   7 paras | biggest: 'Karl Mannheim observes how the aspiration to prefigure a bright future be longs to the lower classes as part o'
+   6acfa608_71.jpg   2487 chars in   7 paras | biggest: 'Immortality becomes "ultra mortality" of a strictly individual nature, concerning only the individual in his v'
+   f8438f43_224.jpg   2213 chars in  29 paras | biggest: 'Feb. 1—Bad News Johnson, Stockton, CA $\\dotfill$ KO 3 Feb. 1—Wally Hunt, Stockton, CA $\\dotfill$ KO 1 Feb. 8—B'
+   205bf9ce_33.jpg   2069 chars in   5 paras | biggest: 'climates – from very hot to very cold.The flowers come in large clusters andare followed by a handsome crop of'
+   6acfa608_63.jpg   1470 chars in  10 paras | biggest: 'Is the measurement of time connected with *hubris?* At first sight it would seem that it is not: it is an orga'
+   16345dc6_65.jpg   1172 chars in  13 paras | biggest: '$\\bullet$ A conceptual data model depicts the information requirements of an organization at the highest gener'
+   17b97659_689.jpg   1160 chars in  15 paras | biggest: 'environmental mastery and well-being: assessment approach, 461; cohort differences in, 463-65, 472-73, 476-77;'
+   17b97659_688.jpg   1018 chars in   7 paras | biggest: 'age and well-being: age as a predictor of socially responsible behavior, 565-66; age as a predictor of social '
+   c5e087e7_113.jpg    875 chars in   3 paras | biggest: '16 Barbecue sound 24 Like a lost cause 27 Fort in New Jersey 28 Silly goose 29 Kinnear in "Flash of Genius" 30'
+

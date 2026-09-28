@@ -23,6 +23,7 @@ from tablefix import fix
 from wrapdup import add as wrapdup
 from cleanlines import clean as cleanlines
 from repair import figdrop, spill
+from indexsplit import split_index
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 TEST = {"v6": "runs/test_all_v6.jsonl", "v7": "runs/test_all_v7.jsonl", "v8": "runs/test_all_v8.jsonl",
@@ -41,7 +42,10 @@ CFG = {"medoid4_snap": (["v6", "v7", "v8", "paddle"], False, False),
        "final9": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, False, True, True, True),
        "final9_wd": (["v6", "v7", "v8", "paddle", "v6c", "v7c", "v8c"], True, True, True, True, True),
        "final5t": (["v6", "v7", "v8", "paddle", "v7c"], True, False, True),
-       "final5t_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True, True)}
+       "final5t_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True, True),
+       "final5i": (["v6", "v7", "v8", "paddle", "v7c"], True, False, False, False, False, True),
+       "final5i_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True, False, False, False, True),
+       "final5ti_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True, True, False, False, True)}
 DEV = {"v6": "runs/dev_all_full_bunny.jsonl", "v7": "runs/dev_all_v7_final.jsonl", "v8": "runs/dev_all_v8_final.jsonl",
        "paddle": "runs/paddle_dev.jsonl", "v7c": "runs/dev_all_v7c_final.jsonl", "v6c": "runs/dev_all_v6c_final.jsonl", "v8c": "runs/dev_all_v8c_final.jsonl"}
 TABLE_CROPS_DEV = ["runs/tables_dev_t1.jsonl", "runs/tables_dev_t2.jsonl", "runs/tables_dev_t3.jsonl"]
@@ -63,6 +67,7 @@ def medoid(texts, names):
 
 def build(name):
     names, tables, wrap, *rest = CFG[name]; tv = bool(rest and rest[0]); cl = bool(len(rest) > 1 and rest[1]); rp = bool(len(rest) > 2 and rest[2])
+    ix = bool(len(rest) > 3 and rest[3])
     if tv:      # table vote: needs the scorer checkout (its table normaliser) and the crop-pass outputs
         from table_merge import load_crops
         from table_vote import vote_page
@@ -75,6 +80,8 @@ def build(name):
         s = snap(md, stem, mode="split")
         if para(s) - para(md) > MAX_ADD:      # heavy re-splits are a coin flip on dev: leave those pages alone
             s = md
+        if ix:
+            s = split_index(s)    # back-of-book index paragraphs: one entry per line -> one entry per paragraph (indexsplit.py)
         if tables:
             s, _ = fix(s, stem, replace=False)
         if tv:
