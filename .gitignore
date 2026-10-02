@@ -18,3 +18,4 @@ kaggle/*.zip
 kaggle/*.log
 kaggle/manifest.csv
 .DS_Store
+.venv-ocr/

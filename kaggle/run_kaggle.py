@@ -24,6 +24,7 @@ TOOLS = {  # name -> (notebook file, kernel slug)
     "paddle": ("paddleocr_vl.ipynb", "drdoc-paddleocr-vl"),
     "mineru": ("mineru.ipynb", "drdoc-mineru"),
     "mineru2": ("mineru.ipynb", "drdoc-mineru2"),   # chunked, time-budgeted rerun
+    "docling": ("docling.ipynb", "drdoc-docling"),
 }
 
 
