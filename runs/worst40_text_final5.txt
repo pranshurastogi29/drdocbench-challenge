@@ -1,0 +1,48 @@
+ 1 1.00 tiny-ref SELF-HELP        11fb213b p78   ref=0     ours=2
+ 2 1.00 tiny-ref DESIGN           4d5947df p114  ref=1     ours=7
+ 3 1.00 tiny-ref DESIGN           4d5947df p116  ref=1     ours=1
+ 4 1.00 tiny-ref DESIGN           4d5947df p118  ref=1     ours=9
+ 5 1.00 tiny-ref DESIGN           4d5947df p120  ref=1     ours=1
+ 6 1.00 tiny-ref DESIGN           4d5947df p122  ref=1     ours=1
+ 7 1.00 tiny-ref DESIGN           4d5947df p124  ref=1     ours=3
+ 8 1.00 we-drop  JUVENILENONFICTI 591d786d p14   ref=4524  ours=2
+ 9 1.00 tiny-ref JUVENILENONFICTI 591d786d p21   ref=2     ours=820
+10 0.97 we-add   EDUCATION        23bdb6d7 p114  ref=137   ours=4051
+11 0.96 we-add   CRAFTS&HOBBIES   eb964d7e p120  ref=18    ours=510
+12 0.95 we-add   CRAFTS&HOBBIES   eb964d7e p113  ref=11    ours=202
+13 0.95 we-add   SELF-HELP        11fb213b p79   ref=39    ours=711
+14 0.94 we-add   TRANSPORTATION   c18d05a4 p135  ref=46    ours=760
+15 0.94 we-add   SELF-HELP        11fb213b p81   ref=57    ours=933
+16 0.93 we-drop  SPORTS&RECREATIO 4cc5fd14 p1    ref=8731  ours=598
+17 0.93 we-drop  COOKING          761bb2e8 p10   ref=1536  ours=110
+18 0.93 we-drop  TRANSPORTATION   c18d05a4 p142  ref=615   ours=103
+19 0.93 we-drop  SPORTS&RECREATIO 4cc5fd14 p2    ref=7472  ours=561
+20 0.92 we-add   TRANSPORTATION   c18d05a4 p141  ref=82    ours=1009
+21 0.91 we-add   CRAFTS&HOBBIES   eb964d7e p114  ref=56    ours=596
+22 0.90 we-drop  GAMES&ACTIVITIES c5e087e7 p120  ref=1774  ours=190
+23 0.89 we-add   SELF-HELP        11fb213b p80   ref=42    ours=388
+24 0.87 we-drop  SOCIALSCIENCE    17b97659 p684  ref=2026  ours=267
+25 0.84 we-add   CRAFTS&HOBBIES   eb964d7e p112  ref=295   ours=890
+26 0.83 we-add   TRANSPORTATION   c18d05a4 p131  ref=87    ours=523
+27 0.82 garbled  POETRY           7f1cdfe4 p184  ref=856   ours=565
+28 0.82 we-add   EDUCATION        23bdb6d7 p120  ref=654   ours=3653
+29 0.82 we-add   CRAFTS&HOBBIES   eb964d7e p110  ref=373   ours=1077
+30 0.82 garbled  TRANSPORTATION   c18d05a4 p133  ref=733   ours=849
+31 0.81 we-add   TRANSPORTATION   c18d05a4 p130  ref=152   ours=821
+32 0.80 garbled  TRANSPORTATION   c18d05a4 p132  ref=771   ours=846
+33 0.80 we-add   HOUSE&HOME       18b6da40 p364  ref=21    ours=104
+34 0.80 we-add   CRAFTS&HOBBIES   eb964d7e p115  ref=252   ours=909
+35 0.78 we-drop  COOKING          761bb2e8 p11   ref=683   ours=147
+36 0.78 garbled  COMPUTERS        16345dc6 p65   ref=1825  ours=1825
+37 0.76 we-add   CRAFTS&HOBBIES   eb964d7e p116  ref=172   ours=659
+38 0.75 we-drop  GAMES&ACTIVITIES c5e087e7 p111  ref=1553  ours=406
+39 0.75 we-drop  GAMES&ACTIVITIES c5e087e7 p109  ref=1453  ours=367
+40 0.74 we-drop  GAMES&ACTIVITIES c5e087e7 p108  ref=1630  ours=435
+
+class  pages  share-of-worst40-loss
+tiny-ref    8   22%
+we-drop    11   27%
+we-add     17   42%
+garbled     4   9%
+
+docs: [('eb964d7e', 7), ('c18d05a4', 7), ('4d5947df', 6), ('11fb213b', 4), ('c5e087e7', 4), ('591d786d', 2), ('23bdb6d7', 2), ('4cc5fd14', 2)]
