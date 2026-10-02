@@ -13,7 +13,7 @@ Pipelines (each adds one step to the previous):
   final5_wd    : + duplicate $\\textit{..}$ copy of every short standalone line (formula channel)
 The LLM outputs themselves (runs/test_all_*.jsonl) are archived, not regenerable byte-for-byte.
 """
-import argparse, collections, json, os, re, sys, zipfile
+import argparse, collections, itertools, json, os, re, statistics, sys, zipfile
 from rapidfuzz import fuzz
 from common import list_pages
 from common import DATA  # noqa: F401
@@ -24,6 +24,7 @@ from wrapdup import add as wrapdup
 from cleanlines import clean as cleanlines
 from repair import figdrop, spill
 from indexsplit import split_index
+from xdrop import xdrop
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 TEST = {"v6": "runs/test_all_v6.jsonl", "v7": "runs/test_all_v7.jsonl", "v8": "runs/test_all_v8.jsonl",
@@ -45,7 +46,9 @@ CFG = {"medoid4_snap": (["v6", "v7", "v8", "paddle"], False, False),
        "final5t_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True, True),
        "final5i": (["v6", "v7", "v8", "paddle", "v7c"], True, False, False, False, False, True),
        "final5i_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True, False, False, False, True),
-       "final5ti_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True, True, False, False, True)}
+       "final5ti_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True, True, False, False, True),
+       "final5x": (["v6", "v7", "v8", "paddle", "v7c"], True, False, False, False, False, False, True),
+       "final5x_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True, False, False, False, False, True)}
 DEV = {"v6": "runs/dev_all_full_bunny.jsonl", "v7": "runs/dev_all_v7_final.jsonl", "v8": "runs/dev_all_v8_final.jsonl",
        "paddle": "runs/paddle_dev.jsonl", "v7c": "runs/dev_all_v7c_final.jsonl", "v6c": "runs/dev_all_v6c_final.jsonl", "v8c": "runs/dev_all_v8c_final.jsonl"}
 TABLE_CROPS_DEV = ["runs/tables_dev_t1.jsonl", "runs/tables_dev_t2.jsonl", "runs/tables_dev_t3.jsonl"]
@@ -65,9 +68,14 @@ def medoid(texts, names):
     return max(names, key=lambda n: (sc[n], n == "v7"))
 
 
+def agreement(texts, names):
+    w = {n: re.sub(r"\W", "", texts[n].lower())[:4000] for n in names}
+    return statistics.mean(fuzz.ratio(w[a], w[b]) for a, b in itertools.combinations(names, 2))
+
+
 def build(name):
     names, tables, wrap, *rest = CFG[name]; tv = bool(rest and rest[0]); cl = bool(len(rest) > 1 and rest[1]); rp = bool(len(rest) > 2 and rest[2])
-    ix = bool(len(rest) > 3 and rest[3])
+    ix = bool(len(rest) > 3 and rest[3]); xd = bool(len(rest) > 4 and rest[4])
     if tv:      # table vote: needs the scorer checkout (its table normaliser) and the crop-pass outputs
         from table_merge import load_crops
         from table_vote import vote_page
@@ -84,6 +92,10 @@ def build(name):
             s = split_index(s)    # back-of-book index paragraphs: one entry per line -> one entry per paragraph (indexsplit.py)
         if tables:
             s, _ = fix(s, stem, replace=False)
+        if xd and agreement(t, [n for n in names if n != "paddle"]) < 97:
+            # we write >1.3x Paddle's text: drop our paragraphs Paddle lacks entirely (xdrop.py). Skipped when our runs agree
+            # near-verbatim: that is legible body text Paddle under-read (a dense street index), not text inside a picture
+            s = xdrop(s, t["paddle"], ratio=1.3, match=60, min_keep=4)
         if tv:
             s = vote_page(stem, s, [c.get(stem, {}) for c in crops], {}, True, "place")
         if cl:
