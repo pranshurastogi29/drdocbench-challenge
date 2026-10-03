@@ -116,14 +116,56 @@ def collect(a):
     print(f"{out}: wrote {ok} pages; failed/degenerate requests {bad}; short pages {short}; truncated at max_tokens {trunc}; batches still running {pend}; batch cost so far ${cost:.4f}")
 
 
+def live(a):
+    """Same prepared requests, sent synchronously at the live (non-batch) price, for models with no :batch variant.
+    Stops submitting once the spend reported by OpenRouter passes --budget."""
+    from concurrent.futures import ThreadPoolExecutor
+    load_env(); wd = wdir(a.tag); P = json.load(open(os.path.join(wd, "prepared.json")))
+    out = os.path.join(ROOT, "runs", f"{P['split']}_all_{a.tag}.jsonl")
+    spent = {"cost": 0.0}; stats = {"ok": 0, "bad": 0, "short": 0, "trunc": 0}
+    have = {(r["document_id"], r["page"]) for r in map(json.loads, open(out))} if os.path.exists(out) else set()
+
+    def one(r):
+        if spent["cost"] >= a.budget:
+            return r["custom_id"], None, "budget"
+        for attempt in range(3):
+            try:
+                resp = call("POST", "/chat/completions", {**r["body"], "usage": {"include": True}})
+                spent["cost"] += (resp.get("usage") or {}).get("cost") or 0
+                return r["custom_id"], resp, None
+            except SystemExit as e:
+                err = str(e)
+                if "402" in err or "403" in err: return r["custom_id"], None, err
+                time.sleep(5 * (attempt + 1))
+        return r["custom_id"], None, "failed after retries"
+
+    with open(out, "a", encoding="utf-8") as f, ThreadPoolExecutor(a.workers) as ex:
+        for cid, resp, err in ex.map(one, P["requests"]):
+            m = P["meta"][cid]
+            if resp is None:
+                stats["bad"] += 1; print("  not run:", cid, (err or "")[:100]); continue
+            ch0 = resp["choices"][0]; text = (ch0.get("message") or {}).get("content") or ""
+            stats["trunc"] += ch0.get("finish_reason") == "length"
+            if not text.strip() or is_degenerate(text):
+                stats["bad"] += 1; print("  empty/degenerate:", cid); continue
+            pages = predict.split_pages(text, len(m["pages"]))
+            stats["short"] += sum(len(strip_sections(x).strip()) < predict.SHORT for x in pages)
+            for pg, md in zip(m["pages"], pages):
+                if (m["doc"], pg) not in have:
+                    f.write(json.dumps({"subject": m["subject"], "document_id": m["doc"], "page": pg, "markdown": postprocess(md)}) + "\n"); stats["ok"] += 1
+            f.flush()
+    print(f"{out}: wrote {stats['ok']} pages; failed {stats['bad']}; short pages {stats['short']}; truncated {stats['trunc']}; spend ${spent['cost']:.4f} (budget ${a.budget})")
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); sp = ap.add_subparsers(dest="cmd", required=True)
     p = sp.add_parser("prepare"); p.add_argument("--split", default="test", choices=["dev", "test"]); p.add_argument("--model", required=True)
     p.add_argument("--prompt", default="v7"); p.add_argument("--variant", default="plain", choices=["plain", "contrast"]); p.add_argument("--window", type=int, default=2)
     p.add_argument("--reasoning", choices=["low", "medium", "high"]); p.add_argument("--max-tokens", type=int, default=32000); p.add_argument("--subset", type=int)
     p.add_argument("--dry", action="store_true")
-    for c in ("prepare", "submit", "poll", "collect"):
+    for c in ("prepare", "submit", "poll", "collect", "live"):
         q = p if c == "prepare" else sp.add_parser(c); q.add_argument("--tag", required=True)
         if c == "submit": q.add_argument("--chunk", type=int, default=150)
+        if c == "live": q.add_argument("--budget", type=float, default=4.0); q.add_argument("--workers", type=int, default=6)
     a = ap.parse_args()
-    {"prepare": prepare, "submit": submit, "poll": poll, "collect": collect}[a.cmd](a)
+    {"prepare": prepare, "submit": submit, "poll": poll, "collect": collect, "live": live}[a.cmd](a)
