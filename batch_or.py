@@ -133,14 +133,16 @@ def live(a):
                 resp = call("POST", "/chat/completions", {**r["body"], "usage": {"include": True}})
                 spent["cost"] += (resp.get("usage") or {}).get("cost") or 0
                 return r["custom_id"], resp, None
-            except SystemExit as e:
+            except (SystemExit, OSError, ValueError) as e:      # HTTP error from call(), or a dropped connection / bad JSON
                 err = str(e)
                 if "402" in err or "403" in err: return r["custom_id"], None, err
                 time.sleep(5 * (attempt + 1))
         return r["custom_id"], None, "failed after retries"
 
+    todo = [r for r in P["requests"] if not all((P["meta"][r["custom_id"]]["doc"], pg) in have for pg in P["meta"][r["custom_id"]]["pages"])]
+    print(f"{len(P['requests']) - len(todo)} windows already done, {len(todo)} to run")
     with open(out, "a", encoding="utf-8") as f, ThreadPoolExecutor(a.workers) as ex:
-        for cid, resp, err in ex.map(one, P["requests"]):
+        for cid, resp, err in ex.map(one, todo):
             m = P["meta"][cid]
             if resp is None:
                 stats["bad"] += 1; print("  not run:", cid, (err or "")[:100]); continue
