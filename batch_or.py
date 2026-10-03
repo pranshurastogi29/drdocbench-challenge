@@ -93,7 +93,7 @@ def collect(a):
     load_env(); wd = wdir(a.tag); P = json.load(open(os.path.join(wd, "prepared.json")))
     out = os.path.join(ROOT, "runs", f"{P['split']}_all_{a.tag}.jsonl")
     have = {(r["document_id"], r["page"]) for r in map(json.loads, open(out))} if os.path.exists(out) else set()
-    cost, ok, bad, short, pend = 0.0, 0, 0, 0, 0
+    cost, ok, bad, short, pend, trunc = 0.0, 0, 0, 0, 0, 0
     with open(out, "a", encoding="utf-8") as f:
         for b in json.load(open(os.path.join(wd, "batches.json"))):
             r = call("GET", f"/batches/{b['id']}")
@@ -103,7 +103,9 @@ def collect(a):
             for item in r.get("results") or []:
                 m = P["meta"][item["custom_id"]]
                 body = ((item.get("response") or {}).get("body")) or {}
-                text = ((body.get("choices") or [{}])[0].get("message") or {}).get("content") or ""
+                ch0 = (body.get("choices") or [{}])[0]
+                text = (ch0.get("message") or {}).get("content") or ""
+                trunc += ch0.get("finish_reason") == "length"   # hit max_tokens: the page text is cut off
                 if item.get("error") or not text.strip() or is_degenerate(text):
                     bad += 1; print("  failed/degenerate:", item["custom_id"], (item.get("error") or {}).get("message", "")[:120]); continue
                 pages = predict.split_pages(text, len(m["pages"]))
@@ -111,7 +113,7 @@ def collect(a):
                 for pg, md in zip(m["pages"], pages):
                     if (m["doc"], pg) not in have:
                         f.write(json.dumps({"subject": m["subject"], "document_id": m["doc"], "page": pg, "markdown": postprocess(md)}) + "\n"); ok += 1
-    print(f"{out}: wrote {ok} pages; failed/degenerate requests {bad}; short pages {short}; batches still running {pend}; batch cost so far ${cost:.4f}")
+    print(f"{out}: wrote {ok} pages; failed/degenerate requests {bad}; short pages {short}; truncated at max_tokens {trunc}; batches still running {pend}; batch cost so far ${cost:.4f}")
 
 
 if __name__ == "__main__":
