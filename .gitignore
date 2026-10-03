@@ -19,3 +19,5 @@ kaggle/*.log
 kaggle/manifest.csv
 .DS_Store
 .venv-ocr/
+bucket_stage/
+secrets/
