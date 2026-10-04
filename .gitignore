@@ -21,3 +21,4 @@ kaggle/manifest.csv
 .venv-ocr/
 bucket_stage/
 secrets/
+viz/
