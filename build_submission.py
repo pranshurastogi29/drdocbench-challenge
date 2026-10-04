@@ -30,7 +30,8 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 TEST = {"v6": "runs/test_all_v6.jsonl", "v7": "runs/test_all_v7.jsonl", "v8": "runs/test_all_v8.jsonl",
         "paddle": "runs/paddle_test.jsonl", "v7c": "runs/test_all_v7c_test.jsonl",
         "v6c": "runs/test_all_v6c_test.jsonl", "v8c": "runs/test_all_v8c_test.jsonl", "v7s": "runs/test_all_v7_1200.jsonl",
-        "v6w1": "runs/test_all_v6_w1.jsonl", "v7w1": "runs/test_all_v7_w1.jsonl", "v8w1": "runs/test_all_v8_w1.jsonl", "v7cw1": "runs/test_all_v7c_w1.jsonl"}
+        "v6w1": "runs/test_all_v6_w1.jsonl", "v7w1": "runs/test_all_v7_w1.jsonl", "v8w1": "runs/test_all_v8_w1.jsonl", "v7cw1": "runs/test_all_v7c_w1.jsonl",
+        "v7sw1": "runs/test_all_v7sw1.jsonl", "v5w1": "runs/test_all_v5w1.jsonl", "v7tw1": "runs/test_all_v7tw1.jsonl"}
 CFG = {"medoid4_snap": (["v6", "v7", "v8", "paddle"], False, False),
        "best": (["v6", "v7", "v8", "paddle"], True, False),
        "final5": (["v6", "v7", "v8", "paddle", "v7c"], True, False),
@@ -58,11 +59,18 @@ CFG = {"medoid4_snap": (["v6", "v7", "v8", "paddle"], False, False),
        "final5c_wd": (["v6", "v7", "v8", "paddle", "v7c", "v6w1", "v7w1", "v8w1"], True, True),
        "final5d": (["v6w1", "v7w1", "v8w1", "paddle", "v7cw1"], True, False),
        "final5d_wd": (["v6w1", "v7w1", "v8w1", "paddle", "v7cw1"], True, True),
+       "final5e": (["v6", "v7", "v8", "paddle", "v7c", "v6w1", "v7w1", "v8w1", "v7sw1"], True, False),
+       "final5e_wd": (["v6", "v7", "v8", "paddle", "v7c", "v6w1", "v7w1", "v8w1", "v7sw1"], True, True),
+       "final5f": (["v6", "v7", "v8", "paddle", "v7c", "v6w1", "v7w1", "v8w1", "v5w1"], True, False),
+       "final5f_wd": (["v6", "v7", "v8", "paddle", "v7c", "v6w1", "v7w1", "v8w1", "v5w1"], True, True),
+       "final5g": (["v6", "v7", "v8", "paddle", "v7c", "v6w1", "v7w1", "v8w1", "v7sw1", "v5w1"], True, False),
+       "final5g_wd": (["v6", "v7", "v8", "paddle", "v7c", "v6w1", "v7w1", "v8w1", "v7sw1", "v5w1"], True, True),
        "final5x": (["v6", "v7", "v8", "paddle", "v7c"], True, False, False, False, False, False, True),
        "final5x_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True, False, False, False, False, True)}
 DEV = {"v6": "runs/dev_all_full_bunny.jsonl", "v7": "runs/dev_all_v7_final.jsonl", "v8": "runs/dev_all_v8_final.jsonl",
        "paddle": "runs/paddle_dev.jsonl", "v7c": "runs/dev_all_v7c_final.jsonl", "v6c": "runs/dev_all_v6c_final.jsonl", "v8c": "runs/dev_all_v8c_final.jsonl", "v7s": "runs/dev_all_v7_1200.jsonl",
-       "v6w1": "runs/dev_all_v6_w1.jsonl", "v7w1": "runs/dev_all_v7_w1.jsonl", "v8w1": "runs/dev_all_v8_w1.jsonl", "v7cw1": "runs/dev_all_v7c_w1.jsonl"}
+       "v6w1": "runs/dev_all_v6_w1.jsonl", "v7w1": "runs/dev_all_v7_w1.jsonl", "v8w1": "runs/dev_all_v8_w1.jsonl", "v7cw1": "runs/dev_all_v7c_w1.jsonl",
+       "v7sw1": "runs/dev_all_v7sw1.jsonl", "v5w1": "runs/dev_all_v5w1.jsonl", "v7tw1": "runs/dev_all_v7tw1.jsonl"}
 TABLE_CROPS_DEV = ["runs/tables_dev_t1.jsonl", "runs/tables_dev_t2.jsonl", "runs/tables_dev_t3.jsonl"]
 SPLIT = "test"      # `--split dev` rebuilds the same pipeline on the dev pages (jsonl out) so it can be scored with the official scorer
 TABLE_CROPS = ["runs/tables_test_t1.jsonl", "runs/tables_test_t2.jsonl", "runs/tables_test_t3.jsonl"]
