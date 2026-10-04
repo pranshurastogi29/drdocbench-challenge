@@ -12,6 +12,7 @@ import argparse
 import base64
 import io
 import json
+import re
 import os
 import sys
 import time
@@ -29,8 +30,28 @@ SHORT = 60  # chars; a page shorter than this triggers a retry
 PREPROC = "none"   # set from --preprocess: "contrast" = stretch the histogram before upscaling, mild unsharp mask after
 
 
+FRAME_SKIP = {"image", "chart", "seal", "header_image", "footer_image"}
+
+
+def draw_frames(im, path):
+    """--preprocess frames: thin red frames around PaddleOCR-VL's layout blocks (no numbers), so the model sees where text regions end"""
+    from PIL import ImageDraw
+    import paddle_ingest
+    m = re.search(r"/([0-9a-f-]{36})/images/page_(\d+)\.", path)
+    if not m: return im
+    bl = paddle_ingest.blocks(f"{m.group(1)}_{m.group(2)}") or []
+    d = ImageDraw.Draw(im)
+    for b in bl:
+        if b["block_label"] in FRAME_SKIP: continue
+        x0, y0, x1, y1 = b["block_bbox"]
+        d.rectangle([x0 - 2, y0 - 2, x1 + 2, y1 + 2], outline=(230, 0, 0), width=1)
+    return im
+
+
 def encode(path, max_side):
     im = Image.open(path).convert("RGB")
+    if PREPROC == "frames":
+        im = draw_frames(im, path)
     if PREPROC == "contrast":
         from PIL import ImageOps
         im = ImageOps.autocontrast(im, cutoff=1)
@@ -122,10 +143,11 @@ def main():
     ap.add_argument("--reasoning", choices=["low", "medium", "high"], help="OpenRouter reasoning effort")
     ap.add_argument("--temperature", type=float, default=0.0)
     ap.add_argument("--no-postprocess", action="store_true")
-    ap.add_argument("--preprocess", default="none", choices=["none", "contrast"], help="image preprocessing before the model call")
+    ap.add_argument("--preprocess", default="none", choices=["none", "contrast", "frames"], help="image preprocessing before the model call")
     ap.add_argument("--limit-docs", type=int)
     ap.add_argument("--subset", type=int, help="run a fixed random sample of N windows (seeded), for fast A/B comparisons")
     ap.add_argument("--workers", type=int, default=4)
+    ap.add_argument("--windows", help="JSON file with a list of [document_id, first_page]: run only those windows (fixed A/B sets)")
     args = ap.parse_args()
 
     load_env()
@@ -145,6 +167,8 @@ def main():
         allw = [(s_, d_, w_) for (s_, d_), pages in docs.items() for w_ in windows(pages, args.window)]
         keep = random.Random(0).sample(range(len(allw)), min(args.subset, len(allw)))
         subset = {(allw[i][1], allw[i][2][0][0]) for i in keep}  # (doc, first page)
+    elif args.windows:
+        subset = {(d_, p_) for d_, p_ in json.load(open(args.windows))}
     else:
         subset = None
 

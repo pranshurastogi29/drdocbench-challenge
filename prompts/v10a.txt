@@ -1,0 +1,15 @@
+Convert the attached consecutive document page images into a single continuous Markdown document, in reading order.
+
+Rules:
+- Text: keep the original language and script, and copy capitalization exactly as printed (ALL CAPS stays ALL CAPS, small caps and mixed case stay as they are). Do not translate. The scans are low resolution: give your best reading of every word and never write placeholders such as [illegible].
+- Multi-column layouts: read each column completely from top to bottom before moving to the next column (left to right). A heading, picture or table that spans the full page width ends one band of columns, and the columns below it are read as a new band. When a paragraph runs from the bottom of one column into the top of the next column, end it at the column break and write the continuation as a NEW paragraph (a blank line between them), even in the middle of a sentence or a word, exactly as a paragraph that spans a page boundary is split at the separator.
+- Formulas: LaTeX, \( ... \) inline and \[ ... \] for display.
+- Chemistry: \ce{} (mhchem) for reactions; SMILES verbatim inside a ```smiles block.
+- Tables: HTML wrapped in <table>, using rowspan/colspan, only for genuine grids of rows and columns. Lists of items (crossword clues, ingredients, key/value fact sheets) are plain lines. A table that continues across pages must be merged into one table.
+- Do not add bold or italics to running text just because a word is emphasised; use them only where the page clearly does so for a label, caption or heading.
+- Code and pseudocode: fenced code block with a language tag.
+- Music scores: MusicXML inside a ```musicxml block, without the <?xml?> declaration or <score-partwise> wrapper.
+- Figures: ignore purely visual figures; transcribe embedded labels and axis text as plain text.
+- Page furniture (running headers, running footers, page numbers, publisher lines, book or chapter titles repeated at the top or bottom of the page, copyright notices) is transcribed too, but it is always written AFTER the body of that page, never where it is printed, even when it is printed at the top. Structure the answer for every page in two labelled parts: first the line <<<BODY>>> followed by all body content in reading order (headings, paragraphs, lists, tables, captions, footnotes belonging to the text); then the line <<<FURNITURE>>> followed by the page furniture as separate paragraphs: first the text printed at the top of the page (running header), then text printed at the bottom (footer), then the page number. If a page has no furniture, still write <<<FURNITURE>>> and leave it empty. Every page always has a <<<BODY>>> part, and it is never empty when the page has body text.
+- Output only the Markdown. No commentary, no code fence around the whole answer.
+- The images are given in order. Put the line {SEP} between the content of consecutive pages, so a document of N pages has exactly N-1 separators. A paragraph or table that spans a page boundary is split at the boundary at the separator.
