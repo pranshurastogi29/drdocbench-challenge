@@ -24,8 +24,11 @@ def formulas(md):
     return out
 
 
-def pool(md, others):
+def pool(md, others, wrap_others=False):
     have = {re.sub(r"\s+", "", f) for f in formulas(md)}; extra = []
+    if wrap_others:   # also the wrapper copies (wrapdup2, same settings as ours) of every other run's lines: other spellings/splits of the same lines
+        from wrapdup2 import add
+        others = [add(o, ("textit", "textbf", "bi"), 100000, True, True, True) for o in others]
     for o in others:
         for f in formulas(o):
             k = re.sub(r"\s+", "", f)
@@ -36,13 +39,13 @@ def pool(md, others):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("src"); ap.add_argument("dst"); ap.add_argument("--split", default="dev")
-    ap.add_argument("--cands", default="v6,v7,v8,v7c,paddle,v6w1,v7w1,v8w1,v7s,sol61")
+    ap.add_argument("--cands", default="v6,v7,v8,v7c,paddle,v6w1,v7w1,v8w1,v7s,sol61"); ap.add_argument("--wrap-others", action="store_true")
     a = ap.parse_args()
     C = [{(r["document_id"], r["page"]): r["markdown"] for r in map(json.loads, open(FILES[a.split][c], encoding="utf-8"))} for c in a.cands.split(",")]
     n = added = 0
     with open(a.dst, "w", encoding="utf-8") as f:
         for r in map(json.loads, open(a.src, encoding="utf-8")):
-            k = (r["document_id"], r["page"]); new = pool(r["markdown"], [c.get(k, "") for c in C])
+            k = (r["document_id"], r["page"]); new = pool(r["markdown"], [c.get(k, "") for c in C], a.wrap_others)
             if new != r["markdown"]: n += 1; added += len(formulas(new)) - len(formulas(r["markdown"]))
             f.write(json.dumps({**r, "markdown": new}, ensure_ascii=False) + "\n")
     print(f"{a.dst}: {n} pages got extra formula candidates ({added} added)")
