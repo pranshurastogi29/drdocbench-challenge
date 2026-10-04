@@ -20,7 +20,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from PIL import Image
 
-from common import PAGE_SEP, fold, gt_markdown, list_pages, load_env, load_prompt, windows
+from common import PAGE_SEP, fold, gt_markdown, list_pages, load_env, load_prompt, windows as _windows
 from postprocess import is_degenerate, postprocess, strip_sections
 
 
@@ -130,6 +130,18 @@ def report_usage(backend, n_windows, out):
     print("USAGE", json.dumps(summary), file=sys.stderr)
 
 
+OFFSET = 0
+
+
+def windows(pages, n=2):
+    """the window grid, shifted by --offset (the first OFFSET pages form their own window)"""
+    if OFFSET and n > 1 and len(pages) > OFFSET:
+        yield pages[:OFFSET]
+        yield from _windows(pages[OFFSET:], n)
+    else:
+        yield from _windows(pages, n)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--split", default="dev", choices=["dev", "test"])
@@ -139,6 +151,7 @@ def main():
     ap.add_argument("--tag", help="run name (default: prompt name)")
     ap.add_argument("--fold", default="all", choices=["a", "b", "all"], help="dev only: tuning fold / held-out fold")
     ap.add_argument("--window", type=int, default=2)
+    ap.add_argument("--offset", type=int, default=0, help="test-time augmentation: shift the window grid (offset 1 -> first page alone, then pairs 2-3, 4-5, ...)")
     ap.add_argument("--max-side", type=int, default=0, help="resize longest side of each page (0 = keep)")
     ap.add_argument("--reasoning", choices=["low", "medium", "high"], help="OpenRouter reasoning effort")
     ap.add_argument("--temperature", type=float, default=0.0)
@@ -151,8 +164,8 @@ def main():
     args = ap.parse_args()
 
     load_env()
-    global PREPROC
-    PREPROC = args.preprocess
+    global PREPROC, OFFSET
+    PREPROC = args.preprocess; OFFSET = args.offset
     os.makedirs("runs", exist_ok=True)
     out = f"runs/{args.split}_{args.fold if args.split == 'dev' else 'all'}_{args.tag or args.prompt}.jsonl"
     docs = list_pages(args.split)

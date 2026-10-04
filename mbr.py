@@ -41,6 +41,22 @@ def utility(pred_md, ref_md):
     return 0.558 * text + 0.433 * ro
 
 
+def gt_like(pred_md, ref_md):
+    """(text, order) of pred_md scored against ref_md as if it were the reference (official splitting and pairing)"""
+    gt = md_tex_filter(ref_md).get("text_all") or []; pr = md_tex_filter(pred_md).get("text_all") or []
+    if not gt: return None
+    recs = match(gt, pr, "text", "x"); n = d = 0
+    for r in recs:
+        g = r.get("norm_gt") or r.get("gt") or ""; p = r.get("norm_pred") or r.get("pred") or ""
+        if g or p: n += Lev(p, g); d += max(len(p), len(g))
+    text = 100 * (1 - n / d) if d else 100.0
+    m = [(r["gt_position"], r["pred_position"]) for r in recs if r["gt_position"] != [""] and r["pred_position"] != ""]
+    G = sorted(x for x in sum([r["gt_position"] for r in recs if r["gt_position"] != [""]], []) if x)
+    P = [x for x in sum([a for a, _ in sorted(m, key=lambda t: t[1])], []) if x]
+    if not (G or P): return None
+    return text, 100 * (1 - Lev(G, P) / max(len(G), len(P)))
+
+
 def choose(job):
     stem, cands = job
     names = [n for n, md in cands.items() if md.strip()]
