@@ -29,7 +29,8 @@ from xdrop import xdrop
 ROOT = os.path.dirname(os.path.abspath(__file__))
 TEST = {"v6": "runs/test_all_v6.jsonl", "v7": "runs/test_all_v7.jsonl", "v8": "runs/test_all_v8.jsonl",
         "paddle": "runs/paddle_test.jsonl", "v7c": "runs/test_all_v7c_test.jsonl",
-        "v6c": "runs/test_all_v6c_test.jsonl", "v8c": "runs/test_all_v8c_test.jsonl"}
+        "v6c": "runs/test_all_v6c_test.jsonl", "v8c": "runs/test_all_v8c_test.jsonl", "v7s": "runs/test_all_v7_1200.jsonl",
+        "v6w1": "runs/test_all_v6_w1.jsonl", "v7w1": "runs/test_all_v7_w1.jsonl", "v8w1": "runs/test_all_v8_w1.jsonl", "v7cw1": "runs/test_all_v7c_w1.jsonl"}
 CFG = {"medoid4_snap": (["v6", "v7", "v8", "paddle"], False, False),
        "best": (["v6", "v7", "v8", "paddle"], True, False),
        "final5": (["v6", "v7", "v8", "paddle", "v7c"], True, False),
@@ -47,10 +48,21 @@ CFG = {"medoid4_snap": (["v6", "v7", "v8", "paddle"], False, False),
        "final5i": (["v6", "v7", "v8", "paddle", "v7c"], True, False, False, False, False, True),
        "final5i_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True, False, False, False, True),
        "final5ti_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True, True, False, False, True),
+       "final5s": (["v6", "v7", "v8", "paddle", "v7c", "v7s"], True, False),
+       "final5s_wd": (["v6", "v7", "v8", "paddle", "v7c", "v7s"], True, True),
+       "final5a": (["v6", "v7", "v8", "paddle", "v7c", "v7w1"], True, False),
+       "final5a_wd": (["v6", "v7", "v8", "paddle", "v7c", "v7w1"], True, True),
+       "final5b": (["v6w1", "v7w1", "v8w1", "paddle", "v7c"], True, False),
+       "final5b_wd": (["v6w1", "v7w1", "v8w1", "paddle", "v7c"], True, True),
+       "final5c": (["v6", "v7", "v8", "paddle", "v7c", "v6w1", "v7w1", "v8w1"], True, False),
+       "final5c_wd": (["v6", "v7", "v8", "paddle", "v7c", "v6w1", "v7w1", "v8w1"], True, True),
+       "final5d": (["v6w1", "v7w1", "v8w1", "paddle", "v7cw1"], True, False),
+       "final5d_wd": (["v6w1", "v7w1", "v8w1", "paddle", "v7cw1"], True, True),
        "final5x": (["v6", "v7", "v8", "paddle", "v7c"], True, False, False, False, False, False, True),
        "final5x_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True, False, False, False, False, True)}
 DEV = {"v6": "runs/dev_all_full_bunny.jsonl", "v7": "runs/dev_all_v7_final.jsonl", "v8": "runs/dev_all_v8_final.jsonl",
-       "paddle": "runs/paddle_dev.jsonl", "v7c": "runs/dev_all_v7c_final.jsonl", "v6c": "runs/dev_all_v6c_final.jsonl", "v8c": "runs/dev_all_v8c_final.jsonl"}
+       "paddle": "runs/paddle_dev.jsonl", "v7c": "runs/dev_all_v7c_final.jsonl", "v6c": "runs/dev_all_v6c_final.jsonl", "v8c": "runs/dev_all_v8c_final.jsonl", "v7s": "runs/dev_all_v7_1200.jsonl",
+       "v6w1": "runs/dev_all_v6_w1.jsonl", "v7w1": "runs/dev_all_v7_w1.jsonl", "v8w1": "runs/dev_all_v8_w1.jsonl", "v7cw1": "runs/dev_all_v7c_w1.jsonl"}
 TABLE_CROPS_DEV = ["runs/tables_dev_t1.jsonl", "runs/tables_dev_t2.jsonl", "runs/tables_dev_t3.jsonl"]
 SPLIT = "test"      # `--split dev` rebuilds the same pipeline on the dev pages (jsonl out) so it can be scored with the official scorer
 TABLE_CROPS = ["runs/tables_test_t1.jsonl", "runs/tables_test_t2.jsonl", "runs/tables_test_t3.jsonl"]
@@ -65,7 +77,7 @@ def rd(p):
 
 def medoid(texts, names):
     sc = {n: sum(fuzz.ratio(nz(texts[n]), nz(texts[m])) for m in names if m != n) for n in names}
-    return max(names, key=lambda n: (sc[n], n == "v7"))
+    return max(names, key=lambda n: (sc[n], n in ("v7", "v7w1")))
 
 
 def agreement(texts, names):
@@ -82,7 +94,9 @@ def build(name):
         crops = [{st: {i: t for i, t in v} for st, v in load_crops(os.path.join(ROOT, f)).items()} for f in (TABLE_CROPS_DEV if SPLIT == 'dev' else TABLE_CROPS)]
     R = {n: rd((DEV if SPLIT == 'dev' else TEST)[n]) for n in names}
     out = []
-    for k, base in R["v7"].items():
+    ref = next(iter(R.values()))
+    for k in [k for k in ref if all(k in R[n] for n in names)]:
+        base = ref[k]
         t = {n: strip_sections(R[n][k]["markdown"]).strip() for n in names}
         md = t[medoid(t, names)]; stem = f"{k[0]}_{k[1]}"
         s = snap(md, stem, mode="split")
@@ -138,12 +152,12 @@ def zip_rows(path):
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(); ap.add_argument("pipeline", choices=list(CFG)); ap.add_argument("--verify", action="store_true"); ap.add_argument("--split", default="test", choices=["test", "dev"])
+    ap = argparse.ArgumentParser(); ap.add_argument("pipeline", choices=list(CFG)); ap.add_argument("--verify", action="store_true"); ap.add_argument("--split", default="test", choices=["test", "dev"]); ap.add_argument("--partial", action="store_true", help="dev only: candidates cover a sample of pages")
     a = ap.parse_args()
     SPLIT = a.split
     rows = build(a.pipeline)
     want = {(s, d, p) for (s, d), pages in list_pages(a.split).items() for p, _ in pages}
-    assert {(r["subject"], r["document_id"], r["page"]) for r in rows} == want, "page set differs from the test set"
+    assert a.partial or {(r["subject"], r["document_id"], r["page"]) for r in rows} == want, "page set differs from the test set"
     if a.split == "dev":
         dst = os.path.join(ROOT, "runs", f"dev_all_rebuilt_{a.pipeline}.jsonl")
         with open(dst, "w", encoding="utf-8") as f:
