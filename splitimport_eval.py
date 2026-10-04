@@ -22,7 +22,7 @@ def job(a):
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(); ap.add_argument("--runs", required=True); ap.add_argument("--k", type=int, default=1); a = ap.parse_args()
+    ap = argparse.ArgumentParser(); ap.add_argument("--runs", required=True); ap.add_argument("--k", type=int, default=1); ap.add_argument("--pages", help="JSON list of page stems to restrict to"); a = ap.parse_args()
     S = []
     for grp in a.runs.split(","):
         d = {}
@@ -31,6 +31,7 @@ if __name__ == "__main__":
         S.append(d)
     C = json.load(open(os.path.join(ROOT, "runs/selcache_dev.json"))); C = {k: v for k, v in C.items() if all(v["gt"][n] for n in v["gt"])}
     keys = [k for k in sorted(C) if all(k in d for d in S)]; lay = layout_of()
+    if a.pages: keep = set(json.load(open(a.pages))); keys = [k for k in keys if k in keep]
     with Pool(11, initializer=mbr._init) as P: R = dict(P.map(job, [(k, C[k], [d[k] for d in S], a.k) for k in keys], chunksize=4))
     print(f"{len(keys)} of {len(C)} dev pages covered by {a.runs}")
     for grp in ("all", "multi-column", "single/other"):

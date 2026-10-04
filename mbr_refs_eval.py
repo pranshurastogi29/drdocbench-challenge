@@ -12,8 +12,9 @@ from build_submission import medoid
 from postprocess import strip_sections
 from sel_lab import BASE5, FREE, U
 
-EXTRA = {"v10a": ("ab_v10a", "v10a_rest"), "v10b": ("ab_v10b", "v10b_rest"), "v11": ("ab_v11", "v11_rest")}
-REFSETS = {"base5 (current)": BASE5, "free11": FREE, "base5+v10": BASE5 + list(EXTRA), "free11+v10": FREE + list(EXTRA), "v10 only": list(EXTRA)}
+EXTRA = {"v10a": ("ab_v10a", "v10a_rest"), "v10b": ("ab_v10b", "v10b_rest"), "v11": ("ab_v11", "v11_rest"), "v10ac": ("v10ac",), "v10at": ("v10at",), "v10ao": ("v10ao",)}
+V3 = ["v10a", "v10b", "v11"]; V6 = list(EXTRA)
+REFSETS = {"base5 (current)": BASE5, "base5+v10 x3": BASE5 + V3, "base5+v10 x6": BASE5 + V6, "free11+v10 x6": FREE + V6, "v10 x6 only": V6}
 
 
 def job(a):
