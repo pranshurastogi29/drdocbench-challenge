@@ -46,6 +46,9 @@ def prepare(a):
     prompt = load_prompt(a.prompt)
     docs = list_pages(a.split)
     allw = [(s, d, w) for (s, d), pages in docs.items() for w in windows(pages, a.window)]
+    if a.group:    # only the books of one probe group (runs/probe_groups.json, written by build_probes.py)
+        ids = {x["doc"] for x in json.load(open(os.path.join(ROOT, "runs", "probe_groups.json")))[a.group]["docs"]}
+        allw = [w for w in allw if w[1] in ids]
     if a.subset:
         allw = [allw[i] for i in sorted(random.Random(0).sample(range(len(allw)), min(a.subset, len(allw))))]
     reqs, meta = [], {}
@@ -163,7 +166,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(); sp = ap.add_subparsers(dest="cmd", required=True)
     p = sp.add_parser("prepare"); p.add_argument("--split", default="test", choices=["dev", "test"]); p.add_argument("--model", required=True)
     p.add_argument("--prompt", default="v7"); p.add_argument("--variant", default="plain", choices=["plain", "contrast"]); p.add_argument("--window", type=int, default=2)
-    p.add_argument("--reasoning", choices=["low", "medium", "high"]); p.add_argument("--max-tokens", type=int, default=32000); p.add_argument("--subset", type=int)
+    p.add_argument("--reasoning", choices=["low", "medium", "high"]); p.add_argument("--max-tokens", type=int, default=32000); p.add_argument("--subset", type=int); p.add_argument("--group", choices=["G1", "G2", "G3", "G4"])
     p.add_argument("--dry", action="store_true")
     for c in ("prepare", "submit", "poll", "collect", "live"):
         q = p if c == "prepare" else sp.add_parser(c); q.add_argument("--tag", required=True)
