@@ -67,6 +67,8 @@ CFG = {"medoid4_snap": (["v6", "v7", "v8", "paddle"], False, False),
        "final5g_wd": (["v6", "v7", "v8", "paddle", "v7c", "v6w1", "v7w1", "v8w1", "v7sw1", "v5w1"], True, True),
        "final5h": (["v6", "v7", "v8", "paddle", "v7c", "v6w1", "v7w1", "v8w1", "v7tw1"], True, False),
        "final5h_wd": (["v6", "v7", "v8", "paddle", "v7c", "v6w1", "v7w1", "v8w1", "v7tw1"], True, True),
+       "final5m": (["v6", "v7", "v8", "paddle", "v7c"], True, False, False, False, False, False, False, True),
+       "final5m_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True, False, False, False, False, False, True),
        "final5x": (["v6", "v7", "v8", "paddle", "v7c"], True, False, False, False, False, False, True),
        "final5x_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True, False, False, False, False, True)}
 DEV = {"v6": "runs/dev_all_full_bunny.jsonl", "v7": "runs/dev_all_v7_final.jsonl", "v8": "runs/dev_all_v8_final.jsonl",
@@ -97,7 +99,8 @@ def agreement(texts, names):
 
 def build(name):
     names, tables, wrap, *rest = CFG[name]; tv = bool(rest and rest[0]); cl = bool(len(rest) > 1 and rest[1]); rp = bool(len(rest) > 2 and rest[2])
-    ix = bool(len(rest) > 3 and rest[3]); xd = bool(len(rest) > 4 and rest[4])
+    ix = bool(len(rest) > 3 and rest[3]); xd = bool(len(rest) > 4 and rest[4]); mb = bool(len(rest) > 5 and rest[5])
+    MBR = json.load(open(os.path.join(ROOT, "runs", f"mbr_choice_{SPLIT}.json"))) if mb else {}   # mbr.py: candidate chosen with the official metric
     if tv:      # table vote: needs the scorer checkout (its table normaliser) and the crop-pass outputs
         from table_merge import load_crops
         from table_vote import vote_page
@@ -108,7 +111,7 @@ def build(name):
     for k in [k for k in ref if all(k in R[n] for n in names)]:
         base = ref[k]
         t = {n: strip_sections(R[n][k]["markdown"]).strip() for n in names}
-        md = t[medoid(t, names)]; stem = f"{k[0]}_{k[1]}"
+        stem = f"{k[0]}_{k[1]}"; md = t[MBR[stem]] if mb and MBR.get(stem) in t else t[medoid(t, names)]
         s = snap(md, stem, mode="split")
         if para(s) - para(md) > MAX_ADD:      # heavy re-splits are a coin flip on dev: leave those pages alone
             s = md
