@@ -1,0 +1,26 @@
+full dev: 925 pages, 66 books; every row has the same downstream rules + furniture merge
+
+== single models ==
+v6w1                   overall 87.08  text 88.77  order 85.38  vs medoid5 +0.08 [-0.62,+0.79]  better/worse 162/204
+v8w1                   overall 87.07  text 88.24  order 85.89  vs medoid5 +0.07 [-0.73,+0.84]  better/worse 169/197
+v7w1                   overall 87.00  text 88.21  order 85.79  vs medoid5 +0.00 [-0.67,+0.68]  better/worse 159/199
+v8c                    overall 86.00  text 87.77  order 84.23  vs medoid5 -1.00 [-1.77,-0.23]  better/worse 163/221
+v7c                    overall 85.83  text 86.90  order 84.77  vs medoid5 -1.16 [-1.93,-0.45]  better/worse 112/199
+v8                     overall 85.81  text 87.21  order 84.41  vs medoid5 -1.19 [-2.02,-0.42]  better/worse 117/185
+v7                     overall 85.44  text 86.44  order 84.43  vs medoid5 -1.56 [-2.23,-0.96]  better/worse 94/176
+v7s                    overall 85.20  text 86.45  order 83.95  vs medoid5 -1.80 [-2.62,-1.00]  better/worse 134/277
+v6c                    overall 84.88  text 86.86  order 82.90  vs medoid5 -2.12 [-3.02,-1.30]  better/worse 149/257
+v6                     overall 84.62  text 86.61  order 82.62  vs medoid5 -2.38 [-3.27,-1.53]  better/worse 98/241
+paddle                 overall 82.22  text 85.28  order 79.15  vs medoid5 -4.78 [-6.01,-3.56]  better/worse 177/345
+
+== selectors ==
+medoid5                overall 87.00  text 87.96  order 86.04  vs medoid5 +0.00 [+0.00,+0.00]  better/worse 0/0
+mbr:base5              overall 88.16  text 88.38  order 87.94  vs medoid5 +1.16 [+0.60,+1.73]  better/worse 126/119
+oracle:base5           overall 91.83  text 92.58  order 91.07  vs medoid5 +4.83 [+4.19,+5.49]  better/worse 319/1
+mbr:free11             overall 88.50  text 89.15  order 87.84  vs medoid5 +1.50 [+0.89,+2.11]  better/worse 165/136
+oracle:free11          overall 92.93  text 93.55  order 92.32  vs medoid5 +5.94 [+5.20,+6.68]  better/worse 367/1
+
+== what each consensus picks (pages) ==
+medoid5                v7 337, v8 212, v6 212, v7c 141, paddle 23
+mbr:base5              v7 380, v8 171, v6 165, v7c 151, paddle 58
+mbr:free11             v7 284, v7c 107, v6 105, v8 99, v8w1 60, v8c 58, v6c 54, v6w1 53, v7w1 41, paddle 36, v7s 28

@@ -1,0 +1,40 @@
+sample (paid models included): 74 pages, 35 books; every row has the same downstream rules + furniture merge
+
+== single models ==
+sol61                  overall 87.69  text 87.31  order 88.06  vs medoid5 +0.02 [-1.83,+1.95]  better/worse 13/17
+v7c                    overall 87.15  text 86.85  order 87.46  vs medoid5 -0.52 [-1.63,+0.52]  better/worse 7/15
+v6w1                   overall 87.08  text 86.46  order 87.71  vs medoid5 -0.59 [-2.18,+1.04]  better/worse 10/18
+v7w1                   overall 86.76  text 86.86  order 86.66  vs medoid5 -0.91 [-2.27,+0.30]  better/worse 11/16
+v8                     overall 86.50  text 86.23  order 86.76  vs medoid5 -1.17 [-3.47,+0.96]  better/worse 10/14
+solpro                 overall 86.35  text 86.50  order 86.19  vs medoid5 -1.32 [-3.59,+0.95]  better/worse 13/14
+v8w1                   overall 86.07  text 85.00  order 87.13  vs medoid5 -1.60 [-3.81,+0.55]  better/worse 14/20
+v8c                    overall 85.52  text 85.16  order 85.87  vs medoid5 -2.15 [-4.69,+0.19]  better/worse 14/21
+v7                     overall 85.45  text 86.33  order 84.56  vs medoid5 -2.22 [-4.10,-0.59]  better/worse 6/18
+v6                     overall 85.43  text 86.58  order 84.29  vs medoid5 -2.24 [-3.83,-0.86]  better/worse 4/22
+v7s                    overall 84.95  text 85.35  order 84.56  vs medoid5 -2.72 [-4.23,-1.27]  better/worse 6/24
+v6c                    overall 83.72  text 84.26  order 83.18  vs medoid5 -3.95 [-8.15,-0.56]  better/worse 14/27
+deepseek               overall 81.41  text 82.46  order 80.37  vs medoid5 -6.26 [-10.72,-2.52]  better/worse 10/26
+paddle                 overall 81.01  text 81.49  order 80.53  vs medoid5 -6.66 [-10.47,-3.08]  better/worse 11/34
+glm                    overall 79.98  text 81.02  order 78.93  vs medoid5 -7.69 [-12.49,-3.62]  better/worse 11/38
+mimo                   overall 79.41  text 80.00  order 78.82  vs medoid5 -8.26 [-13.57,-3.77]  better/worse 7/30
+
+== selectors ==
+medoid5                overall 87.67  text 87.45  order 87.89  vs medoid5 +0.00 [+0.00,+0.00]  better/worse 0/0
+mbr:base5              overall 87.51  text 87.08  order 87.93  vs medoid5 -0.16 [-0.95,+0.63]  better/worse 6/12
+oracle:base5           overall 91.13  text 90.24  order 92.01  vs medoid5 +3.46 [+1.82,+5.38]  better/worse 25/0
+mbr:free11             overall 87.54  text 87.06  order 88.02  vs medoid5 -0.13 [-1.41,+1.14]  better/worse 9/12
+oracle:free11          overall 91.84  text 91.39  order 92.28  vs medoid5 +4.16 [+2.39,+6.18]  better/worse 28/0
+mbr:base5+sol          overall 88.10  text 87.09  order 89.11  vs medoid5 +0.43 [-0.54,+1.56]  better/worse 10/11
+oracle:base5+sol       overall 91.65  text 90.62  order 92.69  vs medoid5 +3.98 [+2.15,+6.04]  better/worse 26/0
+mbr:free11+sol         overall 87.54  text 87.12  order 87.96  vs medoid5 -0.13 [-1.45,+1.15]  better/worse 10/14
+oracle:free11+sol      overall 92.05  text 91.42  order 92.67  vs medoid5 +4.38 [+2.51,+6.45]  better/worse 28/0
+mbr:all16              overall 88.01  text 87.07  order 88.95  vs medoid5 +0.34 [-0.73,+1.46]  better/worse 13/13
+oracle:all16           overall 92.99  text 92.59  order 93.39  vs medoid5 +5.32 [+3.32,+7.52]  better/worse 32/0
+
+== what each consensus picks (pages) ==
+medoid5                v7 29, v8 20, v6 14, v7c 11
+mbr:base5              v7 32, v6 16, v7c 12, v8 9, paddle 5
+mbr:free11             v7 24, v7c 10, v8w1 9, v6 8, v7s 6, v8 5, v8c 4, v6w1 3, paddle 2, v7w1 2, v6c 1
+mbr:base5+sol          v7 29, sol61 11, v6 9, v7c 9, v8 8, paddle 4, solpro 4
+mbr:free11+sol         v7 23, v7c 11, v8w1 8, v8 7, v6 5, sol61 4, v8c 4, v7s 3, v6w1 3, paddle 2, v7w1 2, solpro 2
+mbr:all16              v7 11, glm 10, v7c 9, deepseek 8, mimo 7, v8w1 5, v6 4, sol61 4, v8c 4, v7s 3, solpro 3, paddle 2, v8 2, v6w1 1, v7w1 1
