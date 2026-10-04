@@ -10,10 +10,10 @@ from table_merge import load_crops
 TAB = re.compile(r"<table\b.*?</table>", re.S | re.I)
 RUNS = {"dev": ["runs/dev_all_full_bunny.jsonl", "runs/dev_all_v7_final.jsonl", "runs/dev_all_v8_final.jsonl", "runs/dev_all_v7c_final.jsonl",
                 "runs/dev_all_v6_w1.jsonl", "runs/dev_all_v7_w1.jsonl", "runs/dev_all_v8_w1.jsonl", "runs/dev_all_v7_1200.jsonl",
-                "runs/paddle_dev.jsonl", "runs/mineru_dev.jsonl"],
+                "runs/paddle_dev.jsonl", "runs/mineru_dev.jsonl", "runs/dev_all_live_sol61.jsonl"],
         "test": ["runs/test_all_v6.jsonl", "runs/test_all_v7.jsonl", "runs/test_all_v8.jsonl", "runs/test_all_v7c_test.jsonl",
                  "runs/test_all_v6_w1.jsonl", "runs/test_all_v7_w1.jsonl", "runs/test_all_v8_w1.jsonl", "runs/test_all_v7_1200.jsonl",
-                 "runs/paddle_test.jsonl", "runs/mineru_test.jsonl"]}
+                 "runs/paddle_test.jsonl", "runs/mineru_test.jsonl", "runs/test_all_ab_g2_sol61.jsonl"]}   # last: gpt-6.1-sol-pro (G2 pages)
 CROPS = {"dev": ["runs/tables_dev_t1.jsonl", "runs/tables_dev_t2.jsonl", "runs/tables_dev_t3.jsonl"],
          "test": ["runs/tables_test_t1.jsonl", "runs/tables_test_t2.jsonl", "runs/tables_test_t3.jsonl"]}
 K = lambda t: re.sub(r"\s+", "", t)
