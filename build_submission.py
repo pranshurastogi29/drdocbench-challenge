@@ -65,6 +65,8 @@ CFG = {"medoid4_snap": (["v6", "v7", "v8", "paddle"], False, False),
        "final5f_wd": (["v6", "v7", "v8", "paddle", "v7c", "v6w1", "v7w1", "v8w1", "v5w1"], True, True),
        "final5g": (["v6", "v7", "v8", "paddle", "v7c", "v6w1", "v7w1", "v8w1", "v7sw1", "v5w1"], True, False),
        "final5g_wd": (["v6", "v7", "v8", "paddle", "v7c", "v6w1", "v7w1", "v8w1", "v7sw1", "v5w1"], True, True),
+       "final5h": (["v6", "v7", "v8", "paddle", "v7c", "v6w1", "v7w1", "v8w1", "v7tw1"], True, False),
+       "final5h_wd": (["v6", "v7", "v8", "paddle", "v7c", "v6w1", "v7w1", "v8w1", "v7tw1"], True, True),
        "final5x": (["v6", "v7", "v8", "paddle", "v7c"], True, False, False, False, False, False, True),
        "final5x_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True, False, False, False, False, True)}
 DEV = {"v6": "runs/dev_all_full_bunny.jsonl", "v7": "runs/dev_all_v7_final.jsonl", "v8": "runs/dev_all_v8_final.jsonl",
