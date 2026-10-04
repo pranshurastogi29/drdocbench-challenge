@@ -44,7 +44,7 @@ def find_span(needle, hay):
     return (min(a.score, b.score), a.dest_start, b.dest_end)
 
 
-def snap(md, stem, mode="both"):
+def snap(md, stem, mode="both", ws=False):
     btxt = block_texts(stem)
     paras = [p.strip() for p in re.split(r"\n\s*\n", md.strip()) if p.strip()]
     if not btxt or len(paras) < 1:
@@ -89,9 +89,19 @@ def snap(md, stem, mode="both"):
         if len(keep) < 2 or mode == "merge":
             out.append(p); continue
         cuts = [0] + [(keep[i][1] + keep[i + 1][0]) // 2 for i in range(len(keep) - 1)] + [len(p)]
+        if ws:      # move each inner cut to the nearest line break (else space) within 40 chars, so a cut never lands inside a word
+            cuts = [cuts[0]] + [ws_cut(p, c) for c in cuts[1:-1]] + [cuts[-1]]
         pieces = [p[cuts[i]:cuts[i + 1]].strip() for i in range(len(cuts) - 1)]
         out.extend(x for x in pieces if x)
     return "\n\n".join(out)
+
+
+def ws_cut(p, c, win=40):
+    for ch in ("\n", " "):
+        cand = [i for i in range(max(1, c - win), min(len(p), c + win + 1)) if p[i - 1] == ch or p[i] == ch]
+        if cand:
+            return min(cand, key=lambda i: abs(i - c))
+    return c
 
 
 def n_paddle(stem):
