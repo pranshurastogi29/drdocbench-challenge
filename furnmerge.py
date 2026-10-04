@@ -25,27 +25,23 @@ def is_furniture(p, fur):
 
 
 def merge_tail(md, max_tail=3, maxlen=80, fur=None):
+    """Works on positions: only the trailing body paragraphs are touched (an identical line elsewhere on the page stays)."""
     paras = [p.strip() for p in re.split(r"\n\s*\n", md.strip()) if p.strip()]
-    body = [p for p in paras if not (p.startswith("$") and p.endswith("$")) and not p.startswith("<table")]
-    if len(body) < 3:
+    body_idx = [i for i, p in enumerate(paras) if not (p.startswith("$") and p.endswith("$")) and not p.startswith("<table")]
+    if len(body_idx) < 3:
         return md
     tail = []
-    for p in reversed(body):
+    for i in reversed(body_idx):
+        p = paras[i]
         if len(tail) < max_tail and "\n" not in p and 1 <= N(p) <= maxlen and not p.startswith("#") and (fur is None or is_furniture(p, fur)):
-            tail.append(p)
+            tail.append(i)
         else:
             break
     if len(tail) < 2:
         return md
-    tail = tail[::-1]; tset = set(tail)
-    out, done = [], False
-    for p in paras:
-        if p in tset and not done:
-            out.append("\n".join(tail)); done = True
-        elif p in tset:
-            continue
-        else:
-            out.append(p)
+    tail = tail[::-1]
+    merged = "\n".join(paras[i] for i in tail)
+    out = [merged if i == tail[0] else p for i, p in enumerate(paras) if i == tail[0] or i not in tail]
     return "\n\n".join(out)
 
 
