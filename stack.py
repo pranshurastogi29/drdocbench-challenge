@@ -54,9 +54,22 @@ def base_rows(split, sel, rules):
 def build(split, steps, tmp):
     st = dict(s.split("=") if "=" in s else (s, "1") for s in steps.split(","))
     rows = base_rows(split, st.get("sel", "mbr"), "rules" in st)
+    if st.get("chan", "").startswith("mathu"):   # unwrap our own wrapper-only formula blocks into plain text before the pools are added
+        INNER = re.compile(r"\\text(?:bf|it|rm)?\{([^{}$]*)\}")
+        WR1 = re.compile(r"^(\$\$?|\\\[)\s*(\\begin\{array\}\{l\}\s*)?((\{?\\text(bf|it|rm)?\{[^{}$]*\}\}?|\\textbf\{\\textit\{[^{}$]*\}\})\s*(\\\\)?\s*)+(\\end\{array\})?\s*(\$\$?|\\\])$", re.S)
+        for r in rows:
+            ps = re.split(r"\n\s*\n", r["markdown"])
+            r["markdown"] = "\n\n".join(" ".join(INNER.findall(x.replace("\\textbf{\\textit{", "\\textit{"))) if WR1.match(x.strip()) and INNER.findall(x) else x for x in ps)
+    if "sm" in st:   # snap MERGE pass: join our consecutive paragraphs that together make up one PaddleOCR-VL layout block (end2end references are layout boxes)
+        from snap import snap
+        for r in rows: r["markdown"] = snap(r["markdown"], f'{r["document_id"]}_{r["page"]}', mode="merge")
+    if "lm" in st:   # list merge: runs of >= RUN short paragraphs joined into one block (end2end references keep a list / clue column / bibliography as one layout box)
+        from listmerge import merge as lmerge
+        run_, ml = {"1": (6, 80), "4": (4, 80), "3": (3, 100), "6": (6, 120)}.get(st["lm"], (6, 80))
+        for r in rows: r["markdown"] = lmerge(r["markdown"], min_run=run_, max_len=ml, min_total=300)
     p = os.path.join(tmp, "s0.jsonl"); write(rows, p)
     if "chan" in st:
-        v = st["chan"]; sol = v == "1" or v.endswith("S"); v = v[:-1] if v.endswith("S") else v   # suffix S: also sol-6.1 wrapper copies (G2 pages)
+        v = st["chan"]; v = "pools" if v.startswith("math") else v; sol = v == "1" or v.endswith("S"); v = v[:-1] if v.endswith("S") else v   # suffix S: also sol-6.1 wrapper copies (G2 pages)
         # 1 = the 82.88 channel; inter = same copies placed right after each line; short = grouped, lines <= 60; wd = textit, <= 60, after each line; pools = no wrapper copies
         wargs = {"1": ["--styles", "textit,textbf,bi", "--maxlen", "100000", "--lines", "--grouped", "--numbers"],
                  "inter": ["--styles", "textit,textbf,bi", "--maxlen", "100000", "--lines", "--numbers"],
@@ -69,6 +82,15 @@ def build(split, steps, tmp):
         if sol: run("formula_pool.py", p + ".2", p + ".3", "--split", split, "--cands", "sol61", "--wrap-others")   # sol-6.1 wrapper copies
         else: run("formula_pool.py", p + ".2", p + ".3", "--split", split, "--cands", "sol61")
         run("table_pool.py", p + ".3", p + ".4", "--split", split); p = p + ".4"
+    if "chan" in st and st["chan"].startswith("math"):   # keep only formula blocks that look like real math; drop wrapper-only ones (\\textbf{..} / \\textit{..} / \\text{..} around plain words)
+        rows_ = rows_of(p)
+        WRAP = re.compile(r"^(\$\$?|\\\[)\s*(\\begin\{array\}\{l\}\s*)?((\{?\\text(bf|it|rm)?\{[^{}$]*\}\}?|\\textbf\{\\textit\{[^{}$]*\}\})\s*(\\\\)?\s*)+(\\end\{array\})?\s*(\$\$?|\\\])$", re.S)
+        MATH = re.compile(r"[\^_=+<>]|\\(frac|sum|int|sqrt|alpha|beta|gamma|delta|theta|lambda|mu|pi|sigma|omega|times|cdot|le|ge|neq|infty|partial|mathrm|mathbf|left|right)\b")
+        for r in rows_:
+            ps = re.split(r"\n\s*\n", r["markdown"])
+            keep = [x for x in ps if not ((x.strip().startswith("$") or x.strip().startswith("\\[")) and (WRAP.match(x.strip()) or not MATH.search(x)))]
+            r["markdown"] = "\n\n".join(keep)
+        write(rows_, p + ".m"); p = p + ".m"
     if "fm" in st:
         run("furnmerge.py", p, p + ".fm", "--max-tail", "2", "--maxlen", "60", "--paddle-check"); p = p + ".fm"
     rows = rows_of(p)
@@ -91,6 +113,17 @@ def build(split, steps, tmp):
             if s in C and s in pick:
                 new, _, sp = bvote(r["markdown"], [C[s]["proc"][c] for c in FREE if c != pick[s]], k=5, do_merge=False)
                 if sp: r["markdown"] = new
+    if "am" in st:   # add paragraphs our page lacks but >= K other base5 runs have (addmiss.py); end2end drops unpaired text of ours, so extras are free
+        from addmiss import add_missing
+        from postprocess import strip_sections
+        import build_submission as bs
+        files = bs.TEST if split == "test" else bs.DEV; names = ["v6", "v7", "v8", "paddle", "v7c"]
+        RR = {n: {f'{r["document_id"]}_{r["page"]}': strip_sections(r["markdown"]).strip() for r in map(json.loads, open(os.path.join(ROOT, files[n])))} for n in names}
+        pick = json.load(open(os.path.join(ROOT, f"runs/mbr_choice_{split}.json"))); kk = int(st["am"]) if st["am"] != "1" else 2
+        for r in rows:
+            s_ = f'{r["document_id"]}_{r["page"]}'; pk = pick.get(s_, "v7")
+            new, added = add_missing(r["markdown"], [RR[n].get(s_, "") for n in names if n != pk], k=kk)
+            if added: r["markdown"] = new
     if "ac" in st:
         from artclean import artclean, cjk_glitch
         for r in rows: r["markdown"] = cjk_glitch(artclean(r["markdown"], supsub=True))
