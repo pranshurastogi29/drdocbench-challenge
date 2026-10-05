@@ -68,7 +68,14 @@ def page_scores(stem, md, split="dev", sample=None):
         if len(g) or len(p): num += Lev(p, g); den += max(len(p), len(g))
     t = 100 * (1 - num / den) if den else None
     o = 100 * (1 - order["edit"]) if order else None
-    return t, o, len(items)
+    # formula proxy (stands in for CDM): reference formulas matched by our formula blocks (or unmatched), 1 - edit distance on the normalised strings
+    fn = fd = 0
+    for it in formula:
+        if it.get("pred_category_type") in ("equation_inline", "equation_isolated", ""):
+            g = it.get("norm_gt") or it.get("gt") or ""; p = it.get("norm_pred") or it.get("pred") or ""
+            if len(g) or len(p): fn += Lev(p, g); fd += max(len(p), len(g))
+    f = 100 * (1 - fn / fd) if fd else None
+    return t, o, len(items), f
 
 
 def _job(a):

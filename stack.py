@@ -1,0 +1,124 @@
+"""The submission stack as switchable steps, for dev ablations under the end2end scorer (e2e_eval.py) and exact test rebuilds.
+
+Order (= submission_final5m_fc10t_fm_sd_bv_ac.zip, leaderboard 82.88):
+  sel   : MBR pick over base5 (runs/mbr_choice_<split>.json) or medoid5         -> raw page
+  rules : split-snap to Paddle blocks (cap 9 new paragraphs) + Paddle tables where none (build_submission final5/final5m)
+  chan  : formula channel (wrapdup2 textit/textbf/bi, any length, lines, grouped, numbers) + formula pool + sol-6.1 wrapper copies + table pool
+  fm    : furniture merge (furnmerge --max-tail 2 --maxlen 60 --paddle-check)
+  sd    : spill drop (one-page runs v6w1/v7w1/v8w1)
+  bv    : boundary splits (bvote split-only, k=5 of the 10 other free candidates, processed)
+  ac    : markup-artifact cleanup (artclean + CJK glitch)
+  si    : split import (>= 2 of v10a/v10b/v11)
+  python stack.py --split test --verify          (rebuild the 82.88 zip and compare)
+  python stack.py --split dev --steps sel=mbr,rules,chan,fm,sd,bv,ac --out runs/dev_stack_full.jsonl
+"""
+import argparse, json, os, re, subprocess, sys, tempfile
+ROOT = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, ROOT)
+PY = os.path.join(ROOT, ".venv/bin/python")
+FULL = "sel=mbr,rules,chan,fm,sd,bv,ac"
+
+
+def rows_of(path):
+    return [json.loads(l) for l in open(path, encoding="utf-8")]
+
+
+def write(rows, path):
+    with open(path, "w", encoding="utf-8") as f:
+        for r in rows: f.write(json.dumps(r, ensure_ascii=False) + "\n")
+
+
+def run(*args):
+    subprocess.run([PY, *args], cwd=ROOT, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+
+def base_rows(split, sel, rules):
+    """selection (+ rules) via build_submission; without rules: the selected candidate's raw page"""
+    import build_submission as bs
+    bs.SPLIT = split
+    if rules:
+        rows = bs.build("final5m" if sel == "mbr" else "final5")
+    else:
+        from postprocess import strip_sections
+        files = bs.DEV if split == "dev" else bs.TEST; names = ["v6", "v7", "v8", "paddle", "v7c"]
+        R = {n: bs.rd(files[n]) for n in names}; MBR = json.load(open(os.path.join(ROOT, "runs", f"mbr_choice_{split}.json")))
+        rows = []
+        for k in R["v7"]:
+            if not all(k in R[n] for n in names): continue
+            t = {n: strip_sections(R[n][k]["markdown"]).strip() for n in names}; stem = f"{k[0]}_{k[1]}"
+            p = MBR.get(stem) if sel == "mbr" and MBR.get(stem) in t else bs.medoid(t, names)
+            rows.append({"subject": R["v7"][k]["subject"], "document_id": k[0], "page": k[1], "markdown": t[p]})
+        rows.sort(key=lambda r: (r["subject"], r["document_id"], r["page"]))
+    return rows
+
+
+def build(split, steps, tmp):
+    st = dict(s.split("=") if "=" in s else (s, "1") for s in steps.split(","))
+    rows = base_rows(split, st.get("sel", "mbr"), "rules" in st)
+    p = os.path.join(tmp, "s0.jsonl"); write(rows, p)
+    if "chan" in st:
+        v = st["chan"]; sol = v == "1" or v.endswith("S"); v = v[:-1] if v.endswith("S") else v   # suffix S: also sol-6.1 wrapper copies (G2 pages)
+        # 1 = the 82.88 channel; inter = same copies placed right after each line; short = grouped, lines <= 60; wd = textit, <= 60, after each line; pools = no wrapper copies
+        wargs = {"1": ["--styles", "textit,textbf,bi", "--maxlen", "100000", "--lines", "--grouped", "--numbers"],
+                 "inter": ["--styles", "textit,textbf,bi", "--maxlen", "100000", "--lines", "--numbers"],
+                 "short": ["--styles", "textit,textbf,bi", "--maxlen", "60", "--lines", "--grouped", "--numbers"],
+                 "wd": ["--styles", "textit", "--maxlen", "60"],
+                 "inter1": ["--styles", "textit", "--maxlen", "100000", "--lines", "--numbers"]}.get(v)
+        if wargs: run("wrapdup2.py", p, p + ".1", *wargs)
+        else: run("formula_pool.py", p, p + ".1", "--split", split, "--cands", "v7")   # no copies: identity pass (pools follow)
+        run("formula_pool.py", p + ".1", p + ".2", "--split", split)
+        if sol: run("formula_pool.py", p + ".2", p + ".3", "--split", split, "--cands", "sol61", "--wrap-others")   # sol-6.1 wrapper copies
+        else: run("formula_pool.py", p + ".2", p + ".3", "--split", split, "--cands", "sol61")
+        run("table_pool.py", p + ".3", p + ".4", "--split", split); p = p + ".4"
+    if "fm" in st:
+        run("furnmerge.py", p, p + ".fm", "--max-tail", "2", "--maxlen", "60", "--paddle-check"); p = p + ".fm"
+    rows = rows_of(p)
+    if "sd" in st:
+        from spilldrop import spilldrop
+        import build_submission as bs
+        files = bs.TEST if split == "test" else bs.DEV
+        R1 = {n: {f'{r["document_id"]}_{r["page"]}': r["markdown"] for r in map(json.loads, open(os.path.join(ROOT, files[n])))} for n in ("v6w1", "v7w1", "v8w1")}
+        w1 = lambda s: [R1[n].get(s, "") for n in R1]
+        for r in rows:
+            nbs = [w1(f'{r["document_id"]}_{r["page"] + d}') for d in (-1, 1)]
+            md, dropped = spilldrop(r["markdown"], w1(f'{r["document_id"]}_{r["page"]}'), [x for x in nbs if any(x)])
+            r["markdown"] = md
+    if "bv" in st:
+        from bvote import bvote
+        from sel_lab import FREE
+        C = json.load(open(os.path.join(ROOT, f"runs/selcache_{split}.json"))); pick = json.load(open(os.path.join(ROOT, f"runs/mbr_choice_{split}.json")))
+        for r in rows:
+            s = f'{r["document_id"]}_{r["page"]}'
+            if s in C and s in pick:
+                new, _, sp = bvote(r["markdown"], [C[s]["proc"][c] for c in FREE if c != pick[s]], k=5, do_merge=False)
+                if sp: r["markdown"] = new
+    if "ac" in st:
+        from artclean import artclean, cjk_glitch
+        for r in rows: r["markdown"] = cjk_glitch(artclean(r["markdown"], supsub=True))
+    if "si" in st:
+        from bvote import bvote
+        from postprocess import strip_sections
+        tags = {"dev": (("ab_v10a", "v10a_rest"), ("ab_v10b", "v10b_rest"), ("ab_v11", "v11_rest")), "test": (("v10a",), ("v10b",), ("v11",))}[split]
+        S = []
+        for grp in tags:
+            d = {}
+            for t in grp: d.update({f'{r["document_id"]}_{r["page"]}': strip_sections(r["markdown"]).strip() for r in map(json.loads, open(os.path.join(ROOT, f"runs/{split}_all_{t}.jsonl")))})
+            S.append(d)
+        for r in rows:
+            s = f'{r["document_id"]}_{r["page"]}'; src = [d[s] for d in S if s in d]
+            if src:
+                new, _, sp = bvote(r["markdown"], src, k=2, do_merge=False, long_only=False)
+                if sp: r["markdown"] = new
+    return rows
+
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser(); ap.add_argument("--split", default="dev"); ap.add_argument("--steps", default=FULL); ap.add_argument("--out"); ap.add_argument("--verify", action="store_true")
+    a = ap.parse_args()
+    with tempfile.TemporaryDirectory() as tmp:
+        rows = build(a.split, a.steps, tmp)
+    if a.out: write(rows, a.out); print(f"{a.out}: {len(rows)} pages ({a.steps})")
+    if a.verify:
+        from build_submission import zip_rows
+        ref = {(r["document_id"], r["page"]): r for r in zip_rows(os.path.join(ROOT, "submissions/submission_final5m_fc10t_fm_sd_bv_ac.zip"))}
+        same = sum(ref.get((r["document_id"], r["page"])) == r for r in rows)
+        print(f"identical to submission_final5m_fc10t_fm_sd_bv_ac.zip (82.88) on {same}/{len(ref)} pages")
