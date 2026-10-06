@@ -149,6 +149,14 @@ def build(split, steps, tmp):
             s_ = f'{r["document_id"]}_{r["page"]}'; pk = pick.get(s_, "v7")
             new, added = add_missing(r["markdown"], [RR[n].get(s_, "") for n in names if n != pk], k=kk)
             if added: r["markdown"] = new
+    if "dd" in st:   # de-duplicate: a long paragraph (>= 40 chars) that appears again on the same page is kept once (the model sometimes transcribes a passage twice)
+        for r in rows:
+            seen, keep = set(), []
+            for q in re.split(r"\n\s*\n", r["markdown"]):
+                k = q.strip()
+                if len(k) >= 40 and not k.startswith("$") and not k.startswith("<table") and k in seen: continue
+                seen.add(k); keep.append(q)
+            r["markdown"] = "\n\n".join(keep)
     if "ac" in st:
         from artclean import artclean, cjk_glitch
         for r in rows: r["markdown"] = cjk_glitch(artclean(r["markdown"], supsub=True))
