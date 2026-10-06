@@ -10,12 +10,14 @@ FILES = {"dev": {"v6": "runs/dev_all_full_bunny.jsonl", "v7": "runs/dev_all_v7_f
                  "v7s": "runs/dev_all_v7_1200.jsonl", "sol61": "runs/dev_all_live_sol61.jsonl",
                  "v10a": ["runs/dev_all_ab_v10a.jsonl", "runs/dev_all_v10a_rest.jsonl"], "v10b": ["runs/dev_all_ab_v10b.jsonl", "runs/dev_all_v10b_rest.jsonl"],
                  "v11": ["runs/dev_all_ab_v11.jsonl", "runs/dev_all_v11_rest.jsonl"], "v10ac": "runs/dev_all_v10ac.jsonl", "v10at": "runs/dev_all_v10at.jsonl",
-                 "v10ao": "runs/dev_all_v10ao.jsonl", "mineru": "runs/mineru_dev.jsonl"},
+                 "v10ao": "runs/dev_all_v10ao.jsonl", "mineru": "runs/mineru_dev.jsonl", "v6c": "runs/dev_all_v6c_final.jsonl", "v8c": "runs/dev_all_v8c_final.jsonl",
+                 "v7cw1": "runs/dev_all_v7c_w1.jsonl", "v7sw1": "runs/dev_all_v7sw1.jsonl", "v5w1": "runs/dev_all_v5w1.jsonl", "v7tw1": "runs/dev_all_v7tw1.jsonl"},
          "test": {"v6": "runs/test_all_v6.jsonl", "v7": "runs/test_all_v7.jsonl", "v8": "runs/test_all_v8.jsonl", "v7c": "runs/test_all_v7c_test.jsonl",
                   "paddle": "runs/paddle_test.jsonl", "v6w1": "runs/test_all_v6_w1.jsonl", "v7w1": "runs/test_all_v7_w1.jsonl", "v8w1": "runs/test_all_v8_w1.jsonl",
                   "v7s": "runs/test_all_v7_1200.jsonl", "sol61": "runs/test_all_ab_g2_sol61.jsonl",
                   "v10a": "runs/test_all_v10a.jsonl", "v10b": "runs/test_all_v10b.jsonl", "v11": "runs/test_all_v11.jsonl", "v10ac": "runs/test_all_v10ac.jsonl",
-                  "v10at": "runs/test_all_v10at.jsonl", "v10ao": "runs/test_all_v10ao.jsonl", "mineru": "runs/mineru_test.jsonl"}}   # sol61: gpt-6.1-sol-pro, 89 dev / 120 test (G2) pages
+                  "v10at": "runs/test_all_v10at.jsonl", "v10ao": "runs/test_all_v10ao.jsonl", "mineru": "runs/mineru_test.jsonl", "v6c": "runs/test_all_v6c_test.jsonl",
+                  "v8c": "runs/test_all_v8c_test.jsonl", "v7cw1": "runs/test_all_v7c_w1.jsonl", "v7sw1": "runs/test_all_v7sw1.jsonl", "v5w1": "runs/test_all_v5w1.jsonl", "v7tw1": "runs/test_all_v7tw1.jsonl"}}   # sol61: gpt-6.1-sol-pro, 89 dev / 120 test (G2) pages
 
 
 INLINE = False   # --inline: also offer each inline $...$ formula (with real math in it) as a display candidate

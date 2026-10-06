@@ -8,7 +8,7 @@ from snap import protected
 from wrapdup import clean, ESC
 
 WR = {"textit": lambda t: "$\\textit{" + t + "}$", "textbf": lambda t: "$\\textbf{" + t + "}$",
-      "bi": lambda t: "$\\textbf{\\textit{" + t + "}}$", "plain": lambda t: "$\\text{" + t + "}$"}
+      "bi": lambda t: "$\\textbf{\\textit{" + t + "}}$", "plain": lambda t: "$\\text{" + t + "}$", "ul": lambda t: "$\\underline{\\text{" + t + "}}$"}
 
 
 def esc(t):
