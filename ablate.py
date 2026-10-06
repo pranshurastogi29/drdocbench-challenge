@@ -15,14 +15,27 @@ VARIANTS = {"FULL (82.88)": stack.FULL,
             "medoid instead of MBR": "sel=medoid,rules,chan,fm,sd,bv,ac", "+ si": stack.FULL + ",si"}
 
 
+SCORER = "md2md"
+
+
 def job(a):
-    stem, mds = a
+    stem, mds, subj = a
+    if SCORER == "md2md":
+        import md2md_eval as M
+        from common import gt_markdown
+        doc, pg = stem.rsplit("_", 1); gt = gt_markdown("dev", subj, doc, int(pg))
+        out = []
+        for md in mds:
+            ps = M.page_scores(md, gt, True)
+            out.append((ps[0], ps[1], 0, M.formula_score(md, gt)) if ps else None)
+        return stem, out
     s = E.gt_json("dev", stem)
     return stem, [E.page_scores(stem, md, "dev", s) for md in mds] if s else None
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(); ap.add_argument("--variants"); a = ap.parse_args()
+    ap = argparse.ArgumentParser(); ap.add_argument("--variants"); ap.add_argument("--scorer", default="md2md", choices=["md2md", "e2e"]); a = ap.parse_args()
+    SCORER = a.scorer
     V = dict(x.split("=", 1) for x in a.variants.split(";")) if a.variants else VARIANTS
     if "FULL (82.88)" not in V: V = {"FULL (82.88)": stack.FULL, **V}
     built = {}
@@ -31,14 +44,16 @@ if __name__ == "__main__":
             built[name] = {f'{r["document_id"]}_{r["page"]}': r["markdown"] for r in stack.build("dev", steps, tmp)}
         print(f"built {name}", file=sys.stderr, flush=True)
     names = list(V); keys = sorted(set.intersection(*[set(b) for b in built.values()]))
-    with Pool(11, initializer=E.init) as P: R = {k: r for k, r in P.map(job, [(k, [built[n][k] for n in names]) for k in keys], chunksize=4) if r}
+    subj = {k: v for k, v in [(f'{r["document_id"]}_{r["page"]}', r["subject"]) for r in __import__("stack").rows_of(__import__("os").path.join(ROOT, "runs/dev_all_final5.jsonl"))]}
+    import md2md_eval as M
+    with Pool(11, initializer=M.init if SCORER == "md2md" else E.init) as P: R = {k: r for k, r in P.map(job, [(k, [built[n][k] for n in names], subj.get(k, "")) for k in keys], chunksize=4) if r}
     os.chdir(ROOT)
     json.dump({k: {n: r[i] for i, n in enumerate(names)} for k, r in R.items()}, open(os.path.join(ROOT, "runs", "ablate_last.json"), "w"))
     ok = [k for k in R if all(R[k][i] and R[k][i][0] is not None and R[k][i][1] is not None for i in range(len(names)))]
     fk = [k for k in ok if all(R[k][i][3] is not None for i in range(len(names)))]
     def util(k, i):
         t, o, _, f = R[k][i]; return 0.558 * t + 0.433 * o + 0.054 * (f if f is not None else 0)
-    print(f"{len(ok)} dev pages (formula pages {len(fk)}); end2end scoring")
+    print(f"{len(ok)} dev pages (formula pages {len(fk)}); {SCORER} scoring")
     for i, n in enumerate(names):
         t = st.mean(R[k][i][0] for k in ok); o = st.mean(R[k][i][1] for k in ok); f = st.mean(R[k][i][3] for k in fk) if fk else float("nan")
         by = collections.defaultdict(list)

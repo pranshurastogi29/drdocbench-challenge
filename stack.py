@@ -60,6 +60,20 @@ def build(split, steps, tmp):
         for r in rows:
             ps = re.split(r"\n\s*\n", r["markdown"])
             r["markdown"] = "\n\n".join(" ".join(INNER.findall(x.replace("\\textbf{\\textit{", "\\textit{"))) if WR1.match(x.strip()) and INNER.findall(x) else x for x in ps)
+    if "ob" in st:   # order borrow: our paragraphs re-sorted into the order of a column-major run (v10a); text unchanged. ob=all | multi (Paddle multi-column pages only)
+        from order_mbr import borrow_order, paras as _paras
+        from postprocess import strip_sections
+        import paddle_ingest
+        tags = {"dev": ("ab_v10a", "v10a_rest"), "test": ("v10a",)}[split]; SRC = {}
+        for t in tags: SRC.update({f'{r["document_id"]}_{r["page"]}': strip_sections(r["markdown"]).strip() for r in map(json.loads, open(os.path.join(ROOT, f"runs/{split}_all_{t}.jsonl")))})
+        def multicol(stem):
+            bl = [b["block_bbox"] for b in (paddle_ingest.blocks(stem) or []) if b["block_label"] in ("text", "paragraph_title", "content", "reference_content", "abstract")]
+            return any(a[2] <= b[0] + 5 and min(a[3], b[3]) - max(a[1], b[1]) > 20 for a in bl for b in bl if a is not b)
+        for r in rows:
+            stem = f'{r["document_id"]}_{r["page"]}'
+            if stem not in SRC or (st["ob"] == "multi" and not multicol(stem)): continue
+            ours = _paras(r["markdown"]); h = borrow_order(ours, _paras(SRC[stem]))
+            if h and h != ours: r["markdown"] = "\n\n".join(h)
     if "sm" in st:   # snap MERGE pass: join our consecutive paragraphs that together make up one PaddleOCR-VL layout block (end2end references are layout boxes)
         from snap import snap
         for r in rows: r["markdown"] = snap(r["markdown"], f'{r["document_id"]}_{r["page"]}', mode="merge")
@@ -69,7 +83,7 @@ def build(split, steps, tmp):
         for r in rows: r["markdown"] = lmerge(r["markdown"], min_run=run_, max_len=ml, min_total=300)
     p = os.path.join(tmp, "s0.jsonl"); write(rows, p)
     if "chan" in st:
-        v = st["chan"]; v = "pools" if v.startswith("math") else v; sol = v == "1" or v.endswith("S"); v = v[:-1] if v.endswith("S") else v   # suffix S: also sol-6.1 wrapper copies (G2 pages)
+        v = st["chan"]; v = "pools" if v.startswith("math") else ("1" if v in ("1W", "1W2") else v); sol = v == "1" or v.endswith("S"); v = v[:-1] if v.endswith("S") else v   # suffix S: also sol-6.1 wrapper copies (G2 pages)
         # 1 = the 82.88 channel; inter = same copies placed right after each line; short = grouped, lines <= 60; wd = textit, <= 60, after each line; pools = no wrapper copies
         wargs = {"1": ["--styles", "textit,textbf,bi", "--maxlen", "100000", "--lines", "--grouped", "--numbers"],
                  "inter": ["--styles", "textit,textbf,bi", "--maxlen", "100000", "--lines", "--numbers"],
@@ -81,6 +95,13 @@ def build(split, steps, tmp):
         run("formula_pool.py", p + ".1", p + ".2", "--split", split)
         if sol: run("formula_pool.py", p + ".2", p + ".3", "--split", split, "--cands", "sol61", "--wrap-others")   # sol-6.1 wrapper copies
         else: run("formula_pool.py", p + ".2", p + ".3", "--split", split, "--cands", "sol61")
+        if st["chan"] in ("1W", "1W2"):   # also wrapper copies of every other base run's lines (more spellings of the reference's italic/bold lines)
+            run("formula_pool.py", p + ".3", p + ".3w", "--split", split, "--cands", "v6,v7,v8,v7c" if st["chan"] == "1W" else "v6,v7,v8,v7c,v6w1,v7w1,v8w1", "--wrap-others"); os.replace(p + ".3w", p + ".3")
+        if st.get("fp"):   # extra formula candidates: fp=new (v10 family + MinerU) | newi (+ inline formulas of every run as display candidates)
+            ex = "v10a,v10b,v11,v10ac,v10at,v10ao,mineru"
+            if st["fp"] == "newi": run("formula_pool.py", p + ".3", p + ".3f", "--split", split, "--cands", "v6,v7,v8,v7c,paddle,v6w1,v7w1,v8w1,v7s,sol61," + ex, "--inline")
+            else: run("formula_pool.py", p + ".3", p + ".3f", "--split", split, "--cands", ex)
+            os.replace(p + ".3f", p + ".3")
         run("table_pool.py", p + ".3", p + ".4", "--split", split); p = p + ".4"
     if "chan" in st and st["chan"].startswith("math"):   # keep only formula blocks that look like real math; drop wrapper-only ones (\\textbf{..} / \\textit{..} / \\text{..} around plain words)
         rows_ = rows_of(p)

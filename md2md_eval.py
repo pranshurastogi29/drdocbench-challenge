@@ -35,3 +35,18 @@ def page_scores(pred_md, gt_md, skip=True):
     P = [x for x in sum([a_ for a_, _ in sorted(m, key=lambda t: t[1])], []) if x]
     if not (G or P): return text, None
     return text, 100 * (1 - Lev(G, P) / max(len(G), len(P)))
+
+
+def formula_score(pred_md, gt_md):
+    """formula proxy (stands in for CDM): reference display formulas (Markdown references, incl. $\\textit{..}$ wrappers) matched to our formula
+    blocks as md2md_dataset does; 100 * (1 - edit/len) pooled over the page. None when the reference page has no display formula."""
+    g = md_tex_filter(gt_md).get("equation_isolated") or []
+    if not g: return None
+    p = md_tex_filter(pred_md).get("equation_isolated") or []
+    recs = match(g, p, "formula", "x")
+    recs = [r for r in recs if r.get("gt_idx") != [""] and r.get("gt_category_type") != "equation_inline"]
+    n = d = 0
+    for r in recs:
+        a = r.get("norm_gt") or r.get("gt") or ""; b = r.get("norm_pred") or r.get("pred") or ""
+        if a or b: n += Lev(b, a); d += max(len(a), len(b))
+    return 100 * (1 - n / d) if d else None
