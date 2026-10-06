@@ -1,6 +1,6 @@
 """md2md comparison of a smoke-test run (any model) with our runs on the pages it covers: v7 alone, the new model alone, current pipeline page
 (MBR base5), and the new model as an extra MBR candidate. All pages through the same downstream rules.
-  python model_smoke_eval.py RUN_TAG
+  python model_smoke_eval.py RUN_TAG [--pages]   (--pages: list the pages where adding the new model as a candidate changes the score)
 """
 import collections, json, os, random, statistics as st, sys
 from multiprocessing import Pool
@@ -40,3 +40,7 @@ if __name__ == "__main__":
         bk = list(by); rng = random.Random(0); m = lambda bs: sum(sum(by[q]) for q in bs) / sum(len(by[q]) for q in bs)
         bt = sorted(m(rng.choices(bk, k=len(bk))) for _ in range(2000)); d = [x for vv in by.values() for x in vv]
         print(f"  {n:30s} Text_ED {1 - st.mean(R[k][n][0] for k in ok)/100:.4f}  RO {st.mean(R[k][n][1] for k in ok):6.2f}   vs current {m(bk):+.2f} [{bt[50]:+.2f},{bt[1949]:+.2f}]  pages {sum(x > 0.5 for x in d)}/{sum(x < -0.5 for x in d)}")
+    if "--pages" in sys.argv:
+        for k in ok:
+            d = U(R[k]["MBR base5 + new"]) - U(R[k][base])
+            if abs(d) > 0.01: print(f"  {k[:8]} p{k.rsplit('_', 1)[1]:>4}  MBR + new {d:+6.2f}  text {R[k][base][0]:.1f} -> {R[k]['MBR base5 + new'][0]:.1f}  order {R[k][base][1]:.1f} -> {R[k]['MBR base5 + new'][1]:.1f}")
