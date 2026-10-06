@@ -35,9 +35,9 @@ def base_rows(split, sel, rules):
     """selection (+ rules) via build_submission; without rules: the selected candidate's raw page"""
     import build_submission as bs
     bs.SPLIT = split
-    bs.MBR_FILE = {"mbr6": f"mbr_choice_{split}_refs6.json", "mbr8": f"mbr_choice_{split}_c8.json"}.get(sel)
+    bs.MBR_FILE = {"mbr6": f"mbr_choice_{split}_refs6.json", "mbr8": f"mbr_choice_{split}_c8.json"}.get(sel) or (f"mbr_choice_{split}_{sel[5:]}.json" if sel.startswith("mbrf:") else None)
     if rules:
-        rows = bs.build("final5m8" if sel == "mbr8" else "final5m" if sel in ("mbr", "mbr6") else "final5")
+        rows = bs.build("final5mall" if sel.startswith("mbrf:") else "final5m8" if sel == "mbr8" else "final5m" if sel in ("mbr", "mbr6") else "final5")
     else:
         from postprocess import strip_sections
         files = bs.DEV if split == "dev" else bs.TEST; names = ["v6", "v7", "v8", "paddle", "v7c"]
@@ -46,7 +46,7 @@ def base_rows(split, sel, rules):
         for k in R["v7"]:
             if not all(k in R[n] for n in names): continue
             t = {n: strip_sections(R[n][k]["markdown"]).strip() for n in names}; stem = f"{k[0]}_{k[1]}"
-            p = MBR.get(stem) if sel in ("mbr", "mbr6") and MBR.get(stem) in t else bs.medoid(t, names)
+            p = MBR.get(stem) if (sel in ("mbr", "mbr6", "mbr8") or sel.startswith("mbrf:")) and MBR.get(stem) in t else bs.medoid(t, names)
             rows.append({"subject": R["v7"][k]["subject"], "document_id": k[0], "page": k[1], "markdown": t[p]})
         rows.sort(key=lambda r: (r["subject"], r["document_id"], r["page"]))
     return rows
