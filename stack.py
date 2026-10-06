@@ -35,9 +35,9 @@ def base_rows(split, sel, rules):
     """selection (+ rules) via build_submission; without rules: the selected candidate's raw page"""
     import build_submission as bs
     bs.SPLIT = split
-    bs.MBR_FILE = f"mbr_choice_{split}_refs6.json" if sel == "mbr6" else None
+    bs.MBR_FILE = {"mbr6": f"mbr_choice_{split}_refs6.json", "mbr8": f"mbr_choice_{split}_c8.json"}.get(sel)
     if rules:
-        rows = bs.build("final5m" if sel in ("mbr", "mbr6") else "final5")
+        rows = bs.build("final5m8" if sel == "mbr8" else "final5m" if sel in ("mbr", "mbr6") else "final5")
     else:
         from postprocess import strip_sections
         files = bs.DEV if split == "dev" else bs.TEST; names = ["v6", "v7", "v8", "paddle", "v7c"]
