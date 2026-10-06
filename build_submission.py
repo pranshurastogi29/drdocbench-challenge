@@ -79,6 +79,7 @@ TABLE_CROPS_DEV = ["runs/tables_dev_t1.jsonl", "runs/tables_dev_t2.jsonl", "runs
 SPLIT = "test"      # `--split dev` rebuilds the same pipeline on the dev pages (jsonl out) so it can be scored with the official scorer
 TABLE_CROPS = ["runs/tables_test_t1.jsonl", "runs/tables_test_t2.jsonl", "runs/tables_test_t3.jsonl"]
 MAX_ADD = 9
+MBR_FILE = None   # override for the MBR choice file (stack.py sel=mbr6: runs/mbr_choice_<split>_refs6.json)
 para = lambda m: len([p for p in re.split(r"\n\s*\n", m.strip()) if p.strip()])
 nz = lambda s: re.sub(r"\s+", " ", s.lower())[:6000]
 
@@ -100,7 +101,7 @@ def agreement(texts, names):
 def build(name):
     names, tables, wrap, *rest = CFG[name]; tv = bool(rest and rest[0]); cl = bool(len(rest) > 1 and rest[1]); rp = bool(len(rest) > 2 and rest[2])
     ix = bool(len(rest) > 3 and rest[3]); xd = bool(len(rest) > 4 and rest[4]); mb = bool(len(rest) > 5 and rest[5])
-    MBR = json.load(open(os.path.join(ROOT, "runs", f"mbr_choice_{SPLIT}.json"))) if mb else {}   # mbr.py: candidate chosen with the official metric
+    MBR = json.load(open(os.path.join(ROOT, "runs", MBR_FILE or f"mbr_choice_{SPLIT}.json"))) if mb else {}   # mbr.py: candidate chosen with the official metric
     if tv:      # table vote: needs the scorer checkout (its table normaliser) and the crop-pass outputs
         from table_merge import load_crops
         from table_vote import vote_page

@@ -35,17 +35,18 @@ def base_rows(split, sel, rules):
     """selection (+ rules) via build_submission; without rules: the selected candidate's raw page"""
     import build_submission as bs
     bs.SPLIT = split
+    bs.MBR_FILE = f"mbr_choice_{split}_refs6.json" if sel == "mbr6" else None
     if rules:
-        rows = bs.build("final5m" if sel == "mbr" else "final5")
+        rows = bs.build("final5m" if sel in ("mbr", "mbr6") else "final5")
     else:
         from postprocess import strip_sections
         files = bs.DEV if split == "dev" else bs.TEST; names = ["v6", "v7", "v8", "paddle", "v7c"]
-        R = {n: bs.rd(files[n]) for n in names}; MBR = json.load(open(os.path.join(ROOT, "runs", f"mbr_choice_{split}.json")))
+        R = {n: bs.rd(files[n]) for n in names}; MBR = json.load(open(os.path.join(ROOT, "runs", bs.MBR_FILE or f"mbr_choice_{split}.json")))
         rows = []
         for k in R["v7"]:
             if not all(k in R[n] for n in names): continue
             t = {n: strip_sections(R[n][k]["markdown"]).strip() for n in names}; stem = f"{k[0]}_{k[1]}"
-            p = MBR.get(stem) if sel == "mbr" and MBR.get(stem) in t else bs.medoid(t, names)
+            p = MBR.get(stem) if sel in ("mbr", "mbr6") and MBR.get(stem) in t else bs.medoid(t, names)
             rows.append({"subject": R["v7"][k]["subject"], "document_id": k[0], "page": k[1], "markdown": t[p]})
         rows.sort(key=lambda r: (r["subject"], r["document_id"], r["page"]))
     return rows
@@ -117,7 +118,8 @@ def build(split, steps, tmp):
             r["markdown"] = "\n\n".join(keep)
         write(rows_, p + ".m"); p = p + ".m"
     if "fm" in st:
-        run("furnmerge.py", p, p + ".fm", "--max-tail", "2", "--maxlen", "60", "--paddle-check"); p = p + ".fm"
+        ft, fl = ("3", "80") if st["fm"] == "3" else ("2", "60")
+        run("furnmerge.py", p, p + ".fm", "--max-tail", ft, "--maxlen", fl, "--paddle-check"); p = p + ".fm"
     rows = rows_of(p)
     if "sd" in st:
         from spilldrop import spilldrop
@@ -132,7 +134,7 @@ def build(split, steps, tmp):
     if "bv" in st:
         from bvote import bvote
         from sel_lab import FREE
-        C = json.load(open(os.path.join(ROOT, f"runs/selcache_{split}.json"))); pick = json.load(open(os.path.join(ROOT, f"runs/mbr_choice_{split}.json")))
+        C = json.load(open(os.path.join(ROOT, f"runs/selcache_{split}.json"))); pick = json.load(open(os.path.join(ROOT, "runs", __import__("build_submission").MBR_FILE or f"mbr_choice_{split}.json")))
         for r in rows:
             s = f'{r["document_id"]}_{r["page"]}'
             if s in C and s in pick:
@@ -144,7 +146,7 @@ def build(split, steps, tmp):
         import build_submission as bs
         files = bs.TEST if split == "test" else bs.DEV; names = ["v6", "v7", "v8", "paddle", "v7c"]
         RR = {n: {f'{r["document_id"]}_{r["page"]}': strip_sections(r["markdown"]).strip() for r in map(json.loads, open(os.path.join(ROOT, files[n])))} for n in names}
-        pick = json.load(open(os.path.join(ROOT, f"runs/mbr_choice_{split}.json"))); kk = int(st["am"]) if st["am"] != "1" else 2
+        pick = json.load(open(os.path.join(ROOT, "runs", __import__("build_submission").MBR_FILE or f"mbr_choice_{split}.json"))); kk = int(st["am"]) if st["am"] != "1" else 2
         for r in rows:
             s_ = f'{r["document_id"]}_{r["page"]}'; pk = pick.get(s_, "v7")
             new, added = add_missing(r["markdown"], [RR[n].get(s_, "") for n in names if n != pk], k=kk)
