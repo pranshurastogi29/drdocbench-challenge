@@ -45,8 +45,9 @@ def formula_score(pred_md, gt_md):
     p = md_tex_filter(pred_md).get("equation_isolated") or []
     recs = match(g, p, "formula", "x")
     recs = [r for r in recs if r.get("gt_idx") != [""] and r.get("gt_category_type") != "equation_inline"]
-    n = d = 0
-    for r in recs:
-        a = r.get("norm_gt") or r.get("gt") or ""; b = r.get("norm_pred") or r.get("pred") or ""
-        if a or b: n += Lev(b, a); d += max(len(a), len(b))
-    return 100 * (1 - n / d) if d else None
+    from utils.data_preprocess import normalized_formula
+    scores = []
+    for r in recs:   # CDM averages per reference formula, so does this proxy: 1 - normalised edit, both sides normalised the scorer's way
+        a = normalized_formula(r.get("gt") or ""); b = normalized_formula(r.get("pred") or "") if r.get("pred") else ""
+        scores.append(1 - Lev(b, a) / max(len(a), len(b), 1))
+    return (100 * sum(scores) / len(scores), len(scores)) if scores else None

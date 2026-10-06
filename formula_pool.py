@@ -39,7 +39,8 @@ def pool(md, others, wrap_others=False):
     have = {re.sub(r"\s+", "", f) for f in formulas(md)}; extra = []
     if wrap_others:   # also the wrapper copies (wrapdup2, same settings as ours) of every other run's lines: other spellings/splits of the same lines
         from wrapdup2 import add
-        others = [add(o, ("textit", "textbf", "bi"), 100000, True, True, True) for o in others]
+        from postprocess import strip_sections
+        others = [add(strip_sections(o or ""), ("textit", "textbf", "bi"), 100000, True, True, True) for o in others]
     for o in others:
         for f in formulas(o):
             k = re.sub(r"\s+", "", f)

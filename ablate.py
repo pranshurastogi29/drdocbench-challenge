@@ -27,7 +27,8 @@ def job(a):
         out = []
         for md in mds:
             ps = M.page_scores(md, gt, True)
-            out.append((ps[0], ps[1], 0, M.formula_score(md, gt)) if ps else None)
+            fs = M.formula_score(md, gt)
+            out.append((ps[0], ps[1], fs[1] if fs else 0, fs[0] if fs else None) if ps else None)
         return stem, out
     s = E.gt_json("dev", stem)
     return stem, [E.page_scores(stem, md, "dev", s) for md in mds] if s else None
@@ -55,7 +56,8 @@ if __name__ == "__main__":
         t, o, _, f = R[k][i]; return 0.558 * t + 0.433 * o + 0.054 * (f if f is not None else 0)
     print(f"{len(ok)} dev pages (formula pages {len(fk)}); {SCORER} scoring")
     for i, n in enumerate(names):
-        t = st.mean(R[k][i][0] for k in ok); o = st.mean(R[k][i][1] for k in ok); f = st.mean(R[k][i][3] for k in fk) if fk else float("nan")
+        t = st.mean(R[k][i][0] for k in ok); o = st.mean(R[k][i][1] for k in ok)
+        nf = sum(R[k][i][2] for k in fk); f = (sum(R[k][i][3] * R[k][i][2] for k in fk) / nf) if (fk and nf and SCORER == "md2md") else (st.mean(R[k][i][3] for k in fk) if fk else float("nan"))   # md2md: per-formula average like CDM
         by = collections.defaultdict(list)
         for k in ok: by[k.rsplit("_", 1)[0]].append(util(k, i) - util(k, 0))
         bk = list(by); rng = random.Random(0); m = lambda bs: sum(sum(by[q]) for q in bs) / sum(len(by[q]) for q in bs)

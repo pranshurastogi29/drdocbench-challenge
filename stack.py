@@ -83,7 +83,7 @@ def build(split, steps, tmp):
         for r in rows: r["markdown"] = lmerge(r["markdown"], min_run=run_, max_len=ml, min_total=300)
     p = os.path.join(tmp, "s0.jsonl"); write(rows, p)
     if "chan" in st:
-        v = st["chan"]; v = "pools" if v.startswith("math") else ("1" if v in ("1W", "1W2") else v); sol = v == "1" or v.endswith("S"); v = v[:-1] if v.endswith("S") else v   # suffix S: also sol-6.1 wrapper copies (G2 pages)
+        v = st["chan"]; v = "pools" if v.startswith("math") else ("1" if v in ("1W", "1W2", "1W3") else v); sol = v == "1" or v.endswith("S"); v = v[:-1] if v.endswith("S") else v   # suffix S: also sol-6.1 wrapper copies (G2 pages)
         # 1 = the 82.88 channel; inter = same copies placed right after each line; short = grouped, lines <= 60; wd = textit, <= 60, after each line; pools = no wrapper copies
         wargs = {"1": ["--styles", "textit,textbf,bi", "--maxlen", "100000", "--lines", "--grouped", "--numbers"],
                  "inter": ["--styles", "textit,textbf,bi", "--maxlen", "100000", "--lines", "--numbers"],
@@ -95,8 +95,9 @@ def build(split, steps, tmp):
         run("formula_pool.py", p + ".1", p + ".2", "--split", split)
         if sol: run("formula_pool.py", p + ".2", p + ".3", "--split", split, "--cands", "sol61", "--wrap-others")   # sol-6.1 wrapper copies
         else: run("formula_pool.py", p + ".2", p + ".3", "--split", split, "--cands", "sol61")
-        if st["chan"] in ("1W", "1W2"):   # also wrapper copies of every other base run's lines (more spellings of the reference's italic/bold lines)
-            run("formula_pool.py", p + ".3", p + ".3w", "--split", split, "--cands", "v6,v7,v8,v7c" if st["chan"] == "1W" else "v6,v7,v8,v7c,v6w1,v7w1,v8w1", "--wrap-others"); os.replace(p + ".3w", p + ".3")
+        if st["chan"] in ("1W", "1W2", "1W3"):   # also wrapper copies of other runs' lines (more spellings of the reference's italic/bold lines)
+            cw = {"1W": "v6,v7,v8,v7c", "1W2": "v6,v7,v8,v7c,v6w1,v7w1,v8w1", "1W3": "v6,v7,v8,v7c,v6w1,v7w1,v8w1,v7s,v10a,v10b,v11,v10ac,v10at,v10ao"}[st["chan"]]
+            run("formula_pool.py", p + ".3", p + ".3w", "--split", split, "--cands", cw, "--wrap-others"); os.replace(p + ".3w", p + ".3")
         if st.get("fp"):   # extra formula candidates: fp=new (v10 family + MinerU) | newi (+ inline formulas of every run as display candidates)
             ex = "v10a,v10b,v11,v10ac,v10at,v10ao,mineru"
             if st["fp"] == "newi": run("formula_pool.py", p + ".3", p + ".3f", "--split", split, "--cands", "v6,v7,v8,v7c,paddle,v6w1,v7w1,v8w1,v7s,sol61," + ex, "--inline")
@@ -148,6 +149,9 @@ def build(split, steps, tmp):
     if "ac" in st:
         from artclean import artclean, cjk_glitch
         for r in rows: r["markdown"] = cjk_glitch(artclean(r["markdown"], supsub=True))
+    if "sym" in st:   # symbol channel (symchan.py): one formula per symbol occurrence, in the references' LaTeX (\\bullet, \\dotfill, ^\\circ, ...)
+        from symchan import add_symbols
+        for r in rows: r["markdown"] = add_symbols(r["markdown"], roman=st["sym"] != "noroman")
     if "si" in st:
         from bvote import bvote
         from postprocess import strip_sections
