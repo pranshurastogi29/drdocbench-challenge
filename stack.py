@@ -178,12 +178,15 @@ def build(split, steps, tmp):
             s = f'{r["document_id"]}_{r["page"]}'; src = [d[s] for d in S if s in d]
             if src:
                 new, _, sp = bvote(r["markdown"], src, k=2, do_merge=False, long_only=False)
+                if sp and st["si"] == "nl":   # si=nl: keep column / new-region / unlocated breaks, drop breaks inside one layout block (list entries: a dev-only convention)
+                    from split_kind import filtered
+                    new = filtered(s, r["markdown"], new, {"column", "block", "?"})
                 if sp: r["markdown"] = new
     return rows
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(); ap.add_argument("--split", default="dev"); ap.add_argument("--steps", default=FULL); ap.add_argument("--out"); ap.add_argument("--verify", action="store_true")
+    ap = argparse.ArgumentParser(); ap.add_argument("--split", default="dev"); ap.add_argument("--steps", default=FULL); ap.add_argument("--out"); ap.add_argument("--verify", action="store_true"); ap.add_argument("--compare", help="a submission zip to compare the built pages with")
     a = ap.parse_args()
     with tempfile.TemporaryDirectory() as tmp:
         rows = build(a.split, a.steps, tmp)
@@ -193,3 +196,8 @@ if __name__ == "__main__":
         ref = {(r["document_id"], r["page"]): r for r in zip_rows(os.path.join(ROOT, "submissions/submission_final5m_fc10t_fm_sd_bv_ac.zip"))}
         same = sum(ref.get((r["document_id"], r["page"])) == r for r in rows)
         print(f"identical to submission_final5m_fc10t_fm_sd_bv_ac.zip (82.88) on {same}/{len(ref)} pages")
+    if a.compare:
+        from build_submission import zip_rows
+        ref = {(r["document_id"], r["page"]): r for r in zip_rows(a.compare)}
+        same = sum(ref.get((r["document_id"], r["page"])) == r for r in rows)
+        print(f"identical to {os.path.basename(a.compare)} on {same}/{len(ref)} pages")
