@@ -5,7 +5,7 @@
   python predict.py --fold b --prompt v3 --tag v3                     # confirm on held-out fold B
   python predict.py --split test --prompt v3 --tag final              # test images -> submission
 
-Needs OPENROUTER_API_KEY (environment or a .env file next to this script).
+Needs OPENROUTER_API_KEY, or HF_TOKEN with --api hf (environment or a .env file next to this script).
 Resumable: pages already present in the output file are skipped. Output: runs/<split>_<fold>_<tag>.jsonl
 """
 import argparse
@@ -76,16 +76,24 @@ def split_pages(text, n):
 
 
 class OpenRouter:
-    def __init__(self, model, prompt, max_side, reasoning, temperature):
+    API = {"openrouter": ("https://openrouter.ai/api/v1", "OPENROUTER_API_KEY"),
+           "hf": ("https://router.huggingface.co/v1", "HF_TOKEN")}   # Hugging Face Inference Providers (model id "org/Model:provider")
+
+    def __init__(self, model, prompt, max_side, reasoning, temperature, api="openrouter", price=None):
         import openai
 
-        key = os.environ.get("OPENROUTER_API_KEY")
+        url, env = self.API[api]
+        key = os.environ.get(env)
         if not key:
-            sys.exit("OPENROUTER_API_KEY is not set (export it, or put it in .env next to predict.py)")
-        self.client = openai.OpenAI(base_url="https://openrouter.ai/api/v1", api_key=key, max_retries=2, timeout=240)
+            sys.exit(f"{env} is not set (export it, or put it in .env next to predict.py)")
+        self.client = openai.OpenAI(base_url=url, api_key=key, max_retries=2, timeout=240)
         self.model, self.prompt, self.max_side = model, prompt, max_side
-        self.extra = {"reasoning": {"effort": reasoning}} if reasoning else {}
-        self.extra["usage"] = {"include": True}  # ask OpenRouter to return the actual cost of each call
+        self.price = price  # (USD per M input, USD per M output) for APIs that do not return the cost of a call
+        if api == "openrouter":
+            self.extra = {"reasoning": {"effort": reasoning}} if reasoning else {}
+            self.extra["usage"] = {"include": True}  # ask OpenRouter to return the actual cost of each call
+        else:
+            self.extra = {}
         self.usage = []  # one dict per API call (retries included), for cost reporting
         self.temperature = temperature
 
@@ -107,7 +115,8 @@ class OpenRouter:
             "prompt": u.get("prompt_tokens", 0),
             "completion": u.get("completion_tokens", 0),
             "reasoning": (u.get("completion_tokens_details") or {}).get("reasoning_tokens", 0) or 0,
-            "cost": u.get("cost"),
+            "cost": u.get("cost") if u.get("cost") is not None or not self.price else
+                    (u.get("prompt_tokens", 0) * self.price[0] + u.get("completion_tokens", 0) * self.price[1]) / 1e6,
         })
         ch = resp.choices[0]
         text = ch.message.content or ""
@@ -154,6 +163,8 @@ def main():
     ap.add_argument("--offset", type=int, default=0, help="test-time augmentation: shift the window grid (offset 1 -> first page alone, then pairs 2-3, 4-5, ...)")
     ap.add_argument("--max-side", type=int, default=0, help="resize longest side of each page (0 = keep)")
     ap.add_argument("--reasoning", choices=["low", "medium", "high"], help="OpenRouter reasoning effort")
+    ap.add_argument("--api", default="openrouter", choices=["openrouter", "hf"], help="hf = Hugging Face Inference Providers (needs HF_TOKEN; model id like moonshotai/Kimi-K2.6:novita)")
+    ap.add_argument("--price", help="IN,OUT USD per million tokens, to estimate cost when the API does not report it (e.g. 0.8,3.4)")
     ap.add_argument("--temperature", type=float, default=0.0)
     ap.add_argument("--no-postprocess", action="store_true")
     ap.add_argument("--preprocess", default="none", choices=["none", "contrast", "frames"], help="image preprocessing before the model call")
@@ -202,7 +213,8 @@ def main():
     print(f"{len(docs)} docs, {len(jobs)} windows to run -> {out}", file=sys.stderr)
 
     if args.backend == "openrouter":
-        backend = OpenRouter(args.model, load_prompt(args.prompt), args.max_side, args.reasoning, args.temperature)
+        backend = OpenRouter(args.model, load_prompt(args.prompt), args.max_side, args.reasoning, args.temperature, args.api,
+                             tuple(map(float, args.price.split(","))) if args.price else None)
     elif args.backend == "oracle":
         backend = lambda win, split, subject, doc: PAGE_SEP.join(gt_markdown(split, subject, doc, pg) for pg, _ in win)
     else:
