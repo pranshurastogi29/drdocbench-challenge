@@ -79,7 +79,7 @@ class OpenRouter:
     API = {"openrouter": ("https://openrouter.ai/api/v1", "OPENROUTER_API_KEY"),
            "hf": ("https://router.huggingface.co/v1", "HF_TOKEN")}   # Hugging Face Inference Providers (model id "org/Model:provider")
 
-    def __init__(self, model, prompt, max_side, reasoning, temperature, api="openrouter", price=None):
+    def __init__(self, model, prompt, max_side, reasoning, temperature, api="openrouter", price=None, no_think=False):
         import openai
 
         url, env = self.API[api]
@@ -93,7 +93,7 @@ class OpenRouter:
             self.extra = {"reasoning": {"effort": reasoning}} if reasoning else {}
             self.extra["usage"] = {"include": True}  # ask OpenRouter to return the actual cost of each call
         else:
-            self.extra = {}
+            self.extra = {"chat_template_kwargs": {"thinking": False}} if no_think else {}   # Kimi K2.x on HF providers: answer without a thinking phase
         self.usage = []  # one dict per API call (retries included), for cost reporting
         self.temperature = temperature
 
@@ -164,6 +164,7 @@ def main():
     ap.add_argument("--max-side", type=int, default=0, help="resize longest side of each page (0 = keep)")
     ap.add_argument("--reasoning", choices=["low", "medium", "high"], help="OpenRouter reasoning effort")
     ap.add_argument("--api", default="openrouter", choices=["openrouter", "hf"], help="hf = Hugging Face Inference Providers (needs HF_TOKEN; model id like moonshotai/Kimi-K2.6:novita)")
+    ap.add_argument("--no-think", action="store_true", help="hf only: disable the model's thinking phase (Kimi K2.x: chat_template_kwargs thinking=false)")
     ap.add_argument("--price", help="IN,OUT USD per million tokens, to estimate cost when the API does not report it (e.g. 0.8,3.4)")
     ap.add_argument("--temperature", type=float, default=0.0)
     ap.add_argument("--no-postprocess", action="store_true")
@@ -214,7 +215,7 @@ def main():
 
     if args.backend == "openrouter":
         backend = OpenRouter(args.model, load_prompt(args.prompt), args.max_side, args.reasoning, args.temperature, args.api,
-                             tuple(map(float, args.price.split(","))) if args.price else None)
+                             tuple(map(float, args.price.split(","))) if args.price else None, args.no_think)
     elif args.backend == "oracle":
         backend = lambda win, split, subject, doc: PAGE_SEP.join(gt_markdown(split, subject, doc, pg) for pg, _ in win)
     else:
