@@ -32,8 +32,11 @@ def job(a):
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(); ap.add_argument("--split", default="dev"); ap.add_argument("--cands8", action="store_true"); a = ap.parse_args()
-    if a.cands8: CANDS = BASE5 + ["v10a", "v10b", "v11"]
+    ap = argparse.ArgumentParser(); ap.add_argument("--split", default="dev"); ap.add_argument("--cands8", action="store_true")
+    ap.add_argument("--kimi", help="run tag of a Kimi-K2.5 run (runs/<split>_all_<tag>.jsonl): an extra candidate AND reference on the pages it covers -> mbr_choice_<split>_c9.json")
+    a = ap.parse_args()
+    if a.cands8 or a.kimi: CANDS = BASE5 + ["v10a", "v10b", "v11"] + (["kimi25"] if a.kimi else [])
+    if a.kimi: TAGS[a.split] = {**TAGS[a.split], "kimi25": (a.kimi,)}
     TAGS_REF = TAGS[a.split]
     C = json.load(open(os.path.join(ROOT, f"runs/selcache_{a.split}.json")))
     E = {}
@@ -43,5 +46,6 @@ if __name__ == "__main__":
         E[n] = d
     with Pool(11, initializer=mbr._init) as P: R = dict(P.map(job, [(k, C[k], {n: E[n][k] for n in E if k in E[n]}, CANDS, list(TAGS_REF)) for k in sorted(C)], chunksize=4))
     os.chdir(ROOT); old = json.load(open(f"runs/mbr_choice_{a.split}.json"))
-    json.dump(R, open(f"runs/mbr_choice_{a.split}_{'c8' if a.cands8 else 'refs6'}.json", "w"))
+    json.dump(R, open(f"runs/mbr_choice_{a.split}_{'c9' if a.kimi else 'c8' if a.cands8 else 'refs6'}.json", "w"))
+    if a.kimi: print(f"kimi25 picked on {sum(v == 'kimi25' for v in R.values())} pages; differs from c8 on {sum(R[k] != json.load(open(f'runs/mbr_choice_{a.split}_c8.json')).get(k) for k in R)}")
     print(f"{a.split}: {len(R)} pages, pick differs from the current MBR on {sum(R[k] != old.get(k) for k in R)}")

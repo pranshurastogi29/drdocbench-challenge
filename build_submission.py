@@ -33,7 +33,8 @@ TEST = {"v6": "runs/test_all_v6.jsonl", "v7": "runs/test_all_v7.jsonl", "v8": "r
         "v6w1": "runs/test_all_v6_w1.jsonl", "v7w1": "runs/test_all_v7_w1.jsonl", "v8w1": "runs/test_all_v8_w1.jsonl", "v7cw1": "runs/test_all_v7c_w1.jsonl",
         "v7sw1": "runs/test_all_v7sw1.jsonl", "v5w1": "runs/test_all_v5w1.jsonl", "v7tw1": "runs/test_all_v7tw1.jsonl",
         "v10a": "runs/test_all_v10a.jsonl", "v10b": "runs/test_all_v10b.jsonl", "v11": "runs/test_all_v11.jsonl",
-        "v10ac": "runs/test_all_v10ac.jsonl", "v10at": "runs/test_all_v10at.jsonl", "v10ao": "runs/test_all_v10ao.jsonl"}
+        "v10ac": "runs/test_all_v10ac.jsonl", "v10at": "runs/test_all_v10at.jsonl", "v10ao": "runs/test_all_v10ao.jsonl",
+        "kimi25": "runs/test_all_kimi25.jsonl"}
 CFG = {"medoid4_snap": (["v6", "v7", "v8", "paddle"], False, False),
        "best": (["v6", "v7", "v8", "paddle"], True, False),
        "final5": (["v6", "v7", "v8", "paddle", "v7c"], True, False),
@@ -71,6 +72,7 @@ CFG = {"medoid4_snap": (["v6", "v7", "v8", "paddle"], False, False),
        "final5h_wd": (["v6", "v7", "v8", "paddle", "v7c", "v6w1", "v7w1", "v8w1", "v7tw1"], True, True),
        "final5m": (["v6", "v7", "v8", "paddle", "v7c"], True, False, False, False, False, False, False, True),
        "final5m8": (["v6", "v7", "v8", "paddle", "v7c", "v10a", "v10b", "v11"], True, False, False, False, False, False, False, True),
+       "final5m9": (["v6", "v7", "v8", "paddle", "v7c", "v10a", "v10b", "v11", "kimi25"], True, False, False, False, False, False, False, True),
        "final5mall": (["v6", "v7", "v8", "paddle", "v7c", "v10a", "v10b", "v11", "v10ac", "v10at", "v10ao", "v6w1", "v7w1", "v8w1", "v6c", "v8c", "v7s"], True, False, False, False, False, False, False, True),
        "final5m_wd": (["v6", "v7", "v8", "paddle", "v7c"], True, True, False, False, False, False, False, True),
        "final5x": (["v6", "v7", "v8", "paddle", "v7c"], True, False, False, False, False, False, True),
@@ -80,11 +82,13 @@ DEV = {"v6": "runs/dev_all_full_bunny.jsonl", "v7": "runs/dev_all_v7_final.jsonl
        "v6w1": "runs/dev_all_v6_w1.jsonl", "v7w1": "runs/dev_all_v7_w1.jsonl", "v8w1": "runs/dev_all_v8_w1.jsonl", "v7cw1": "runs/dev_all_v7c_w1.jsonl",
        "v7sw1": "runs/dev_all_v7sw1.jsonl", "v5w1": "runs/dev_all_v5w1.jsonl", "v7tw1": "runs/dev_all_v7tw1.jsonl",
        "v10a": "runs/dev_all_v10a_full.jsonl", "v10b": "runs/dev_all_v10b_full.jsonl", "v11": "runs/dev_all_v11_full.jsonl",
-       "v10ac": "runs/dev_all_v10ac.jsonl", "v10at": "runs/dev_all_v10at.jsonl", "v10ao": "runs/dev_all_v10ao.jsonl"}
+       "v10ac": "runs/dev_all_v10ac.jsonl", "v10at": "runs/dev_all_v10at.jsonl", "v10ao": "runs/dev_all_v10ao.jsonl",
+       "kimi25": "runs/dev_all_sm_kimi.jsonl"}   # Kimi-K2.5 via OpenRouter, reasoning low (dev: the 40-window smoke subset only)
 TABLE_CROPS_DEV = ["runs/tables_dev_t1.jsonl", "runs/tables_dev_t2.jsonl", "runs/tables_dev_t3.jsonl"]
 SPLIT = "test"      # `--split dev` rebuilds the same pipeline on the dev pages (jsonl out) so it can be scored with the official scorer
 TABLE_CROPS = ["runs/tables_test_t1.jsonl", "runs/tables_test_t2.jsonl", "runs/tables_test_t3.jsonl"]
 MAX_ADD = 9
+OPTIONAL = {"kimi25"}   # candidates that may miss pages (or the whole file): a page needs only the others, and the missing one simply is not a candidate there
 MBR_FILE = None   # override for the MBR choice file (stack.py sel=mbr6: runs/mbr_choice_<split>_refs6.json)
 para = lambda m: len([p for p in re.split(r"\n\s*\n", m.strip()) if p.strip()])
 nz = lambda s: re.sub(r"\s+", " ", s.lower())[:6000]
@@ -112,13 +116,15 @@ def build(name):
         from table_merge import load_crops
         from table_vote import vote_page
         crops = [{st: {i: t for i, t in v} for st, v in load_crops(os.path.join(ROOT, f)).items()} for f in (TABLE_CROPS_DEV if SPLIT == 'dev' else TABLE_CROPS)]
-    R = {n: rd((DEV if SPLIT == 'dev' else TEST)[n]) for n in names}
+    files = DEV if SPLIT == 'dev' else TEST
+    R = {n: rd(files[n]) for n in names if n not in OPTIONAL or os.path.exists(os.path.join(ROOT, files[n]))}
     out = []
     ref = next(iter(R.values()))
-    for k in [k for k in ref if all(k in R[n] for n in names)]:
+    for k in [k for k in ref if all(k in R[n] for n in R if n not in OPTIONAL)]:
         base = ref[k]
-        t = {n: strip_sections(R[n][k]["markdown"]).strip() for n in names}
-        stem = f"{k[0]}_{k[1]}"; md = t[MBR[stem]] if mb and MBR.get(stem) in t else t[medoid(t, names)]
+        here = [n for n in R if k in R[n]]
+        t = {n: strip_sections(R[n][k]["markdown"]).strip() for n in here}
+        stem = f"{k[0]}_{k[1]}"; md = t[MBR[stem]] if mb and MBR.get(stem) in t else t[medoid(t, here)]
         s = snap(md, stem, mode="split")
         if para(s) - para(md) > MAX_ADD:      # heavy re-splits are a coin flip on dev: leave those pages alone
             s = md
