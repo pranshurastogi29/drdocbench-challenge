@@ -140,6 +140,16 @@ def build(split, steps, tmp):
             if s in C and s in pick:
                 new, _, sp = bvote(r["markdown"], [C[s]["proc"][c] for c in FREE if c != pick[s]], k=5, do_merge=False)
                 if sp: r["markdown"] = new
+    if "rv" in st:   # word-level consensus (rover.py) inside each paragraph of the selected page; voters: the other runs' processed pages
+        from rover import rover
+        from sel_lab import FREE, BASE5
+        C = json.load(open(os.path.join(ROOT, f"runs/selcache_{split}.json"))); pick = json.load(open(os.path.join(ROOT, "runs", __import__("build_submission").MBR_FILE or f"mbr_choice_{split}.json")))
+        voters = {"free": FREE, "base5": BASE5, "nopad": [c for c in FREE if c != "paddle"]}[st["rv"] if st["rv"] != "1" else "free"]
+        for r in rows:
+            s = f'{r["document_id"]}_{r["page"]}'
+            if s in C:
+                new, ch = rover(r["markdown"], [C[s]["proc"][c] for c in voters if c != pick.get(s) and c in C[s]["proc"]])
+                if ch: r["markdown"] = new
     if "am" in st:   # add paragraphs our page lacks but >= K other base5 runs have (addmiss.py); end2end drops unpaired text of ours, so extras are free
         from addmiss import add_missing
         from postprocess import strip_sections
