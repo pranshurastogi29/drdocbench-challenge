@@ -1,13 +1,18 @@
-"""Word-level consensus (ROVER) inside each paragraph of the selected page.
-The selected page stays the skeleton: its paragraph split, order, tables, formulas and multi-line paragraphs are kept. Each body paragraph is
-located in every other run (best fuzzy match on scorer-normalised text, similar length, as para_fuse.py does); every located version is
-word-aligned to the skeleton paragraph (difflib on the scorer-visible characters of each word), and each word position takes the version that
-a strict majority of ALL versions (skeleton included) agree on: a substitution, a deletion, or an insertion in the gap before it.
-Where no strict majority exists the skeleton's word stays. Only the scorer-visible characters decide the vote; the surface form is the one
-most of the winning voters wrote.
-  from rover import rover; md, changed = rover(page_md, [other_run_md, ...])
+"""Word-level consensus (ROVER) inside each paragraph of the selected page, gated by independent evidence.
+The selected page stays the skeleton: its paragraph split, order, tables, formulas, casing and multi-line paragraphs are kept. Each body
+paragraph is located in every other run (near-identical match on scorer-normalised text, similar length); every located version is
+word-aligned to the skeleton paragraph (difflib on the scorer-visible characters of each word), and a word position may change only when
+  1. a strict majority of ALL versions (skeleton included) agree on the change, AND
+  2. the change is a near-spelling of the word (an OCR slip, not a different word: that would mean the voters matched another paragraph),
+     never a case-only change (small caps) and never on punctuation-only tokens, AND
+  3. evidence outside our model family confirms it. Our runs share one model, so their majority is often a shared error (just -> jut,
+     1973 -> 1979). A change passes when an independent engine on the same page (PaddleOCR-VL, MinerU pipeline) has the new word and
+     not the old one, or when it turns a non-word into a dictionary word (oozhed -> oozed; no digits). Insertions and deletions (one
+     word at most, never at the paragraph edges) need the independent engines: inserted word present there, deleted word absent there
+     and not a dictionary word.
+  from rover import rover; md, changed = rover(page_md, [other_run_md, ...], indep=[paddle_md, mineru_md])
 """
-import collections, re
+import collections, functools, re
 from difflib import SequenceMatcher
 from rapidfuzz import fuzz
 import Levenshtein
@@ -20,7 +25,38 @@ similar = lambda a, b: 1 - Levenshtein.distance(a.lower(), b.lower()) / max(len(
 MATH = re.compile(r"\$|\\\(|\\\[")
 
 
-def vote_para(S, versions):
+@functools.lru_cache(1)
+def dictionary():
+    try: return {w.strip().lower() for w in open("/usr/share/dict/words", encoding="utf-8", errors="ignore")}
+    except OSError: return set()
+
+
+def indep_words(texts):
+    """lower-cased word keys of the independent engines' pages (whole whitespace tokens and their \\w+ pieces)"""
+    c = collections.Counter()
+    for t in texts or []:
+        for tok in (t or "").split():
+            k = K(tok).lower()
+            if k: c[k] += 1
+            for piece in re.findall(r"[^\W_]+", tok.lower()):
+                if piece != k: c[piece] += 1
+    return c
+
+
+def make_gate(ind):
+    D = dictionary()
+    def gate(old, new):
+        ko = K(old).lower() if old else ""; kn = K(new).lower() if new else ""
+        if old and new:                                            # substitution
+            if ind and ind[kn] > 0 and ind[ko] == 0: return True
+            return not any(ch.isdigit() for ch in ko + kn) and ko not in D and kn in D and ind[ko] == 0
+        if new:                                                    # insertion
+            return bool(ind) and kn != "" and ind[kn] > 0
+        return bool(ind) and ind[ko] == 0 and ko not in D          # deletion
+    return gate
+
+
+def vote_para(S, versions, gate=lambda old, new: True):
     """S: skeleton words; versions: list of word lists. Returns (new words, number of changed positions)."""
     n = 1 + len(versions); need = n // 2 + 1
     sub = [collections.Counter({K(w): 1}) for w in S]; surf = [collections.defaultdict(collections.Counter) for _ in S]
@@ -42,21 +78,21 @@ def vote_para(S, versions):
     for i in range(len(S) + 1):
         if ins[i]:
             t, c = ins[i].most_common(1)[0]
-            if c >= need: out.extend(t); ch += 1
+            if c >= need and K("".join(t)) and gate(None, t[0]): out.extend(t); ch += 1
         if i == len(S): break
-        k, c = sub[i].most_common(1)[0]
-        if (c >= need and k != K(S[i]) and K(S[i]) and (k is None or (k.lower() != K(S[i]).lower() and similar(k, K(S[i]))))):
-            # never vote on punctuation-only words or on case alone (small caps: the selected page's casing stays); a substitution must
-            # be a near-spelling of the word (an OCR slip), never a different word (that means the voters matched another paragraph)
-            ch += 1
-            if k is None: continue
-            out.append(surf[i][k].most_common(1)[0][0])
-        else:
-            out.append(S[i])
+        k, c = sub[i].most_common(1)[0]; ks = K(S[i])
+        if c >= need and k != ks and ks and (k is None or (k.lower() != ks.lower() and similar(k, ks))):
+            new = None if k is None else surf[i][k].most_common(1)[0][0]
+            if gate(S[i], new):
+                ch += 1
+                if new is not None: out.append(new)
+                continue
+        out.append(S[i])
     return out, ch
 
 
-def rover(skel, others, minsim=90, lenr=0.85, minw=8, minv=2):
+def rover(skel, others, indep=None, minsim=90, lenr=0.85, minw=8, minv=2):
+    gate = make_gate(indep_words(indep)) if indep is not None else (lambda old, new: True)   # indep=None: majority vote only
     O = [[(HEAD.sub("", q), W(HEAD.sub("", q))) for q in paras(o) if not skip(q)] for o in others if o]
     out = []; changed = 0
     for p in paras(skel):
@@ -72,7 +108,7 @@ def rover(skel, others, minsim=90, lenr=0.85, minw=8, minv=2):
                 if s > best: best, bq = s, q
             if bq is not None and best >= minsim: vers.append(bq.split())
         if len(vers) < minv: out.append(p); continue
-        new, ch = vote_para(body.split(), vers)
+        new, ch = vote_para(body.split(), vers, gate)
         if ch: changed += ch; out.append(pre + " ".join(new))
         else: out.append(p)
     return "\n\n".join(out), changed

@@ -140,15 +140,26 @@ def build(split, steps, tmp):
             if s in C and s in pick:
                 new, _, sp = bvote(r["markdown"], [C[s]["proc"][c] for c in FREE if c != pick[s]], k=5, do_merge=False)
                 if sp: r["markdown"] = new
-    if "rv" in st:   # word-level consensus (rover.py) inside each paragraph of the selected page; voters: the other runs' processed pages
+    if "rv" in st:   # word-level consensus (rover.py) inside each paragraph of the selected page; voters: our other runs' processed pages;
+                     # independent evidence: PaddleOCR-VL's page and the MinerU pipeline's page (rv=raw: majority only, no independent gate)
         from rover import rover
         from sel_lab import FREE, BASE5
         C = json.load(open(os.path.join(ROOT, f"runs/selcache_{split}.json"))); pick = json.load(open(os.path.join(ROOT, "runs", __import__("build_submission").MBR_FILE or f"mbr_choice_{split}.json")))
-        voters = {"free": FREE, "base5": BASE5, "nopad": [c for c in FREE if c != "paddle"]}[st["rv"] if st["rv"] != "1" else "free"]
+        mode = st["rv"] if st["rv"] != "1" else "free"
+        voters = [c for c in {"free": FREE, "base5": BASE5, "raw": FREE}[mode] if c != "paddle"]
+        def mineru_md(stem):
+            f = os.path.expanduser(f"~/Downloads/mineru_results/{stem}/auto/{stem}.md")
+            return re.sub(r"!\[[^\]]*\]\([^)]*\)", "", open(f, encoding="utf-8").read()) if os.path.exists(f) else ""
+        kimi = {}
+        if "rvk" in st:   # rvk=<run tag>: Kimi-K2.5 (another model family) votes AND counts as independent evidence: runs/<split>_all_<tag>.jsonl
+            from postprocess import strip_sections
+            kimi = {f'{x["document_id"]}_{x["page"]}': strip_sections(x["markdown"]).strip() for x in map(json.loads, open(os.path.join(ROOT, f'runs/{split}_all_{st["rvk"]}.jsonl')))}
         for r in rows:
             s = f'{r["document_id"]}_{r["page"]}'
             if s in C:
-                new, ch = rover(r["markdown"], [C[s]["proc"][c] for c in voters if c != pick.get(s) and c in C[s]["proc"]])
+                ind = None if mode == "raw" else [C[s]["proc"].get("paddle", ""), mineru_md(s)] + ([kimi[s]] if kimi.get(s) else [])
+                vs = [C[s]["proc"][c] for c in voters if c != pick.get(s) and c in C[s]["proc"]] + ([kimi[s]] if kimi.get(s) else [])
+                new, ch = rover(r["markdown"], vs, indep=ind)
                 if ch: r["markdown"] = new
     if "am" in st:   # add paragraphs our page lacks but >= K other base5 runs have (addmiss.py); end2end drops unpaired text of ours, so extras are free
         from addmiss import add_missing
