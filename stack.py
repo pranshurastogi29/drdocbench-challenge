@@ -203,6 +203,10 @@ def build(split, steps, tmp):
                     from split_kind import filtered
                     new = filtered(s, r["markdown"], new, {"column", "block", "?"})
                 if sp: r["markdown"] = new
+    if "ip" in st:   # styled lines written once in the references' LaTeX convention, in place of the Markdown emphasis (inplace.py; no copies)
+        from inplace import convert
+        ml = int(st["ip"]) if st["ip"] != "1" else 10 ** 6   # ip=<n>: only styled lines of at most n characters
+        for r in rows: r["markdown"] = convert(r["markdown"], ml)[0]
     return rows
 
 
