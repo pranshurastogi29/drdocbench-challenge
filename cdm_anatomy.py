@@ -37,7 +37,7 @@ def job(a):
 
 
 if __name__ == "__main__":
-    with tempfile.TemporaryDirectory() as tmp: rows = stack.build("dev", stack.FULL, tmp)
+    with tempfile.TemporaryDirectory() as tmp: rows = stack.build("dev", sys.argv[1] if len(sys.argv) > 1 else stack.FULL, tmp)
     with Pool(11, initializer=M.init) as P: R = dict(P.map(job, [(f'{r["document_id"]}_{r["page"]}', r["subject"], r["markdown"]) for r in rows], chunksize=4))
     os.chdir(ROOT)
     allr = [x for v in R.values() for x in v]; E = sum(x[1] for x in allr); L = sum(x[2] for x in allr)
