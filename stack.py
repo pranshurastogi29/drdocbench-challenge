@@ -176,6 +176,23 @@ def build(split, steps, tmp):
             s_ = f'{r["document_id"]}_{r["page"]}'; pk = pick.get(s_, "v7")
             new, added = add_missing(r["markdown"], [RR[n].get(s_, "") for n in names if n != pk], k=kk)
             if added: r["markdown"] = new
+    if "cdd" in st:   # consensus de-duplication: a long paragraph written twice on our page is kept once only when most of our other runs
+                      # wrote it once on that page (a model duplication); genuine repetition on the page (refrains, repeated worksheet lines,
+                      # repeated headings) that the other runs also show twice stays
+        from sel_lab import FREE
+        C = json.load(open(os.path.join(ROOT, f"runs/selcache_{split}.json"))); pick = json.load(open(os.path.join(ROOT, "runs", __import__("build_submission").MBR_FILE or f"mbr_choice_{split}.json")))
+        Nz = lambda s: re.sub(r"[\W_]", "", s.lower())
+        for r in rows:
+            s_ = f'{r["document_id"]}_{r["page"]}'
+            others = [Nz(C[s_]["proc"][c]) for c in FREE if s_ in C and c != pick.get(s_) and c != "paddle" and c in C[s_]["proc"]]
+            seen, keep = set(), []
+            for q in re.split(r"\n\s*\n", r["markdown"]):
+                k = q.strip()
+                if len(k) >= 40 and not k.startswith("$") and not k.startswith("<table") and k in seen:
+                    w = Nz(k); rep = sum(o.count(w) >= 2 for o in others)
+                    if w and others and rep * 2 < len(others): continue      # most other runs have it once: our duplicate is a model error
+                seen.add(k); keep.append(q)
+            r["markdown"] = "\n\n".join(keep)
     if "dd" in st:   # de-duplicate: a long paragraph (>= 40 chars) that appears again on the same page is kept once (the model sometimes transcribes a passage twice)
         for r in rows:
             seen, keep = set(), []
