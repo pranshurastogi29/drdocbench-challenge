@@ -121,6 +121,10 @@ def build(split, steps, tmp):
         ft, fl = ("3", "80") if st["fm"] == "3" else ("2", "60")
         run("furnmerge.py", p, p + ".fm", "--max-tail", ft, "--maxlen", fl, "--paddle-check"); p = p + ".fm"
     rows = rows_of(p)
+    if "nt" in st:   # page-number tail merge (numtail.py): nt=<k lines> or nt=<k>_<maxlen>
+        from numtail import numtail
+        kk, ml = (st["nt"].split("_") + ["60"])[:2] if st["nt"] != "1" else ("3", "60")
+        for r in rows: r["markdown"] = numtail(r["markdown"], maxlen=int(ml), k=int(kk))[0]
     if "sd" in st:
         from spilldrop import spilldrop
         import build_submission as bs
