@@ -219,8 +219,8 @@ def build(split, steps, tmp):
         for r in rows:
             s = f'{r["document_id"]}_{r["page"]}'; src = [d[s] for d in S if s in d]
             if src:
-                new, _, sp = bvote(r["markdown"], src, k=2, do_merge=False, long_only=False)
-                if sp and st["si"] == "nl":   # si=nl: keep column / new-region / unlocated breaks, drop breaks inside one layout block (list entries: a dev-only convention)
+                new, _, sp = bvote(r["markdown"], src, k=1 if st["si"] == "nl1" else 2, do_merge=False, long_only=False)   # si=nl1: a break any ONE of the 3 runs makes
+                if sp and st["si"] in ("nl", "nl1"):   # si=nl: keep column / new-region / unlocated breaks, drop breaks inside one layout block (list entries: a dev-only convention)
                     from split_kind import filtered
                     new = filtered(s, r["markdown"], new, {"column", "block", "?"})
                 if sp: r["markdown"] = new
