@@ -211,6 +211,9 @@ def build(split, steps, tmp):
         from inplace import convert
         ml = int(st["ip"]) if st["ip"] != "1" else 10 ** 6   # ip=<n>: only styled lines of at most n characters
         for r in rows: r["markdown"] = convert(r["markdown"], ml)[0]
+    if "w3" in st:   # formula channel v3 (wrapdup3.py): whole multi-line blocks, windows of short lines, nested styles; appended at the page end
+        from wrapdup3 import add as add3
+        for r in rows: r["markdown"] = add3(r["markdown"], ("textit", "textbf", "plain", "ul", "uit", "itu"), ("textit", "textbf", "plain", "ul"), ("uit", "itu", "bu", "u0"), 4, 80)[0]
     return rows
 
 
