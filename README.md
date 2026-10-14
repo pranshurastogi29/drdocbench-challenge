@@ -9,6 +9,7 @@ TEDS, formula CDM and reading order per page (md2md pipeline of the official sco
 - **Technical report**: read it online at <https://pranshurastogi29.github.io/drdocbench/>
   ([paper PDF](https://pranshurastogi29.github.io/drdocbench/paper.pdf)). Sources: `report/acl/paper.tex` (ACL format; see
   `report/acl/README.md` to compile) and `report/technical_report.html`.
+- **Poster** (A0, ACL typography): <https://pranshurastogi29.github.io/drdocbench/poster.pdf>; source in `report/poster/`.
 - **Development summary**: `MILESTONES.md` (kept changes, ablations, what transferred, models, scorer findings) and
   `SUBMISSIONS.md` (leaderboard submissions). The commit history follows the same path, milestone by milestone.
 

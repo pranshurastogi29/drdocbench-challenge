@@ -1,0 +1,288 @@
+% Dr.DocBench 2026 poster, team pranshu29. A0 portrait, ACL typography (Times text and math, Inconsolata, ACL dark blue),
+% natbib author-year citations and acl_natbib.bst references from ../acl/references.bib.
+% Compile with XeLaTeX or tectonic, with acl_natbib.bst (https://github.com/acl-org/acl-style-files) next to this file:
+%   tectonic poster.tex        or        xelatex poster && bibtex poster && xelatex poster && xelatex poster
+\documentclass{article}
+\usepackage[paperwidth=841mm,paperheight=1189mm,left=30mm,right=30mm,top=0mm,bottom=22mm]{geometry}
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\setmainfont{texgyretermes}[Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
+\setmathfont{texgyretermes-math.otf}
+\setmonofont{Inconsolatazi4-Regular.otf}[BoldFont=Inconsolatazi4-Bold.otf,Scale=MatchLowercase]
+\usepackage{anyfontsize}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage[most]{tcolorbox}
+\usepackage{qrcode}
+\usepackage[round]{natbib}
+\setcitestyle{aysep={,}}
+\usepackage{url}
+\usepackage{hyperref}
+\definecolor{darkblue}{rgb}{0,0,0.5}   % the link colour of acl.sty
+\hypersetup{colorlinks=true,urlcolor=darkblue,linkcolor=darkblue,citecolor=darkblue,
+  pdftitle={pranshu29 at Dr.DocBench 2026 (poster)},pdfauthor={Pranshu Rastogi, Rajneesh Tiwari}}
+
+\definecolor{accent}{rgb}{0,0,0.5}
+\definecolor{ink}{HTML}{111111}
+\definecolor{muted}{HTML}{555A66}
+\definecolor{rulec}{HTML}{C9CDE0}
+\definecolor{tint}{HTML}{EEF0F8}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4mm}
+\hyphenpenalty=1000
+\setlength{\tabcolsep}{3.5mm}
+\newcommand{\body}{\fontsize{28}{35.5}\selectfont}
+\newcommand{\tsmall}{\fontsize{24}{29}\selectfont}
+\newcommand{\up}[1]{\textcolor{green!45!black}{\textbf{#1}}}
+\newcommand{\dn}[1]{\textcolor{red!65!black}{\textbf{#1}}}
+\newcommand{\ted}{Text\_ED}
+
+% section heading in the ACL style: number and title in bold, then a rule
+\newcommand{\blk}[2]{%
+  \par\vspace{8mm}%
+  {\fontsize{44}{50}\selectfont\bfseries\textcolor{accent}{#1\hspace{6mm}#2}}\par
+  \vspace{-2mm}{\color{accent}\rule{\linewidth}{1mm}}\par\vspace{0mm}}
+
+\setlist[itemize]{leftmargin=12mm,labelsep=4mm,itemsep=3mm,topsep=2mm,parsep=0mm,label={\textcolor{accent}{\rule[0.3em]{3.4mm}{3.4mm}}}}
+\newtcolorbox{keybox}{enhanced,colback=tint,colframe=tint,boxrule=0mm,arc=2mm,left=8mm,right=8mm,top=5mm,bottom=6mm,before skip=6mm,after skip=2mm}
+
+\newcommand{\stat}[2]{%
+  \begin{tcolorbox}[enhanced,colback=tint,colframe=tint,arc=2mm,boxrule=0mm,width=121.8mm,halign=center,top=5mm,bottom=4mm,left=2mm,right=2mm,nobeforeafter,box align=top]
+    {\fontsize{64}{70}\selectfont\bfseries\textcolor{accent}{#1}}\\[1mm]
+    {\fontsize{27}{31}\selectfont\textcolor{muted}{#2}}
+  \end{tcolorbox}}
+
+% reference list: acl_natbib entries, set small in three columns
+\renewcommand{\bibsection}{}
+\renewcommand{\bibfont}{\fontsize{17}{21}\selectfont}
+\setlength{\bibsep}{1.2mm}
+\setlength{\bibhang}{8mm}
+
+\begin{document}
+\body\color{ink}
+
+%%%% Title band
+\begin{tikzpicture}[remember picture,overlay]
+  \fill[accent] (current page.north west) rectangle ([yshift=-188mm]current page.north east);
+  \node[anchor=north west,text width=630mm,align=left,text=white,inner sep=0mm,execute at begin node={\hyphenpenalty=10000\exhyphenpenalty=10000}]
+    at ([xshift=30mm,yshift=24mm-48mm]current page.north west) {%
+    {\fontsize{30}{36}\selectfont EMNLP 2026\enspace·\enspace DocInsights Workshop\enspace·\enspace Shared Task, Dr.DocBench Track}\\[10mm]
+    {\fontsize{72}{80}\selectfont\bfseries pranshu29 at Dr.DocBench 2026: Consensus Selection over Prompt-Diverse VLM Transcriptions for \mbox{Expert-Level} Document Parsing}\\[12mm]
+    \begin{tabular}{@{}l@{\hspace{40mm}}l@{}}
+      {\fontsize{38}{44}\selectfont\bfseries Pranshu Rastogi} & {\fontsize{38}{44}\selectfont\bfseries Rajneesh Tiwari} \\[1mm]
+      {\fontsize{30}{36}\selectfont Independent Researcher} & {\fontsize{30}{36}\selectfont Independent Researcher} \\[1mm]
+      {\fontsize{28}{34}\selectfont\ttfamily rastogipranshu29@gmail.com} & {\fontsize{28}{34}\selectfont\ttfamily rajneesh.vish1@gmail.com}
+    \end{tabular}};
+  \node[anchor=north east,fill=white,inner sep=6mm,rounded corners=2mm] (qr)
+    at ([xshift=-30mm,yshift=-24mm]current page.north east) {\qrcode[height=122mm]{https://pranshurastogi29.github.io/drdocbench/}};
+  \node[anchor=north,text=white,align=center,font=\fontsize{25}{30}\selectfont] at ([yshift=-5mm]qr.south)
+    {Report: \texttt{pranshurastogi29.github.io/drdocbench}};
+\end{tikzpicture}
+
+\vspace*{200mm}
+
+%%%% Result strip
+\noindent\stat{7th}{final leaderboard}\hfill\stat{84.54}{Overall}\hfill\stat{0.1641}{Text\_ED}\hfill\stat{85.65}{Reading order}\hfill\stat{81.84}{Formula CDM}\hfill\stat{71.86}{Table TEDS}
+
+\vspace{4mm}
+{\centering\fontsize{28}{34}\selectfont\textcolor{muted}{509 test pages\enspace·\enspace training-free\enspace·\enspace one free vision-language model, prompted many ways\enspace·\enspace about \$82 of API use in total}\par}
+
+%%%% Pipeline
+\vspace{9mm}
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={draw=accent,line width=0.8mm,rounded corners=2mm,align=center,font=\fontsize{24}{29}\selectfont,inner sep=3mm,text width=76mm,minimum height=42mm,fill=white},
+  arr/.style={-{Stealth[length=7mm,width=6mm]},line width=1.1mm,accent}]
+  \node[box] (img) {\textbf{Page images}\\two-page windows, 1600\,px};
+  \node[box,right=8.5mm of img] (runs) {\textbf{8 transcriptions}\\prompts v6--v11, contrast run, PaddleOCR-VL};
+  \node[box,right=8.5mm of runs] (rules) {\textbf{Page rules}\\layout snap, tables, furniture merge};
+  \node[box,right=8.5mm of rules,fill=tint] (mbr) {\textbf{MBR selection}\\official text + order matching as utility};
+  \node[box,right=8.5mm of mbr] (post) {\textbf{Post rules}\\spill drop, boundary votes, cleanup};
+  \node[box,right=8.5mm of post,fill=tint] (cons) {\textbf{Gated word consensus}\\confirmed by OCR engines};
+  \node[box,right=8.5mm of cons] (cand) {\textbf{Formula and table}\\candidate blocks};
+  \node[box,right=8.5mm of cand,fill=accent,text=white] (out) {\textbf{Markdown page}};
+  \foreach \a/\b in {img/runs,runs/rules,rules/mbr,mbr/post,post/cons,cons/cand,cand/out} \draw[arr] (\a) -- (\b);
+\end{tikzpicture}
+\end{center}
+\vspace{-8mm}
+
+%%%% Three columns
+\noindent
+\begin{minipage}[t]{245mm}
+\blk{1}{The Challenge}
+Dr.DocBench \citep{drdocbench}, a track of the DocInsights 2026 shared task \citep{docinsights2026}, collects book pages on which parsers disagree. Its references follow \textbf{book-specific conventions} (which lines form a block, whether picture text is kept, where page numbers go), so a strong model loses points on pages it reads correctly.
+
+Scoring uses the md2md matcher of OmniDocBench \citep{omnidocbench}: text edit distance, reading order (RO), CDM \citep{cdm} and TEDS \citep{teds}; Overall averages them per page.
+
+\begin{keybox}
+\textbf{\textcolor{accent}{Scorer facts that shaped the system}}
+\begin{itemize}
+  \item Predicted blocks are joined to one reference block only if it has at most 300 normalised characters.
+  \item Only word characters count: punctuation and Markdown emphasis do not; case and digits do.
+  \item Formulas and tables are scored by best match, apart from text and order.
+\end{itemize}
+\end{keybox}
+
+\blk{2}{Select, Don't Train}
+One model gives many plausible transcriptions. We pick one per page with minimum Bayes risk \citep{kumar-byrne-2004-minimum}, using the \textbf{metric itself as the utility}:
+\[ \hat{c} = \arg\max_{c\in C}\, \frac{1}{|R_c|}\sum_{r\in R_c} \big(w_t\,T(c\,|\,r) + w_o\,O(c\,|\,r)\big) \]
+$T$ and $O$ are the official text and order scores of $c$ with run $r$ as the reference, $R_c$ excludes $c$, and $(w_t,w_o)=(0.558,0.433)$, the weights of text and order in Overall fitted on our submissions.
+
+\textbf{mbr8}: eight candidates (five base runs incl.\ PaddleOCR-VL \citep{paddleocrvl}, three column-break runs) against eleven pseudo-references.
+
+\blk{3}{Gated Word Consensus}
+In the spirit of ROVER \citep{fiscus1997rover}, the other runs vote word by word. A word changes only if a strict majority agrees, the new word is a near-spelling of the old one (not case only, not at a paragraph edge), and PaddleOCR-VL or MinerU \citep{mineru} confirms it or the old word is not in a dictionary.
+
+A plain majority vote lost \dn{0.06}: our runs share one model's errors. The gated vote gains \up{+0.006} with no page worse and fixes 33 test words, e.g.\ \emph{ATHAWAY}\,$\to$\,\emph{HATHAWAY}.
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{245mm}
+\blk{4}{Development Journey}
+Leaderboard Overall after each kept change, 67.77\,$\to$\,84.54:
+
+\begin{tikzpicture}
+\begin{axis}[width=241mm,height=118mm,ymin=64,ymax=88,xmin=0.5,xmax=11.5,
+  xtick={1,...,11},ytick={65,70,75,80,85},
+  tick label style={font=\fontsize{23}{27}\selectfont},
+  ymajorgrids,grid style={rulec,line width=0.5mm},axis line style={muted,line width=0.6mm},
+  major tick length=3mm,
+  nodes near coords,point meta=explicit symbolic,
+  every node near coord/.append style={font=\fontsize{22}{26}\selectfont\bfseries,anchor=south,text=accent,yshift=1.5mm}]
+\addplot[line width=1.3mm,accent,mark=*,mark size=3.4mm,mark options={fill=white,line width=1mm}] coordinates {
+ (1,67.77)[] (2,77.25)[77.3] (3,77.39)[] (4,78.66)[78.7] (5,81.59)[81.6] (6,81.97)[] (7,82.52)[] (8,82.88)[82.9] (9,83.53)[83.5] (10,84.13)[84.1] (11,84.54)[84.5]};
+\node[anchor=west,font=\fontsize{22}{26}\selectfont\bfseries,text=accent] at (axis cs:1.18,67.77) {67.8};
+\end{axis}
+\end{tikzpicture}
+
+{\tsmall
+\begin{tabularx}{\linewidth}{@{}r@{\hspace{5mm}}X@{\hspace{4mm}}r@{}}
+\toprule
+\# & Change kept & Overall \\
+\midrule
+1 & Single run, prompt v3 & 67.77 \\
+2 & Furniture-last prompts, medoid of runs, layout snap & 77.25 \\
+3--4 & PaddleOCR-VL tables; contrast run as a vote & 78.66 \\
+5--7 & Formula and table candidate blocks & 82.52 \\
+8 & \textbf{MBR selection}, furniture merge, spill drop, boundary votes & 82.88 \\
+9 & More formula candidates, symbol channel & 83.53 \\
+10 & \textbf{Column-break runs in MBR}, word consensus & 84.13 \\
+11 & \textbf{Final}: more candidate sources & \textbf{84.54} \\
+\bottomrule
+\end{tabularx}\par}\vspace{3mm}
+
+\blk{5}{Ablations}
+Leave-one-out on 925 development pages ($\Delta$ in leaderboard units):
+
+{\tsmall
+\begin{tabularx}{\linewidth}{@{}Xrrr@{}}
+\toprule
+Pipeline & \ted & RO & $\Delta$ \\
+\midrule
+Final (mbr8 + rules) & 0.1168 & 88.58 & -- \\
+\quad -- layout snap, tables & 0.1204 & 87.11 & \dn{$-$0.84} \\
+\quad -- furniture merge & 0.1162 & 87.49 & \dn{$-$0.44} \\
+\quad -- boundary votes & 0.1186 & 88.48 & \dn{$-$0.14} \\
+\quad -- spill drop & 0.1187 & 88.55 & \dn{$-$0.12} \\
+\quad -- cleanup & 0.1169 & 88.58 & \dn{$-$0.01} \\
+\quad + word consensus & 0.1168 & 88.58 & \up{+0.005} \\
+\bottomrule
+\end{tabularx}\par}\vspace{3mm}
+
+\begin{keybox}
+\textbf{\textcolor{accent}{Selection}}
+\begin{itemize}
+  \item MBR beats the medoid by \up{+1.05} (book-clustered CI $[+0.38, +1.85]$).
+  \item Learned rankers, weighted MBR and paragraph fusion: within noise of MBR.
+  \item A per-page oracle over the same runs adds +4.8: selection, not reading, is the limit.
+  \item Column-break runs as candidates: \up{+0.88} on dev, \up{+0.60} on the leaderboard.
+\end{itemize}
+\end{keybox}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{245mm}
+\blk{6}{What Transferred to Test}
+\textbf{Selection did}: mbr8 kept 68\% of its development gain (94\% for reading order). \textbf{Convention rules did not}:
+
+{\tsmall
+\begin{tabularx}{\linewidth}{@{}Xrr@{}}
+\toprule
+Change (Overall) & Dev & Test \\
+\midrule
+Contrast runs as extra votes & \up{+0.39} & \dn{$-$0.84} \\
+One-page windows as the pool & \up{+1.02} & \dn{$-$0.63} \\
+GPT-6.1 on 120 hard pages & \up{+0.06} & \dn{$-$0.47} \\
+Drop text PaddleOCR-VL lacks & \up{+0.02} & \dn{$-$0.21} \\
+Column splits incl.\ lists & \up{+1.00} & \dn{$-$0.02} \\
+\bottomrule
+\end{tabularx}\par}\vspace{3mm}
+
+\blk{7}{Where the Error Is}
+Diagnostic submissions blanked groups of test books; the score change decodes each group:
+
+{\tsmall
+\begin{tabularx}{\linewidth}{@{}Xrrr@{}}
+\toprule
+Test books & Pages & \ted & RO \\
+\midrule
+Subjects absent from dev & 120 & 0.200 & 77.4 \\
+Highest run disagreement & 120 & 0.203 & 80.7 \\
+Half of the rest & 134 & 0.157 & 85.0 \\
+Other half & 135 & 0.120 & 87.5 \\
+\bottomrule
+\end{tabularx}\par}\vspace{3mm}
+
+The first two groups hold \textbf{56\%} of the text error. On dev, half of it sits on 8\% of pages with a book-specific reference choice.
+
+\blk{8}{Stronger Models Alone}
+{\tsmall
+\begin{tabularx}{\linewidth}{@{}Xrrr@{}}
+\toprule
+53 common dev pages & \ted & RO & $\Delta$ \\
+\midrule
+Our pipeline (mbr8) & 0.0857 & 88.45 & -- \\
+Kimi K2.5 & 0.0614 & 85.20 & \dn{$-$0.05} \\
+Gemini 3.8 Flash & 0.0682 & 84.90 & \dn{$-$0.56} \\
+Kimi K2.6, no thinking & 0.1053 & 83.71 & \dn{$-$3.14} \\
+GPT-6 sol-pro (897 pages) & 0.1380 & 83.69 & \dn{$-$3.19} \\
+\bottomrule
+\end{tabularx}\par}\vspace{3mm}
+
+Kimi K2.5 \citep{kimik25} reads text best but orders worse; proofreading our pages with it: \dn{$-$2.6}.
+
+\begin{keybox}
+\textbf{\textcolor{accent}{Takeaways}}
+\begin{itemize}
+  \item Prompt diversity plus MBR with the metric as utility beat every stronger single model we tried.
+  \item Selection transfers to the hidden test set; rules tuned to development books do not.
+  \item The remaining gap is in segmentation and order conventions that vary by book.
+\end{itemize}
+\end{keybox}
+\end{minipage}
+
+%%%% Footer: models and links, then the reference list
+\vfill
+{\color{accent}\rule{\linewidth}{1mm}}\par\vspace{4mm}
+{\fontsize{21}{27}\selectfont
+\textbf{\textcolor{accent}{Models and tools.}} Base transcriber: a free OpenRouter model \citep{stealthmodel}. Also in the final submission: GPT-6.1 sol-pro \citep{gpt61solpro}, as a source of formula and table candidates. Tested: GPT-6 sol-pro and luna-pro \citep{gpt6solpro,gpt6lunapro}, Gemini 3.8 Flash \citep{gemini38flash}, Claude Sonnet 5.5 \citep{claudesonnet55}, Kimi K2.6 \citep{kimik26}, Qwen3.8 \citep{qwen38}, GLM-5.3 Flash \citep{glm53flash}, DeepSeek V4.1 Flash \citep{deepseekv41}, MiMo v2.6 Pro \citep{mimo26pro} and dots-3-note-preview \citep{dots3note}, through OpenRouter \citep{openrouter} and Hugging Face Inference Providers \citep{hfinference}. Training-free: no fine-tuning, no external annotated data.\par}
+\vspace{2mm}
+{\fontsize{22}{27}\selectfont\textbf{\textcolor{accent}{Links.}} Report: \url{https://pranshurastogi29.github.io/drdocbench/}\enspace·\enspace Paper: \url{https://pranshurastogi29.github.io/drdocbench/paper.pdf}\enspace·\enspace Code (MIT): \url{https://github.com/pranshurastogi29/drdocbench-challenge}\par}
+\vspace{3mm}
+{\fontsize{26}{30}\selectfont\bfseries\textcolor{accent}{References}}\par\vspace{-2mm}
+\setlength{\columnsep}{12mm}
+\begin{multicols}{4}
+\bibliographystyle{acl_natbib}
+\bibliography{../acl/references}
+\end{multicols}
+
+\end{document}
