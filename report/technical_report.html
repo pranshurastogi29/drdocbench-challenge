@@ -9,9 +9,8 @@
   --serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
   --sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
 }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper: #15191c; --ink: #e3e7ea; --muted: #9aa5ae; --rule: #2e363c; --accent: #7cc3df; --tint: #1c2328; --good: #7fc8a3; --bad: #e59a9a; color-scheme: dark } }
-:root[data-theme="dark"] { --paper: #15191c; --ink: #e3e7ea; --muted: #9aa5ae; --rule: #2e363c; --accent: #7cc3df; --tint: #1c2328; --good: #7fc8a3; --bad: #e59a9a; color-scheme: dark }
 body { background: var(--paper); color: var(--ink); font: 17px/1.62 var(--serif); padding-inline: 16px; padding-block: 40px 64px; }
 main { max-width: 46rem; margin: 0 auto; display: grid; gap: 0; }
 header { display: grid; gap: .5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--rule); margin-bottom: 1.5rem; }
