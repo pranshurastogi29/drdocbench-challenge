@@ -1,0 +1,154 @@
+<title>Consensus Selection for Dr.DocBench</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single reading column in the shape of a workshop paper; tables and code scroll inside their own boxes */
+:root {
+  --paper: #fbfbfa; --ink: #1d2328; --muted: #5b6670; --rule: #d8dde1; --accent: #1f5f7a; --tint: #eef3f5; --good: #2d6a4f; --bad: #9b2c2c;
+  --serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper: #15191c; --ink: #e3e7ea; --muted: #9aa5ae; --rule: #2e363c; --accent: #7cc3df; --tint: #1c2328; --good: #7fc8a3; --bad: #e59a9a; color-scheme: dark } }
+:root[data-theme="dark"] { --paper: #15191c; --ink: #e3e7ea; --muted: #9aa5ae; --rule: #2e363c; --accent: #7cc3df; --tint: #1c2328; --good: #7fc8a3; --bad: #e59a9a; color-scheme: dark }
+body { background: var(--paper); color: var(--ink); font: 17px/1.62 var(--serif); padding-inline: 16px; padding-block: 40px 64px; }
+main { max-width: 46rem; margin: 0 auto; display: grid; gap: 0; }
+header { display: grid; gap: .5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--rule); margin-bottom: 1.5rem; }
+.venue { font: 500 .78rem/1.3 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { font: 600 2rem/1.18 var(--serif); margin: 0; text-wrap: balance; }
+.authors { font: 500 .95rem/1.4 var(--sans); color: var(--muted); margin: 0; }
+h2 { font: 600 1.08rem/1.3 var(--sans); margin: 2.2rem 0 .6rem; text-wrap: balance; }
+h3 { font: 600 .95rem/1.3 var(--sans); margin: 1.5rem 0 .4rem; color: var(--ink); }
+p { margin: 0 0 .9rem; }
+.abstract { background: var(--tint); border-radius: 6px; padding: 1rem 1.2rem; }
+.abstract strong { font: 600 .8rem/1 var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: .45rem; }
+.abstract p { margin: 0; }
+ul, ol { margin: 0 0 .9rem; padding-left: 1.3rem; display: grid; gap: .3rem; }
+code { font: .86em/1 var(--mono); background: var(--tint); padding: .08em .3em; border-radius: 3px; }
+.tbl { overflow-x: auto; margin: .4rem 0 1.1rem; }
+table { border-collapse: collapse; width: 100%; font: .9rem/1.4 var(--sans); font-variant-numeric: tabular-nums; }
+caption { caption-side: bottom; text-align: left; font: .82rem/1.45 var(--serif); color: var(--muted); padding-top: .5rem; }
+th, td { text-align: left; padding: .38rem .6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-weight: 600; color: var(--muted); font-size: .78rem; letter-spacing: .03em; text-transform: uppercase; border-bottom: 1.5px solid var(--ink); }
+td.n, th.n { text-align: right; white-space: nowrap; }
+tr.hl td { background: var(--tint); font-weight: 600; }
+.pos { color: var(--good); } .neg { color: var(--bad); }
+.note { font-size: .88rem; color: var(--muted); }
+footer { margin-top: 2.4rem; padding-top: 1rem; border-top: 1px solid var(--rule); font: .85rem/1.5 var(--sans); color: var(--muted); }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 520px) { body { font-size: 16px; } h1 { font-size: 1.55rem; } }
+</style>
+
+<main>
+<header>
+  <div class="venue">Dr.DocBench Challenge 2026 · Document parsing track · Technical report</div>
+  <h1>pranshu29 at Dr.DocBench 2026: Consensus Selection over Prompt-Diverse VLM Transcriptions for Expert-Level Document Parsing</h1>
+  <p class="authors">Pranshu Rastogi and Rajneesh Tiwari, Independent Researchers · Team pranshu29 · Final rank 7 · Overall 84.54</p>
+</header>
+
+<section class="abstract">
+  <strong>Abstract</strong>
+  <p>We describe a training-free system for the Dr.DocBench document-parsing challenge. A general vision-language model transcribes each page several times under different prompts, image settings and window sizes. A page-level minimum-Bayes-risk (MBR) selector, whose utility is the challenge's own text and reading-order matching, picks one transcription per page. A small set of rules derived from the evaluator's matching behaviour then refines it, and a word-level consensus layer corrects recognition slips that independent OCR engines confirm. Display formulas and tables are evaluated by best match, so we also emit LaTeX and HTML candidate blocks for each page. Our final submission scores 84.54 overall (Text_ED 0.1641, TEDS 71.86, CDM 81.84, Reading Order 85.65, rank 7). We report which choices transferred from the development set to the test set, where the remaining error sits, and a set of measured negative results, including five stronger commercial models that did not improve on the ensemble.</p>
+</section>
+
+<h2>1. Introduction</h2>
+<p>Dr.DocBench selects book pages on which current parsers disagree, and its references follow annotator conventions that vary from book to book: which lines form one block, whether text inside a picture is transcribed, whether a list is a table, and where running headers and page numbers sit in the reading order. Our approach treats the problem as selection under uncertainty. Instead of training a parser, we generate many plausible transcriptions with one capable model and choose among them with the metric itself as the utility. All tuning used the development set (986 pages, 66 books) scored with a local copy of the official md2md scorer; the 509 test pages were used only through leaderboard submissions.</p>
+
+<h2>2. Task and evaluation</h2>
+<p>Each page is converted to Markdown. The scorer splits our page and the reference into blocks, matches text blocks by normalised edit distance, and reports four components. Text_ED and reading order are computed on matched text blocks; display formulas are scored by CDM and tables by TEDS, each against its best-matching prediction. The overall score is the mean of the components available on a page, averaged over pages. Reading the scorer closely gave three facts that shaped the system:</p>
+<ul>
+  <li>Consecutive predicted blocks are joined to one reference block only when that block is at most 300 normalised characters. Above that length a segmentation mismatch cannot be repaired by the matcher.</li>
+  <li>Our unmatched text blocks cost nothing while any reference block is unmatched, but once every reference block is matched they are joined into one record and counted in full.</li>
+  <li>Normalisation keeps only word characters (runs of four or more underscores become four), so punctuation and Markdown emphasis do not count, while capitalisation and digits do.</li>
+</ul>
+
+<h2>3. System</h2>
+
+<h3>3.1 Transcription runs</h3>
+<p>The base model is a general vision-language model served through OpenRouter (Section 6). Pages are sent as two-page windows at 1600 px on the long side, temperature 0. The prompts evolved through several versions; the ones in the final pool add these conventions in turn:</p>
+<ul>
+  <li><b>v6:</b> copy capitalisation exactly; never write placeholders for illegible text.</li>
+  <li><b>v7:</b> write page furniture (running headers, footers, page numbers) after the body, in a labelled section, because the references place it last.</li>
+  <li><b>v10a / v10b / v11:</b> read multi-column pages column by column and start a new paragraph at a column break; v10b also splits paragraphs interrupted by pictures; v11 draws PaddleOCR-VL layout frames on the image.</li>
+</ul>
+<p>Further runs vary contrast preprocessing, image size (1200 px) and window size (one page). PaddleOCR-VL and the MinerU pipeline provide layout blocks, tables and formulas. The final candidate pool for selection has eight transcriptions per page: five base runs (three prompts, a contrast variant, PaddleOCR-VL) and the three column-break runs.</p>
+
+<h3>3.2 Page-level rules</h3>
+<p>Every candidate passes through the same deterministic rules, each kept only if a leave-one-out ablation on the development set showed it helping:</p>
+<div class="tbl"><table>
+  <thead><tr><th>Rule</th><th>What it does</th><th class="n">Dev change when removed</th></tr></thead>
+  <tbody>
+    <tr><td>Layout snap + tables</td><td>Split our paragraphs at PaddleOCR-VL block boundaries where the text clearly spans two blocks; add PaddleOCR-VL's table where the page has none</td><td class="n neg">−0.84</td></tr>
+    <tr><td>Furniture merge</td><td>Join trailing header, footer and page-number lines that PaddleOCR-VL labels as furniture into one block, so their internal order cannot be wrong</td><td class="n neg">−0.44</td></tr>
+    <tr><td>Boundary votes</td><td>Split a long paragraph where at least five of the other runs split it</td><td class="n neg">−0.14</td></tr>
+    <tr><td>Spill drop</td><td>Drop a paragraph that only appears in the neighbouring page's one-page transcriptions (text spilled across the window)</td><td class="n neg">−0.12</td></tr>
+    <tr><td>Markup cleanup</td><td>Decode HTML entities, strip inline tags and stray script runs</td><td class="n neg">−0.01</td></tr>
+  </tbody>
+  <caption>Table 1. Leave-one-out on 925 development pages, in leaderboard units (0.558 × text + 0.433 × reading order), on top of the final selection.</caption>
+</table></div>
+
+<h3>3.3 MBR selection</h3>
+<p>For each page we choose the candidate with the highest average agreement with the other runs, where agreement between two candidates is the official text and reading-order matching computed with one of them standing in as the reference. This replaces a character-level medoid and adds about one point on the development set. Adding the three column-break runs as candidates and the six column-break variants as extra pseudo-references raised development Text_ED from 0.1264 to 0.1168 and reading order from 87.79 to 88.58. On the leaderboard this change gave +0.60 overall (Text_ED −0.0048, reading order +0.74).</p>
+
+<h3>3.4 Word-level consensus</h3>
+<p>Inside each paragraph of the selected page, the other runs' versions are aligned word by word. A word changes only when a strict majority agrees, the new spelling is close to the old (an OCR slip, not a different word), the change is not capitalisation alone, and an engine outside our model family (PaddleOCR-VL or MinerU) has the new word and not the old one, or the old word is not a dictionary word. A plain majority vote lost 0.06 on development because our runs share one model and therefore share errors; the gated version is small but never hurt a page.</p>
+
+<h3>3.5 Formula and table candidate blocks</h3>
+<p>Display formulas and tables are evaluated by best match: each reference formula or table is paired with its closest predicted one, and predicted blocks that match nothing are ignored. Display formulas also take no part in text or reading-order matching. The references write many styled lines (italic captions, bold labels, stage directions) as display formulas such as <code>$\textit{…}$</code>. We therefore append to each page standalone LaTeX candidates: every line of the page in the wrapper styles the references use (<code>\textit</code>, <code>\textbf</code>, bold italic, <code>\text</code>, underlined), the same lines from the other candidate runs, and inline formulas of all runs written as display formulas. Tables are handled the same way, with alternative transcriptions (PaddleOCR-VL, crop-level transcriptions, other runs) included as additional HTML tables. These blocks do not change the page's text or its reading order; their effect on the formula score is traced in Table 2.</p>
+
+<h2>4. Results</h2>
+<div class="tbl"><table>
+  <thead><tr><th>Submission</th><th class="n">Text_ED</th><th class="n">TEDS</th><th class="n">CDM</th><th class="n">Order</th><th class="n">Overall</th></tr></thead>
+  <tbody>
+    <tr><td>Medoid of five runs + rules</td><td class="n">0.1681</td><td class="n">68.0</td><td class="n">—</td><td class="n">82.85</td><td class="n">78.66</td></tr>
+    <tr><td>+ italic formula candidates for short lines</td><td class="n">0.1681</td><td class="n">68.0</td><td class="n">55.0</td><td class="n">82.85</td><td class="n">81.59</td></tr>
+    <tr><td>MBR selection, spill drop, boundary votes, cleanup</td><td class="n">0.1689</td><td class="n">71.86</td><td class="n">65.79</td><td class="n">84.91</td><td class="n">82.88</td></tr>
+    <tr><td>+ formula candidates from all runs</td><td class="n">0.1689</td><td class="n">71.86</td><td class="n">76.54</td><td class="n">84.91</td><td class="n">83.53</td></tr>
+    <tr><td>+ column-break candidates in MBR, word consensus</td><td class="n">0.1641</td><td class="n">71.86</td><td class="n">76.79</td><td class="n">85.65</td><td class="n">84.13</td></tr>
+    <tr class="hl"><td>Final: + extended formula candidates</td><td class="n">0.1641</td><td class="n">71.86</td><td class="n">81.84</td><td class="n">85.65</td><td class="n">84.54</td></tr>
+  </tbody>
+  <caption>Table 2. Leaderboard results, in submission order.</caption>
+</table></div>
+<p>The final system ranked seventh. The teams above us are close to us on formulas and tables and ahead on text (Text_ED 0.133–0.146) and reading order (up to 89.9). That gap is in transcription and segmentation, which is where our analysis also places our remaining error.</p>
+
+<h2>5. Analysis</h2>
+
+<h3>5.1 What transferred from development to test</h3>
+<p>Changes that select among existing transcriptions transferred well: the column-break MBR kept 68% of its development gain overall, 94% for reading order and about 50% for text. Changes that touched most pages or encoded a development-book convention reversed on test: adding contrast-enhanced runs as extra votes (−0.84), replacing two-page with one-page transcriptions (−0.63), and paragraph splits inside list blocks, which helped development books and cost text on test.</p>
+
+<h3>5.2 Where the error is</h3>
+<p>We located test error by blanking groups of books and decoding the leaderboard change. Books whose subjects never appear in development and books on which our runs disagree most (240 pages) held 56% of the text error and most of the reading-order error, at Text_ED 0.20 and reading order 77–81, against 0.12–0.16 and 85–88 for the rest. On development, 40% of the remaining text error is text we write that the reference does not keep, and half of all text error sits on 8% of pages where the reference made a book-specific choice: picture text kept as an image, a directory kept as a table, crossword clues kept as one block, a page whose reference is only its page number. Our words on those pages are right; the choice is not visible in the image or in our runs.</p>
+
+<h3>5.3 What did not help</h3>
+<div class="tbl"><table>
+  <thead><tr><th>Attempt</th><th>Result (development unless stated)</th></tr></thead>
+  <tbody>
+    <tr><td>Stronger models alone: GPT-6 and GPT-6.1 sol-pro, Gemini 3.8 Flash, Kimi K2.5 and K2.6</td><td>All below the ensemble (sol-pro −3.2 on 897 pages); GPT-6.1 sol-pro on the 120 hardest test pages: −0.47 on the leaderboard</td></tr>
+    <tr><td>The same models as extra MBR candidates</td><td>+0.1 to +0.2 once a single page is removed; Kimi K2.5 inside the final selection −0.02</td></tr>
+    <tr><td>Another model's paragraph order applied to our text</td><td>−1.1 to −1.3</td></tr>
+    <tr><td>Proofreading our page with Kimi K2.5 and the page image</td><td>As returned −2.6 (re-split paragraphs); word-level fixes only ±0.00</td></tr>
+    <tr><td>Paragraph boundaries from PaddleOCR-VL or MinerU</td><td>−1.4 to −1.7, also on high-disagreement books</td></tr>
+    <tr><td>Learned rankers on label-free features</td><td>No better than MBR</td></tr>
+    <tr><td>Geometric column order, consensus order, moving running heads</td><td>−0.2 to −2.2</td></tr>
+  </tbody>
+  <caption>Table 3. Measured negative results. The ensemble of one model's prompt-diverse runs was stronger than every single model we could access, and its errors are mostly convention mismatches that no candidate gets right.</caption>
+</table></div>
+
+<h2>6. Resources and disclosure</h2>
+<ul>
+  <li><b>Base transcription model:</b> an unnamed vision-language model offered free on OpenRouter during the challenge (<code>stealth/space-bunny-alpha</code>); it produced every transcription in the final pool.</li>
+  <li><b>OCR and layout:</b> PaddleOCR-VL (layout blocks, tables, formulas) and the MinerU 2.7.6 pipeline (formulas, word evidence for the consensus layer).</li>
+  <li><b>Also in the final submission:</b> OpenAI GPT-6.1 sol-pro transcriptions of 120 test pages, used only as a source of formula and table candidates (Section 3.5).</li>
+  <li><b>Models tested and not used in the final system:</b> OpenAI GPT-6 sol-pro, Google Gemini 3.8 Flash, Moonshot Kimi K2.5 and K2.6, Xiaomi MiMo v2.6 Pro, GLM and DeepSeek vision models, through OpenRouter and Hugging Face Inference Providers.</li>
+  <li><b>Evaluation:</b> the official scorer code, run locally on the development set; the system is training-free (no fine-tuning, no external annotated data, no manual edits to test output).</li>
+  <li><b>Leaderboard use:</b> besides regular submissions, three diagnostic submissions blanked groups of test books to locate error (Section 5.2), and some submissions applied one change to a single group of books to measure it there.</li>
+  <li><b>Formula and table candidate blocks:</b> described in Section 3.5.</li>
+</ul>
+
+<h2>7. Conclusion</h2>
+<p>A single capable model, prompted several ways and filtered by an MBR selector that uses the evaluation metric as its utility, outperformed every stronger model we tested on this benchmark. Selection-based changes transferred to the hidden test set; rules built on development-book conventions did not. The remaining gap to the leading teams is in segmentation and reading-order conventions that vary by book, which a future system could address with layout-aware models trained on the annotation conventions themselves.</p>
+
+<footer>Team pranshu29 · Dr.DocBench Challenge 2026, DocInsights workshop at EMNLP 2026 · Code and full experiment logs available on request.</footer>
+</main>
