@@ -23,6 +23,9 @@
 \usepackage{multicol}
 \usepackage[most]{tcolorbox}
 \usepackage{qrcode}
+\usepackage{graphicx}
+\graphicspath{{logos/}}
+\newcommand{\vc}[1]{$\vcenter{\hbox{#1}}$}
 \usepackage[round]{natbib}
 \setcitestyle{aysep={,}}
 \usepackage{url}
@@ -74,23 +77,30 @@
 
 %%%% Title band
 \begin{tikzpicture}[remember picture,overlay]
-  \fill[accent] (current page.north west) rectangle ([yshift=-188mm]current page.north east);
+  \fill[accent] (current page.north west) rectangle ([yshift=-208mm]current page.north east);
+  % logos: main conference, workshop, company (Dr.DocBench challenge)
+  \node[anchor=north west,fill=white,rounded corners=2mm,inner xsep=9mm,inner ysep=5mm] (logos)
+    at ([xshift=30mm,yshift=-22mm]current page.north west) {%
+    \vc{\includegraphics[height=31mm]{emnlp_2026.png}}\hspace{11mm}%
+    \vc{\includegraphics[height=44mm]{docinsights_2026.png}}\hspace{11mm}%
+    \vc{\includegraphics[height=25mm]{abaka_ai.png}}};
+  \node[anchor=west,text=white,align=left,font=\fontsize{30}{37}\selectfont,inner sep=0mm] at ([xshift=14mm]logos.east)
+    {DocInsights Workshop at EMNLP 2026\\Shared Task, Dr.DocBench Track};
   \node[anchor=north west,text width=630mm,align=left,text=white,inner sep=0mm,execute at begin node={\hyphenpenalty=10000\exhyphenpenalty=10000}]
-    at ([xshift=30mm,yshift=24mm-48mm]current page.north west) {%
-    {\fontsize{30}{36}\selectfont EMNLP 2026\enspace·\enspace DocInsights Workshop\enspace·\enspace Shared Task, Dr.DocBench Track}\\[10mm]
-    {\fontsize{72}{80}\selectfont\bfseries pranshu29 at Dr.DocBench 2026: Consensus Selection over Prompt-Diverse VLM Transcriptions for \mbox{Expert-Level} Document Parsing}\\[12mm]
+    at ([yshift=-8mm]logos.south west) {%
+    {\fontsize{68}{76}\selectfont\bfseries pranshu29 at Dr.DocBench 2026: Consensus Selection over Prompt-Diverse VLM Transcriptions for \mbox{Expert-Level} Document Parsing}\\[9mm]
     \begin{tabular}{@{}l@{\hspace{40mm}}l@{}}
       {\fontsize{38}{44}\selectfont\bfseries Pranshu Rastogi} & {\fontsize{38}{44}\selectfont\bfseries Rajneesh Tiwari} \\[1mm]
       {\fontsize{30}{36}\selectfont Independent Researcher} & {\fontsize{30}{36}\selectfont Independent Researcher} \\[1mm]
       {\fontsize{28}{34}\selectfont\ttfamily rastogipranshu29@gmail.com} & {\fontsize{28}{34}\selectfont\ttfamily rajneesh.vish1@gmail.com}
     \end{tabular}};
   \node[anchor=north east,fill=white,inner sep=6mm,rounded corners=2mm] (qr)
-    at ([xshift=-30mm,yshift=-24mm]current page.north east) {\qrcode[height=122mm]{https://pranshurastogi29.github.io/drdocbench/}};
-  \node[anchor=north,text=white,align=center,font=\fontsize{25}{30}\selectfont] at ([yshift=-5mm]qr.south)
-    {Report: \texttt{pranshurastogi29.github.io/drdocbench}};
+    at ([xshift=-30mm,yshift=-22mm]current page.north east) {\qrcode[height=122mm]{https://pranshurastogi29.github.io/drdocbench/}};
+  \node[anchor=north east,text=white,align=right,font=\fontsize{24}{30}\selectfont,inner sep=0mm] at ([yshift=-5mm]qr.south east)
+    {Scan for the full report\\\texttt{pranshurastogi29.github.io/drdocbench}};
 \end{tikzpicture}
 
-\vspace*{200mm}
+\vspace*{220mm}
 
 %%%% Result strip
 \noindent\stat{7th}{final leaderboard}\hfill\stat{84.54}{Overall}\hfill\stat{0.1641}{Text\_ED}\hfill\stat{85.65}{Reading order}\hfill\stat{81.84}{Formula CDM}\hfill\stat{71.86}{Table TEDS}

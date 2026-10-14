@@ -10,5 +10,9 @@ Compile with XeLaTeX or [tectonic](https://tectonic-typesetting.github.io), with
     tectonic poster.tex
     # or: xelatex poster && bibtex poster && xelatex poster && xelatex poster
 
+Logos in `logos/` are the event and organiser marks, taken from their official sites: EMNLP 2026
+(2026.emnlp.org), the DocInsights 2026 workshop (docinsights-workshop.github.io) and Abaka AI, which runs the
+Dr.DocBench challenge (from the workshop's sponsor list). They belong to their owners.
+
 For another board size, change `paperwidth` / `paperheight` in the `geometry` line.
 `poster.pdf` is the compiled poster; it is also at https://pranshurastogi29.github.io/drdocbench/poster.pdf.
