@@ -38,12 +38,18 @@ tr.hl td { background: var(--tint); font-weight: 600; }
 footer { margin-top: 2.4rem; padding-top: 1rem; border-top: 1px solid var(--rule); font: .85rem/1.5 var(--sans); color: var(--muted); }
 a { color: var(--accent); }
 a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+a.cite { text-decoration: none; } a.cite:hover { text-decoration: underline; }
+ol.refs { list-style: none; padding-left: 0; gap: .6rem; font-size: .88rem; line-height: 1.5; }
+ol.refs li { padding-left: 1.4rem; text-indent: -1.4rem; overflow-wrap: anywhere; }
+ol.refs li:target { background: var(--tint); border-radius: 3px; }
+ol.refs code { font-size: .82em; }
+p.rw b { font-family: var(--sans); font-size: .92rem; }
 @media (max-width: 520px) { body { font-size: 16px; } h1 { font-size: 1.55rem; } }
 </style>
 
 <main>
 <header>
-  <div class="venue">Dr.DocBench Challenge 2026 · Document parsing track · Technical report</div>
+  <div class="venue">DocInsights 2026 Shared Task · Dr.DocBench track · System description</div>
   <h1>pranshu29 at Dr.DocBench 2026: Consensus Selection over Prompt-Diverse VLM Transcriptions for Expert-Level Document Parsing</h1>
   <p class="authors">Pranshu Rastogi and Rajneesh Tiwari, Independent Researchers · Team pranshu29 · Final rank 7 · Overall 84.54</p>
 </header>
@@ -54,28 +60,34 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 </section>
 
 <h2>1. Introduction</h2>
-<p>Dr.DocBench selects book pages on which current parsers disagree, and its references follow annotator conventions that vary from book to book: which lines form one block, whether text inside a picture is transcribed, whether a list is a table, and where running headers and page numbers sit in the reading order. Our approach treats the problem as selection under uncertainty. Instead of training a parser, we generate many plausible transcriptions with one capable model and choose among them with the metric itself as the utility. All tuning used the development set (986 pages, 66 books) scored with a local copy of the official md2md scorer; the 509 test pages were used only through leaderboard submissions.</p>
+<p>This report describes our system for the Dr.DocBench track of the DocInsights 2026 shared task (<a class="cite" href="#r-docinsights2026">DocInsights Workshop Organizers, 2026</a>), held with the Workshop on Document Intelligence and Understanding at EMNLP 2026. The shared task has two tracks: DocSem, document-grounded quantitative reasoning with evidence attribution (<a class="cite" href="#r-docsem">Oracle, 2026</a>), and Dr.DocBench, expert-level parsing of complex document pages (<a class="cite" href="#r-drdocbench">Yang et al., 2026</a>; <a class="cite" href="#r-drdocbenchchallenge">2077AI and Abaka AI, 2026</a>). Teams were ranked on the Dr.DocBench leaderboard hosted on EvalAI (<a class="cite" href="#r-evalai">EvalAI, 2026</a>).</p>
+<p>Dr.DocBench (<a class="cite" href="#r-drdocbench">Yang et al., 2026</a>) selects book pages on which current parsers disagree, and its references follow annotator conventions that vary from book to book: which lines form one block, whether text inside a picture is transcribed, whether a list is a table, and where running headers and page numbers sit in the reading order. Our approach treats the problem as selection under uncertainty. Instead of training a parser, we generate many plausible transcriptions with one capable model and choose among them with minimum-Bayes-risk selection (<a class="cite" href="#r-kumar-byrne-2004-minimum">Kumar and Byrne, 2004</a>), using the metric itself as the utility. All tuning used the development set (986 pages, 66 books) scored with a local copy of the official md2md scorer; the 509 test pages were used only through leaderboard submissions.</p>
 
-<h2>2. Task and evaluation</h2>
-<p>Each page is converted to Markdown. The scorer splits our page and the reference into blocks, matches text blocks by normalised edit distance, and reports four components. Text_ED and reading order are computed on matched text blocks; display formulas are scored by CDM and tables by TEDS, each against its best-matching prediction. The overall score is the mean of the components available on a page, averaged over pages. Reading the scorer closely gave three facts that shaped the system:</p>
+<h2>2. Related work</h2>
+<p class="rw"><b>Benchmarks.</b> Document-parsing benchmarks moved from layout detection, as in DocLayNet (<a class="cite" href="#r-doclaynet">Pfitzmann et al., 2022</a>) and M<sup>6</sup>Doc (<a class="cite" href="#r-m6doc">Cheng et al., 2023</a>), to end-to-end page parsing with block-level annotations, as in OmniDocBench (<a class="cite" href="#r-omnidocbench">Ouyang et al., 2025</a>), whose md2md scorer this challenge uses, and to OCR-centred evaluation of multimodal models in OCRBench v2 (<a class="cite" href="#r-ocrbenchv2">Fu et al., 2025</a>). Dr.DocBench (<a class="cite" href="#r-drdocbench">Yang et al., 2026</a>) samples pages on which strong parsers disagree and adds expert content such as chemistry, music and dense formulas. Its metrics combine normalised edit distance (<a class="cite" href="#r-levenshtein1966">Levenshtein, 1966</a>), TEDS for tables (<a class="cite" href="#r-teds">Zhong et al., 2020</a>) and CDM for formulas (<a class="cite" href="#r-cdm">Wang et al., 2025</a>).</p>
+<p class="rw"><b>Parsing systems.</b> Pipeline toolkits combine layout detection with specialised recognisers: MinerU (<a class="cite" href="#r-mineru">Wang et al., 2024</a>), PaddleOCR-VL (<a class="cite" href="#r-paddleocrvl">Cui et al., 2025</a>, <a class="cite" href="#r-paddleocrvl15">2026</a>) and Docling (<a class="cite" href="#r-docling">Auer et al., 2024</a>). Compact end-to-end parsers include MinerU2.5 (<a class="cite" href="#r-mineru25">Niu et al., 2025</a>), MinerU2.5-Pro (<a class="cite" href="#r-mineru25pro">Wang et al., 2026</a>), DeepSeek-OCR 2 (<a class="cite" href="#r-deepseekocr2">Wei et al., 2026</a>) and GLM-OCR (<a class="cite" href="#r-glmocr">Duan et al., 2026</a>). General vision-language models such as Kimi K2.5 (<a class="cite" href="#r-kimik25">Kimi Team et al., 2026</a>) also transcribe pages when prompted, and the Dr.DocBench study found the strongest general models ahead of the specialised parsers on text and reading order (<a class="cite" href="#r-drdocbench">Yang et al., 2026</a>).</p>
+<p class="rw"><b>Combining outputs.</b> Selecting among system outputs with minimum Bayes risk (<a class="cite" href="#r-kumar-byrne-2004-minimum">Kumar and Byrne, 2004</a>) and voting at the word level after alignment, as in ROVER (<a class="cite" href="#r-fiscus1997rover">Fiscus, 1997</a>), are established in machine translation and speech recognition. We apply both to page transcriptions, using the challenge's matching as the utility and Hungarian assignment (<a class="cite" href="#r-scipy">Virtanen et al., 2020</a>) as implemented in the scorer.</p>
+
+<h2>3. Task and evaluation</h2>
+<p>The development set has 986 pages from 66 books with Markdown and layout references; the test set has 509 pages from 34 books, five of whose subjects (Drama, Health &amp; Fitness, Juvenile Fiction, Nature, Travel) never occur in development. Each page is converted to Markdown and scored by the md2md pipeline of the official scorer, derived from OmniDocBench (<a class="cite" href="#r-omnidocbench">Ouyang et al., 2025</a>). The scorer splits our page and the reference into blocks, matches text blocks by normalised edit distance (<a class="cite" href="#r-levenshtein1966">Levenshtein, 1966</a>), and reports four components. Text_ED and reading order are computed on matched text blocks; display formulas are scored by CDM (<a class="cite" href="#r-cdm">Wang et al., 2025</a>) and tables by TEDS (<a class="cite" href="#r-teds">Zhong et al., 2020</a>), each against its best-matching prediction. The overall score is the mean of the components available on a page, averaged over pages. Reading the scorer closely gave three facts that shaped the system:</p>
 <ul>
   <li>Consecutive predicted blocks are joined to one reference block only when that block is at most 300 normalised characters. Above that length a segmentation mismatch cannot be repaired by the matcher.</li>
   <li>Our unmatched text blocks cost nothing while any reference block is unmatched, but once every reference block is matched they are joined into one record and counted in full.</li>
   <li>Normalisation keeps only word characters (runs of four or more underscores become four), so punctuation and Markdown emphasis do not count, while capitalisation and digits do.</li>
 </ul>
 
-<h2>3. System</h2>
+<h2>4. System</h2>
 
-<h3>3.1 Transcription runs</h3>
-<p>The base model is a general vision-language model served through OpenRouter (Section 6). Pages are sent as two-page windows at 1600 px on the long side, temperature 0. The prompts evolved through several versions; the ones in the final pool add these conventions in turn:</p>
+<h3>4.1 Transcription runs</h3>
+<p>The base model is a general vision-language model served through OpenRouter (<a class="cite" href="#r-stealthmodel">OpenRouter, 2026b</a>; Section 7). Pages are sent as two-page windows at 1600 px on the long side, temperature 0. The prompts evolved through several versions; the ones in the final pool add these conventions in turn:</p>
 <ul>
   <li><b>v6:</b> copy capitalisation exactly; never write placeholders for illegible text.</li>
   <li><b>v7:</b> write page furniture (running headers, footers, page numbers) after the body, in a labelled section, because the references place it last.</li>
   <li><b>v10a / v10b / v11:</b> read multi-column pages column by column and start a new paragraph at a column break; v10b also splits paragraphs interrupted by pictures; v11 draws PaddleOCR-VL layout frames on the image.</li>
 </ul>
-<p>Further runs vary contrast preprocessing, image size (1200 px) and window size (one page). PaddleOCR-VL and the MinerU pipeline provide layout blocks, tables and formulas. The final candidate pool for selection has eight transcriptions per page: five base runs (three prompts, a contrast variant, PaddleOCR-VL) and the three column-break runs.</p>
+<p>Further runs vary contrast preprocessing, image size (1200 px) and window size (one page). PaddleOCR-VL (<a class="cite" href="#r-paddleocrvl">Cui et al., 2025</a>) and the MinerU pipeline (<a class="cite" href="#r-mineru">Wang et al., 2024</a>) provide layout blocks, tables and formulas. The final candidate pool for selection has eight transcriptions per page: five base runs (three prompts, a contrast variant, PaddleOCR-VL) and the three column-break runs.</p>
 
-<h3>3.2 Page-level rules</h3>
+<h3>4.2 Page-level rules</h3>
 <p>Every candidate passes through the same deterministic rules, each kept only if a leave-one-out ablation on the development set showed it helping:</p>
 <div class="tbl"><table>
   <thead><tr><th>Rule</th><th>What it does</th><th class="n">Dev change when removed</th></tr></thead>
@@ -89,16 +101,16 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   <caption>Table 1. Leave-one-out on 925 development pages, in leaderboard units (0.558 × text + 0.433 × reading order), on top of the final selection.</caption>
 </table></div>
 
-<h3>3.3 MBR selection</h3>
-<p>For each page we choose the candidate with the highest average agreement with the other runs, where agreement between two candidates is the official text and reading-order matching computed with one of them standing in as the reference. This replaces a character-level medoid and adds about one point on the development set. Adding the three column-break runs as candidates and the six column-break variants as extra pseudo-references raised development Text_ED from 0.1264 to 0.1168 and reading order from 87.79 to 88.58. On the leaderboard this change gave +0.60 overall (Text_ED −0.0048, reading order +0.74).</p>
+<h3>4.3 MBR selection</h3>
+<p>Following minimum-Bayes-risk decoding (<a class="cite" href="#r-kumar-byrne-2004-minimum">Kumar and Byrne, 2004</a>), for each page we choose the candidate with the highest average agreement with the other runs, where agreement between two candidates is the official text and reading-order matching computed with one of them standing in as the reference. This replaces a character-level medoid and adds about one point on the development set. Adding the three column-break runs as candidates and the six column-break variants as extra pseudo-references raised development Text_ED from 0.1264 to 0.1168 and reading order from 87.79 to 88.58. On the leaderboard this change gave +0.60 overall (Text_ED −0.0048, reading order +0.74).</p>
 
-<h3>3.4 Word-level consensus</h3>
-<p>Inside each paragraph of the selected page, the other runs' versions are aligned word by word. A word changes only when a strict majority agrees, the new spelling is close to the old (an OCR slip, not a different word), the change is not capitalisation alone, and an engine outside our model family (PaddleOCR-VL or MinerU) has the new word and not the old one, or the old word is not a dictionary word. A plain majority vote lost 0.06 on development because our runs share one model and therefore share errors; the gated version is small but never hurt a page.</p>
+<h3>4.4 Word-level consensus</h3>
+<p>In the spirit of ROVER (<a class="cite" href="#r-fiscus1997rover">Fiscus, 1997</a>), the other runs' versions of each paragraph of the selected page are aligned word by word. A word changes only when a strict majority agrees, the new spelling is close to the old (an OCR slip, not a different word), the change is not capitalisation alone, and an engine outside our model family (PaddleOCR-VL or MinerU) has the new word and not the old one, or the old word is not a dictionary word. A plain majority vote lost 0.06 on development because our runs share one model and therefore share errors; the gated version is small but never hurt a page.</p>
 
-<h3>3.5 Formula and table candidate blocks</h3>
+<h3>4.5 Formula and table candidate blocks</h3>
 <p>Display formulas and tables are evaluated by best match: each reference formula or table is paired with its closest predicted one, and predicted blocks that match nothing are ignored. Display formulas also take no part in text or reading-order matching. The references write many styled lines (italic captions, bold labels, stage directions) as display formulas such as <code>$\textit{…}$</code>. We therefore append to each page standalone LaTeX candidates: every line of the page in the wrapper styles the references use (<code>\textit</code>, <code>\textbf</code>, bold italic, <code>\text</code>, underlined), the same lines from the other candidate runs, and inline formulas of all runs written as display formulas. Tables are handled the same way, with alternative transcriptions (PaddleOCR-VL, crop-level transcriptions, other runs) included as additional HTML tables. These blocks do not change the page's text or its reading order; their effect on the formula score is traced in Table 2.</p>
 
-<h2>4. Results</h2>
+<h2>5. Results</h2>
 <div class="tbl"><table>
   <thead><tr><th>Submission</th><th class="n">Text_ED</th><th class="n">TEDS</th><th class="n">CDM</th><th class="n">Order</th><th class="n">Overall</th></tr></thead>
   <tbody>
@@ -113,15 +125,15 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 </table></div>
 <p>The final system ranked seventh. The teams above us are close to us on formulas and tables and ahead on text (Text_ED 0.133–0.146) and reading order (up to 89.9). That gap is in transcription and segmentation, which is where our analysis also places our remaining error.</p>
 
-<h2>5. Analysis</h2>
+<h2>6. Analysis</h2>
 
-<h3>5.1 What transferred from development to test</h3>
+<h3>6.1 What transferred from development to test</h3>
 <p>Changes that select among existing transcriptions transferred well: the column-break MBR kept 68% of its development gain overall, 94% for reading order and about 50% for text. Changes that touched most pages or encoded a development-book convention reversed on test: adding contrast-enhanced runs as extra votes (−0.84), replacing two-page with one-page transcriptions (−0.63), and paragraph splits inside list blocks, which helped development books and cost text on test.</p>
 
-<h3>5.2 Where the error is</h3>
+<h3>6.2 Where the error is</h3>
 <p>We located test error by blanking groups of books and decoding the leaderboard change. Books whose subjects never appear in development and books on which our runs disagree most (240 pages) held 56% of the text error and most of the reading-order error, at Text_ED 0.20 and reading order 77–81, against 0.12–0.16 and 85–88 for the rest. On development, 40% of the remaining text error is text we write that the reference does not keep, and half of all text error sits on 8% of pages where the reference made a book-specific choice: picture text kept as an image, a directory kept as a table, crossword clues kept as one block, a page whose reference is only its page number. Our words on those pages are right; the choice is not visible in the image or in our runs.</p>
 
-<h3>5.3 What did not help</h3>
+<h3>6.3 What did not help</h3>
 <div class="tbl"><table>
   <thead><tr><th>Attempt</th><th>Result (development unless stated)</th></tr></thead>
   <tbody>
@@ -136,19 +148,84 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   <caption>Table 3. Measured negative results. The ensemble of one model's prompt-diverse runs was stronger than every single model we could access, and its errors are mostly convention mismatches that no candidate gets right.</caption>
 </table></div>
 
-<h2>6. Resources and disclosure</h2>
+<h2>7. Resources and disclosure</h2>
+<p>Table 4 lists every model and tool we ran. Models were called through OpenRouter (<a class="cite" href="#r-openrouter">OpenRouter, 2026a</a>) and Hugging Face Inference Providers (<a class="cite" href="#r-hfinference">Hugging Face, 2026</a>); layout and OCR toolkits ran on Kaggle GPUs; string matching used RapidFuzz (<a class="cite" href="#r-rapidfuzz">Bachmann, 2026</a>) and the official scorer.</p>
 <ul>
-  <li><b>Base transcription model:</b> an unnamed vision-language model offered free on OpenRouter during the challenge (<code>stealth/space-bunny-alpha</code>); it produced every transcription in the final pool.</li>
-  <li><b>OCR and layout:</b> PaddleOCR-VL (layout blocks, tables, formulas) and the MinerU 2.7.6 pipeline (formulas, word evidence for the consensus layer).</li>
-  <li><b>Also in the final submission:</b> OpenAI GPT-6.1 sol-pro transcriptions of 120 test pages, used only as a source of formula and table candidates (Section 3.5).</li>
-  <li><b>Models tested and not used in the final system:</b> OpenAI GPT-6 sol-pro, Google Gemini 3.8 Flash, Moonshot Kimi K2.5 and K2.6, Xiaomi MiMo v2.6 Pro, GLM and DeepSeek vision models, through OpenRouter and Hugging Face Inference Providers.</li>
-  <li><b>Evaluation:</b> the official scorer code, run locally on the development set; the system is training-free (no fine-tuning, no external annotated data, no manual edits to test output).</li>
-  <li><b>Leaderboard use:</b> besides regular submissions, three diagnostic submissions blanked groups of test books to locate error (Section 5.2), and some submissions applied one change to a single group of books to measure it there.</li>
-  <li><b>Formula and table candidate blocks:</b> described in Section 3.5.</li>
+  <li><b>Base model:</b> an unnamed vision-language model offered free on OpenRouter during the challenge (<code>stealth/space-bunny-alpha</code>); every transcription in the final candidate pool comes from it.</li>
+  <li><b>Also in the final submission:</b> GPT-6.1 sol-pro transcriptions of 120 test pages, used only as a source of formula and table candidates (Section 4.5).</li>
+  <li><b>Training and data:</b> none. No fine-tuning, no external annotated data, no manual edits to test output. The official scorer was run locally on the development set only.</li>
+  <li><b>Leaderboard use:</b> besides regular submissions, three diagnostic submissions blanked groups of test books to locate error (Section 6.2), and some submissions applied one change to a single group of books to measure it there.</li>
+  <li><b>Cost:</b> about $82 of API usage in total, all models.</li>
 </ul>
+<div class="tbl"><table>
+  <thead><tr><th>Model or tool</th><th>Developer</th><th>Weights</th><th>Access</th><th>Role</th><th>Ref.</th></tr></thead>
+  <tbody>
+    <tr><td>space-bunny-alpha (stealth)</td><td>not disclosed</td><td>–</td><td>OpenRouter (free)</td><td>base transcriber, all candidates</td><td><a class="cite" href="#r-stealthmodel">OpenRouter, 2026b</a></td></tr>
+    <tr><td>PaddleOCR-VL (pipeline 1.6)</td><td>Baidu</td><td>open</td><td>Kaggle GPU</td><td>layout, furniture labels, tables, formulas</td><td><a class="cite" href="#r-paddleocrvl">Cui et al., 2025</a>, <a class="cite" href="#r-paddleocrvl15">2026</a></td></tr>
+    <tr><td>MinerU (pipeline 2.7.6)</td><td>OpenDataLab</td><td>open</td><td>Kaggle GPU</td><td>formulas, word evidence for consensus</td><td><a class="cite" href="#r-mineru">Wang et al., 2024</a></td></tr>
+    <tr><td>Docling</td><td>IBM Research</td><td>open</td><td>Kaggle GPU</td><td>picture boxes for analysis</td><td><a class="cite" href="#r-docling">Auer et al., 2024</a></td></tr>
+    <tr><td>GPT-6.1 sol-pro</td><td>OpenAI</td><td>closed</td><td>OpenRouter</td><td>formula and table candidates (120 test pages)</td><td><a class="cite" href="#r-gpt61solpro">OpenAI, 2026c</a></td></tr>
+    <tr><td>GPT-6 sol-pro</td><td>OpenAI</td><td>closed</td><td>OpenRouter (batch)</td><td>tested: reader, order source</td><td><a class="cite" href="#r-gpt6solpro">OpenAI, 2026b</a></td></tr>
+    <tr><td>GPT-6 luna-pro</td><td>OpenAI</td><td>closed</td><td>OpenRouter</td><td>tested: reader</td><td><a class="cite" href="#r-gpt6lunapro">OpenAI, 2026a</a></td></tr>
+    <tr><td>Gemini 3.8 Flash</td><td>Google</td><td>closed</td><td>OpenRouter</td><td>tested: reader, MBR candidate</td><td><a class="cite" href="#r-gemini38flash">Google, 2026</a></td></tr>
+    <tr><td>Claude Sonnet 5.5</td><td>Anthropic</td><td>closed</td><td>OpenRouter (batch)</td><td>tested: declined copyrighted pages</td><td><a class="cite" href="#r-claudesonnet55">Anthropic, 2026</a></td></tr>
+    <tr><td>Kimi K2.5</td><td>Moonshot AI</td><td>open</td><td>OpenRouter, HF Inference</td><td>tested: reader, candidate, proofreader</td><td><a class="cite" href="#r-kimik25">Kimi Team et al., 2026</a></td></tr>
+    <tr><td>Kimi K2.6</td><td>Moonshot AI</td><td>open</td><td>HF Inference</td><td>tested: reader, candidate</td><td><a class="cite" href="#r-kimik26">Moonshot AI, 2026</a></td></tr>
+    <tr><td>Qwen3.8 Flash</td><td>Alibaba Qwen</td><td>–</td><td>OpenRouter</td><td>tested: extra ensemble vote</td><td><a class="cite" href="#r-qwen38">Qwen Team, 2026</a></td></tr>
+    <tr><td>Qwen3.8 27B</td><td>Alibaba Qwen</td><td>open</td><td>OpenRouter (free)</td><td>tested: rate-limited, dropped</td><td><a class="cite" href="#r-qwen38">Qwen Team, 2026</a></td></tr>
+    <tr><td>GLM-5.3 Flash</td><td>Z.ai (Zhipu)</td><td>–</td><td>OpenRouter (batch)</td><td>tested: reader</td><td><a class="cite" href="#r-glm53flash">Z.ai, 2026</a></td></tr>
+    <tr><td>DeepSeek V4.1 Flash</td><td>DeepSeek</td><td>–</td><td>OpenRouter (batch)</td><td>tested: reader</td><td><a class="cite" href="#r-deepseekv41">DeepSeek, 2026</a></td></tr>
+    <tr><td>MiMo v2.6 Pro</td><td>Xiaomi</td><td>–</td><td>OpenRouter</td><td>tested: reader</td><td><a class="cite" href="#r-mimo26pro">Xiaomi, 2026</a></td></tr>
+    <tr><td>dots-3-note-preview</td><td>dots studio</td><td>–</td><td>OpenRouter (free)</td><td>tested: reader</td><td><a class="cite" href="#r-dots3note">dots studio, 2026</a></td></tr>
+  </tbody>
+  <caption>Table 4. Every model and tool used. Weights: open (public weights or open-source code), closed, or – (served through an API; we did not check whether weights are public). “Tested” means evaluated on the development set and not used in the final submission (Section 6.3).</caption>
+</table></div>
 
-<h2>7. Conclusion</h2>
+<h2>8. Conclusion</h2>
 <p>A single capable model, prompted several ways and filtered by an MBR selector that uses the evaluation metric as its utility, outperformed every stronger model we tested on this benchmark. Selection-based changes transferred to the hidden test set; rules built on development-book conventions did not. The remaining gap to the leading teams is in segmentation and reading-order conventions that vary by book, which a future system could address with layout-aware models trained on the annotation conventions themselves.</p>
 
-<footer>Team pranshu29 · Dr.DocBench Challenge 2026, DocInsights workshop at EMNLP 2026 · Code and full experiment logs available on request.</footer>
+<h2>References</h2>
+<ol class="refs">
+  <li id="r-drdocbenchchallenge">2077AI and Abaka AI. 2026. Dr.DocBench challenge 2026. <a href="https://drdocbench-challenge.abaka-pages.com/">https://drdocbench-challenge.abaka-pages.com/</a>; data: <a href="https://huggingface.co/datasets/2077AIDataFoundation/DrDocBench">https://huggingface.co/datasets/2077AIDataFoundation/DrDocBench</a>.</li>
+  <li id="r-claudesonnet55">Anthropic. 2026. Claude Sonnet 5.5. Model <code>anthropic/claude-sonnet-5.5</code>, accessed through OpenRouter, October 2026.</li>
+  <li id="r-docling">Christoph Auer, Maksym Lysak, Ahmed Nassar, Michele Dolfi, Nikolaos Livathinos, Panos Vagenas, et al. 2024. Docling technical report. <i>arXiv preprint <a href="https://arxiv.org/abs/2408.09869">arXiv:2408.09869</a></i>.</li>
+  <li id="r-rapidfuzz">Max Bachmann. 2026. RapidFuzz: Rapid fuzzy string matching in Python. <a href="https://github.com/rapidfuzz/RapidFuzz">https://github.com/rapidfuzz/RapidFuzz</a>.</li>
+  <li id="r-m6doc">Hiuyi Cheng, Peirong Zhang, Sihang Wu, Jiaxin Zhang, Qiyuan Zhu, Zecheng Xie, Jing Li, Kai Ding, and Lianwen Jin. 2023. M<sup>6</sup>Doc: A large-scale multi-format, multi-type, multi-layout, multi-language, multi-annotation category dataset for modern document layout analysis. In <i>Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)</i>, pages 15138–15147.</li>
+  <li id="r-paddleocrvl">Cheng Cui, Ting Sun, Suyin Liang, Tingquan Gao, Zelun Zhang, Jiaxuan Liu, et al. 2025. PaddleOCR-VL: Boosting multilingual document parsing via a 0.9B ultra-compact vision-language model. <i>arXiv preprint <a href="https://arxiv.org/abs/2510.14528">arXiv:2510.14528</a></i>.</li>
+  <li id="r-paddleocrvl15">Cheng Cui, Ting Sun, Suyin Liang, Tingquan Gao, Zelun Zhang, Jiaxuan Liu, et al. 2026. PaddleOCR-VL-1.5: Towards a multi-task 0.9B VLM for robust in-the-wild document parsing. <i>arXiv preprint <a href="https://arxiv.org/abs/2601.21957">arXiv:2601.21957</a></i>.</li>
+  <li id="r-deepseekv41">DeepSeek. 2026. DeepSeek V4.1 Flash. Model <code>deepseek/deepseek-v4.1-flash</code>, accessed through OpenRouter, October 2026.</li>
+  <li id="r-docinsights2026">DocInsights Workshop Organizers. 2026. DocInsights 2026 shared task: DocSem and Dr.DocBench tracks. Workshop on Document Intelligence and Understanding at EMNLP 2026. <a href="https://docinsights-workshop.github.io/docinsights-2026/shared-task/">https://docinsights-workshop.github.io/docinsights-2026/shared-task/</a>.</li>
+  <li id="r-dots3note">dots studio. 2026. dots-3-note-preview. Model <code>dots-studio/dots-3-note-preview</code>, accessed through OpenRouter, October 2026.</li>
+  <li id="r-glmocr">Shuaiqi Duan, Yadong Xue, Weihan Wang, Zhe Su, Huan Liu, Sheng Yang, et al. 2026. GLM-OCR technical report. <i>arXiv preprint <a href="https://arxiv.org/abs/2603.10910">arXiv:2603.10910</a></i>.</li>
+  <li id="r-evalai">EvalAI. 2026. Dr.DocBench challenge on EvalAI. <a href="https://eval.ai/web/challenges/challenge-page/2717/overview">https://eval.ai/web/challenges/challenge-page/2717/overview</a>.</li>
+  <li id="r-fiscus1997rover">Jonathan G. Fiscus. 1997. A post-processing system to yield reduced word error rates: Recognizer output voting error reduction (ROVER). In <i>Proceedings of the IEEE Workshop on Automatic Speech Recognition and Understanding</i>, pages 347–354.</li>
+  <li id="r-ocrbenchv2">Ling Fu, Zhebin Kuang, Jiajun Song, Mingxin Huang, Biao Yang, Yuzhe Li, et al. 2025. OCRBench v2: An improved benchmark for evaluating large multimodal models on visual text localization and reasoning. In <i>The Thirty-ninth Annual Conference on Neural Information Processing Systems Datasets and Benchmarks Track</i>.</li>
+  <li id="r-gemini38flash">Google. 2026. Gemini 3.8 Flash. Model <code>google/gemini-3.8-flash</code>, accessed through OpenRouter, October 2026.</li>
+  <li id="r-hfinference">Hugging Face. 2026. Inference providers. <a href="https://huggingface.co/docs/inference-providers">https://huggingface.co/docs/inference-providers</a>.</li>
+  <li id="r-kimik25">Kimi Team, Tongtong Bai, Yifan Bai, Yiping Bao, S. H. Cai, Yuan Cao, et al. 2026. Kimi K2.5: Visual agentic intelligence. <i>arXiv preprint</i>.</li>
+  <li id="r-kumar-byrne-2004-minimum">Shankar Kumar and William Byrne. 2004. Minimum Bayes-risk decoding for statistical machine translation. In <i>Proceedings of the Human Language Technology Conference of the North American Chapter of the Association for Computational Linguistics: HLT-NAACL 2004</i>, pages 169–176.</li>
+  <li id="r-levenshtein1966">Vladimir I. Levenshtein. 1966. Binary codes capable of correcting deletions, insertions, and reversals. <i>Soviet Physics Doklady</i>, 10(8):707–710.</li>
+  <li id="r-kimik26">Moonshot AI. 2026. Kimi K2.6. Model <code>moonshotai/Kimi-K2.6</code>, accessed through Hugging Face Inference Providers, October 2026.</li>
+  <li id="r-mineru25">Junbo Niu, Zheng Liu, Zhuangcheng Gu, Bin Wang, Linke Ouyang, Zhiyuan Zhao, et al. 2025. MinerU2.5: A decoupled vision-language model for efficient high-resolution document parsing. <i>arXiv preprint <a href="https://arxiv.org/abs/2509.22186">arXiv:2509.22186</a></i>.</li>
+  <li id="r-gpt6lunapro">OpenAI. 2026a. GPT-6 luna-pro. Model <code>openai/gpt-6-luna-pro</code>, accessed through OpenRouter, September 2026.</li>
+  <li id="r-gpt6solpro">OpenAI. 2026b. GPT-6 sol-pro. Model <code>openai/gpt-6-sol-pro</code>, accessed through OpenRouter, October 2026.</li>
+  <li id="r-gpt61solpro">OpenAI. 2026c. GPT-6.1 sol-pro. Model <code>openai/gpt-6.1-sol-pro</code>, accessed through OpenRouter, October 2026.</li>
+  <li id="r-openrouter">OpenRouter. 2026a. OpenRouter. <a href="https://openrouter.ai">https://openrouter.ai</a>.</li>
+  <li id="r-stealthmodel">OpenRouter. 2026b. space-bunny-alpha (stealth model). Model <code>stealth/space-bunny-alpha</code>, offered free on OpenRouter until October 2026; developer not disclosed.</li>
+  <li id="r-docsem">Oracle. 2026. DocSem: Document-grounded quantitative reasoning with evidence attribution. Shared-task data: <a href="https://huggingface.co/datasets/amitbcp/docinsights-2026-shared-task-data">https://huggingface.co/datasets/amitbcp/docinsights-2026-shared-task-data</a>; source: <a href="https://github.com/oracle-samples/gsm-sem">https://github.com/oracle-samples/gsm-sem</a>.</li>
+  <li id="r-omnidocbench">Linke Ouyang, Yuan Qu, Hongbin Zhou, Jiawei Zhu, Rui Zhang, Qunshu Lin, et al. 2025. OmniDocBench: Benchmarking diverse PDF document parsing with comprehensive annotations. In <i>Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)</i>.</li>
+  <li id="r-doclaynet">Birgit Pfitzmann, Christoph Auer, Michele Dolfi, Ahmed S. Nassar, and Peter Staar. 2022. DocLayNet: A large human-annotated dataset for document-layout analysis. In <i>Proceedings of the 28th ACM SIGKDD Conference on Knowledge Discovery and Data Mining</i>, pages 3743–3751.</li>
+  <li id="r-qwen38">Qwen Team. 2026. Qwen3.8 models. Models <code>qwen/qwen3.8-flash</code> and <code>qwen/qwen3.8-27b</code>, accessed through OpenRouter, September 2026.</li>
+  <li id="r-scipy">Pauli Virtanen, Ralf Gommers, Travis E. Oliphant, Matt Haberland, Tyler Reddy, David Cournapeau, et al. 2020. SciPy 1.0: Fundamental algorithms for scientific computing in Python. <i>Nature Methods</i>, 17:261–272.</li>
+  <li id="r-mineru25pro">Bin Wang, Tianyao He, Linke Ouyang, Fan Wu, Zhiyuan Zhao, Tao Chu, et al. 2026. MinerU2.5-Pro: Pushing the limits of data-centric document parsing at scale. <i>arXiv preprint <a href="https://arxiv.org/abs/2604.04771">arXiv:2604.04771</a></i>.</li>
+  <li id="r-cdm">Bin Wang, Fan Wu, Linke Ouyang, Zhuangcheng Gu, Rui Zhang, Renqiu Xia, Botian Shi, Bo Zhang, and Conghui He. 2025. Image over text: Transforming formula recognition evaluation with character detection matching. In <i>Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)</i>, pages 19681–19690.</li>
+  <li id="r-mineru">Bin Wang, Chao Xu, Xiaomeng Zhao, Linke Ouyang, Fan Wu, Zhiyuan Zhao, et al. 2024. MinerU: An open-source solution for precise document content extraction. <i>arXiv preprint <a href="https://arxiv.org/abs/2409.18839">arXiv:2409.18839</a></i>.</li>
+  <li id="r-deepseekocr2">Haoran Wei, Yaofeng Sun, and Yukun Li. 2026. DeepSeek-OCR 2: Visual causal flow. <i>arXiv preprint <a href="https://arxiv.org/abs/2601.20552">arXiv:2601.20552</a></i>.</li>
+  <li id="r-mimo26pro">Xiaomi. 2026. MiMo v2.6 Pro. Model <code>xiaomi/mimo-v2.6-pro</code>, accessed through OpenRouter, October 2026.</li>
+  <li id="r-drdocbench">Minglai Yang, Xinyan Velocity Yu, Pengyuan Li, Xinyu Guo, Zhenting Qi, Konwoo Kim, et al. 2026. Dr.DocBench: A comprehensive benchmark for expert-level and difficult document parsing. <i>arXiv preprint <a href="https://arxiv.org/abs/2606.01393">arXiv:2606.01393</a></i>.</li>
+  <li id="r-glm53flash">Z.ai. 2026. GLM-5.3 Flash. Model <code>z-ai/glm-5.3-flash</code>, accessed through OpenRouter, October 2026.</li>
+  <li id="r-teds">Xu Zhong, Elaheh ShafieiBavani, and Antonio Jimeno Yepes. 2020. Image-based table recognition: Data, model, and evaluation. In <i>European Conference on Computer Vision (ECCV)</i>, pages 564–580.</li>
+</ol>
+
+<footer>Team pranshu29 · Dr.DocBench track, DocInsights 2026 shared task at EMNLP 2026 · Code (MIT): <a href="https://github.com/pranshurastogi29/drdocbench-challenge">github.com/pranshurastogi29/drdocbench-challenge</a> · Paper: <code>report/acl/paper.pdf</code></footer>
 </main>
