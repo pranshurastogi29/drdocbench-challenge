@@ -1,6 +1,6 @@
 # Dr.DocBench Challenge 2026: page image -> Markdown
 
-Team **pranshu29**. Final confirmed leaderboard (2026-10-13): **rank 7, Overall 84.54**
+Team **pranshu29** (Pranshu Rastogi, Rajneesh Tiwari). Final confirmed leaderboard (2026-10-13): **rank 7, Overall 84.54**
 (Text_ED 0.1641, Table TEDS 71.86, Formula CDM 81.84, Reading Order 85.65) on the 509 test pages.
 
 The task: turn each page image of the Dr.DocBench test set into Markdown; the challenge scores text edit distance, table
@@ -45,3 +45,6 @@ Hugging Face (below). Without the archived outputs the model calls must be rerun
    then `python run_md2md_eval.py runs/dev_pipeline.jsonl --name pipeline -q`; ablations with `python ablate.py --variants "name=steps;..."`.
 
 Model calls need `OPENROUTER_API_KEY` (or `HF_TOKEN` with `--api hf`) in `.env`, which is never committed.
+
+## License
+MIT, see `LICENSE`. The Dr.DocBench data and the official scorer are not part of this repository and keep their own licenses.

@@ -8,4 +8,4 @@
    `pdflatex paper && bibtex paper && pdflatex paper && pdflatex paper`.
 
 Packages used beyond the template: booktabs, multirow, amsmath, xcolor, tikz, pgfplots.
-Before submitting, fill in the co-author names (TODO in the author block) and check the base-model disclosure in Section 8.
+Before submitting, check the base-model disclosure in Section 8.
