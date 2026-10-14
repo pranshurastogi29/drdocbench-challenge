@@ -7,8 +7,8 @@ The task: turn each page image of the Dr.DocBench test set into Markdown; the ch
 TEDS, formula CDM and reading order per page (md2md pipeline of the official scorer).
 
 - **Technical report**: `report/acl/paper.tex` (ACL format; see `report/acl/README.md` to compile) and `report/technical_report.html`.
-- **Every experiment and upload**: `MILESTONES.md` (what worked, measured negative results, findings) and `SUBMISSIONS.md` (every
-  submission with its leaderboard score). The commit history follows the same path, milestone by milestone.
+- **Development summary**: `MILESTONES.md` (kept changes, ablations, what transferred, models, scorer findings) and
+  `SUBMISSIONS.md` (leaderboard submissions). The commit history follows the same path, milestone by milestone.
 
 ## The system in one paragraph
 One general vision-language model transcribes every page several times (prompts v6-v11, contrast preprocessing, one- and

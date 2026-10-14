@@ -14,6 +14,7 @@
 \usepackage{multirow}
 \usepackage{amsmath}
 \usepackage{xcolor}
+\usepackage{url}
 \usepackage{tikz}
 \usetikzlibrary{positioning,arrows.meta,shapes.misc}
 \usepackage{pgfplots}
@@ -41,6 +42,8 @@ We describe a training-free system for the Dr.DocBench document-parsing challeng
 \end{abstract}
 
 \section{Introduction}
+This paper describes our system for the Dr.DocBench track of the DocInsights 2026 shared task \citep{docinsights2026}, held with the Workshop on Document Intelligence and Understanding at EMNLP 2026. The shared task has two tracks: DocSem, document-grounded quantitative reasoning with evidence attribution \citep{docsem}, and Dr.DocBench, expert-level parsing of complex document pages \citep{drdocbench, drdocbenchchallenge}; teams were ranked on the Dr.DocBench leaderboard hosted on EvalAI \citep{evalai}.
+
 Dr.DocBench \citep{drdocbench} collects book pages on which current parsers disagree and annotates them with block-level references. The references follow conventions that vary from book to book: which lines form one block, whether text inside a picture is kept, whether a list is a table, and where running headers and page numbers sit in the reading order. A single strong model therefore loses points on pages it reads correctly.
 
 We treat the task as selection under uncertainty rather than as model training. Our contributions are:
@@ -51,6 +54,13 @@ We treat the task as selection under uncertainty rather than as model training. 
   \item A step-by-step account of the development, with the leaderboard effect of every major change (\S\ref{sec:journey}), and an analysis of which development gains transferred to the test set and where the remaining error is (\S\ref{sec:analysis}).
   \item Measured negative results, including stronger commercial models used alone, as extra candidates, as proofreaders and as order sources (\S\ref{sec:negative}).
 \end{itemize}
+
+\section{Related Work}
+\paragraph{Benchmarks.} Document-parsing benchmarks moved from layout detection, as in DocLayNet \citep{doclaynet} and M$^6$Doc \citep{m6doc}, to end-to-end page parsing with block-level annotations, as in OmniDocBench \citep{omnidocbench}, whose md2md scorer this challenge uses, and to OCR-centred evaluation of multimodal models in OCRBench v2 \citep{ocrbenchv2}. Dr.DocBench \citep{drdocbench} samples pages on which strong parsers disagree and adds expert content such as chemistry, music and dense formulas. Its metrics combine normalised edit distance \citep{levenshtein1966}, TEDS for tables \citep{teds} and CDM for formulas \citep{cdm}.
+
+\paragraph{Parsing systems.} Pipeline toolkits combine layout detection with specialised recognisers: MinerU \citep{mineru}, PaddleOCR-VL \citep{paddleocrvl, paddleocrvl15} and Docling \citep{docling}. Compact end-to-end parsers include MinerU2.5 \citep{mineru25}, MinerU2.5-Pro \citep{mineru25pro}, DeepSeek-OCR 2 \citep{deepseekocr2} and GLM-OCR \citep{glmocr}. General vision-language models such as Kimi K2.5 \citep{kimik25} also transcribe pages when prompted, and the Dr.DocBench study found the strongest general models ahead of the specialised parsers on text and reading order \citep{drdocbench}.
+
+\paragraph{Combining outputs.} Selecting among system outputs with minimum Bayes risk \citep{kumar-byrne-2004-minimum} and voting at the word level after alignment, as in ROVER \citep{fiscus1997rover}, are established in machine translation and speech recognition. We apply both to page transcriptions, using the challenge's matching as the utility and Hungarian assignment \citep{scipy} as implemented in the scorer.
 
 \section{Task, Data and Evaluation}
 \label{sec:task}
@@ -302,16 +312,47 @@ Table~\ref{tab:models} compares stronger models. Kimi K2.5 reads text best but o
 
 \section{Resources and Disclosure}
 \label{sec:resources}
+Table~\ref{tab:resources} lists every model and tool we ran. Models were called through OpenRouter \citep{openrouter} and Hugging Face Inference Providers \citep{hfinference}; layout and OCR toolkits ran on Kaggle GPUs; string matching used RapidFuzz \citep{rapidfuzz} and the official scorer.
 \begin{itemize}
   \setlength\itemsep{0pt}
-  \item \textbf{Base model}: an unnamed vision-language model offered free on OpenRouter during the challenge (\texttt{stealth/space-bunny-alpha}); every transcription in the final pool comes from it.
-  \item \textbf{OCR and layout}: PaddleOCR-VL 1.6 and the MinerU 2.7.6 pipeline, run on Kaggle GPUs.
-  \item \textbf{Also in the final submission}: OpenAI GPT-6.1 sol-pro transcriptions of 120 test pages, used only as a source of formula and table candidates.
-  \item \textbf{Tested, not used}: GPT-6 sol-pro, Gemini 3.8 Flash, Kimi K2.5 and K2.6, MiMo v2.6 Pro, GLM and DeepSeek vision models, through OpenRouter and Hugging Face Inference Providers (about \$82 in total, all models).
+  \item \textbf{Base model}: an unnamed vision-language model offered free on OpenRouter during the challenge \citep{stealthmodel}; every transcription in the final candidate pool comes from it.
+  \item \textbf{Also in the final submission}: GPT-6.1 sol-pro transcriptions of 120 test pages, used only as a source of formula and table candidates.
   \item \textbf{Training and data}: none. No fine-tuning, no external annotated data, no manual edits to test output. The official scorer was run locally on the development set only.
   \item \textbf{Leaderboard use}: more than 25 scored submissions, of which three blanked groups of books to locate error and several applied one change to one group of books to measure it there.
   \item \textbf{Formula and table candidate blocks}: described in \S\ref{sec:candidates}.
+  \item \textbf{Cost}: about \$82 of API usage in total, all models.
 \end{itemize}
+
+\begin{table*}[t]
+\centering\footnotesize
+\setlength{\tabcolsep}{4pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lllp{2.5cm}p{4.3cm}p{2.9cm}@{}}
+\toprule
+Model or tool & Developer & Weights & Access & Role & Ref. \\
+\midrule
+space-bunny-alpha (stealth) & not disclosed & -- & OpenRouter (free) & base transcriber, all candidates & \citealp{stealthmodel} \\
+PaddleOCR-VL (pipeline 1.6) & Baidu & open & Kaggle GPU & layout, furniture labels, tables, formulas & \citealp{paddleocrvl, paddleocrvl15} \\
+MinerU (pipeline 2.7.6) & OpenDataLab & open & Kaggle GPU & formulas, word evidence for consensus & \citealp{mineru} \\
+Docling & IBM Research & open & Kaggle GPU & picture boxes for analysis & \citealp{docling} \\
+GPT-6.1 sol-pro & OpenAI & closed & OpenRouter & formula and table candidates (120 test pages) & \citealp{gpt61solpro} \\
+GPT-6 sol-pro & OpenAI & closed & OpenRouter (batch) & tested: reader, order source & \citealp{gpt6solpro} \\
+GPT-6 luna-pro & OpenAI & closed & OpenRouter & tested: reader & \citealp{gpt6lunapro} \\
+Gemini 3.8 Flash & Google & closed & OpenRouter & tested: reader, MBR candidate & \citealp{gemini38flash} \\
+Claude Sonnet 5.5 & Anthropic & closed & OpenRouter (batch) & tested: declined copyrighted pages & \citealp{claudesonnet55} \\
+Kimi K2.5 & Moonshot AI & open & OpenRouter, HF Inference & tested: reader, candidate, proofreader & \citealp{kimik25} \\
+Kimi K2.6 & Moonshot AI & open & HF Inference & tested: reader, candidate & \citealp{kimik26} \\
+Qwen3.8 Flash & Alibaba Qwen & -- & OpenRouter & tested: extra ensemble vote & \citealp{qwen38} \\
+Qwen3.8 27B & Alibaba Qwen & open & OpenRouter (free) & tested: rate-limited, dropped & \citealp{qwen38} \\
+GLM-5.3 Flash & Z.ai (Zhipu) & -- & OpenRouter (batch) & tested: reader & \citealp{glm53flash} \\
+DeepSeek V4.1 Flash & DeepSeek & -- & OpenRouter (batch) & tested: reader & \citealp{deepseekv41} \\
+MiMo v2.6 Pro & Xiaomi & -- & OpenRouter & tested: reader & \citealp{mimo26pro} \\
+dots-3-note-preview & dots studio & -- & OpenRouter (free) & tested: reader & \citealp{dots3note} \\
+\bottomrule
+\end{tabular}}
+\caption{Every model and tool used. Weights: open (public weights or open-source code), closed, or -- (served through an API; we did not check whether weights are public). ``Tested'' means evaluated on the development set and not used in the final submission (\S\ref{sec:negative}).}
+\label{tab:resources}
+\end{table*}
 
 \section*{Limitations}
 The system depends on a free model that was withdrawn during the challenge, so the transcriptions cannot be regenerated; we archived all candidate outputs. All candidates come from one model family, which caps what consensus can fix: the oracle over our five base runs is 3.7 points above MBR, but most of that gap lies on pages where every run follows the same wrong convention. The formula and table scores rely on the candidate blocks of \S\ref{sec:candidates}, which the metrics evaluate by best match. The development set shares no books with the test set, so convention-level rules were tuned on books whose annotators made different choices.
@@ -334,6 +375,6 @@ A single capable model, prompted several ways and filtered by MBR with the evalu
 
 \section{Tools}
 \label{app:tools}
-The repository contains the harness (\texttt{predict.py}), the deterministic builder that rebuilds every uploaded file byte-identically from archived candidates (\texttt{stack.py}, \texttt{build\_submission.py}), the MBR selector (\texttt{mbr\_refs\_choose.py}), the consensus layer (\texttt{rover.py}), the ablation and bootstrap tools (\texttt{ablate.py}, \texttt{ablate\_vs.py}), the leaderboard decoders (\texttt{probe\_decode.py}, \texttt{lb\_decode.py}), and the analyses behind \S\ref{sec:analysis} (\texttt{text\_anatomy2.py}, \texttt{ro\_anatomy3.py}). \texttt{MILESTONES.md} and \texttt{SUBMISSIONS.md} log every experiment and upload.
+The repository contains the harness (\texttt{predict.py}), the deterministic builder that rebuilds every uploaded file byte-identically from archived candidates (\texttt{stack.py}, \texttt{build\_submission.py}), the MBR selector (\texttt{mbr\_refs\_choose.py}), the consensus layer (\texttt{rover.py}), the ablation and bootstrap tools (\texttt{ablate.py}, \texttt{ablate\_vs.py}), the leaderboard decoders (\texttt{probe\_decode.py}, \texttt{lb\_decode.py}), and the analyses behind \S\ref{sec:analysis} (\texttt{text\_anatomy2.py}, \texttt{ro\_anatomy3.py}). \texttt{MILESTONES.md} and \texttt{SUBMISSIONS.md} summarise the experiments and the leaderboard submissions.
 
 \end{document}
