@@ -32,7 +32,7 @@
 \usepackage{hyperref}
 \definecolor{darkblue}{rgb}{0,0,0.5}   % the link colour of acl.sty
 \hypersetup{colorlinks=true,urlcolor=darkblue,linkcolor=darkblue,citecolor=darkblue,
-  pdftitle={pranshu29 at Dr.DocBench 2026 (poster)},pdfauthor={Pranshu Rastogi, Rajneesh Tiwari}}
+  pdftitle={Consensus Selection over Prompt-Diverse VLM Transcriptions for Expert-Level Document Parsing (poster)},pdfauthor={Pranshu Rastogi, Rajneesh Tiwari}}
 
 \definecolor{accent}{rgb}{0,0,0.5}
 \definecolor{ink}{HTML}{111111}
@@ -77,7 +77,7 @@
 
 %%%% Title band
 \begin{tikzpicture}[remember picture,overlay]
-  \fill[accent] (current page.north west) rectangle ([yshift=-208mm]current page.north east);
+  \fill[accent] (current page.north west) rectangle ([yshift=-192mm]current page.north east);
   % logos: main conference, workshop, company (Dr.DocBench challenge)
   \node[anchor=north west,fill=white,rounded corners=2mm,inner xsep=9mm,inner ysep=5mm] (logos)
     at ([xshift=30mm,yshift=-22mm]current page.north west) {%
@@ -88,7 +88,7 @@
     {DocInsights Workshop at EMNLP 2026\\Shared Task, Dr.DocBench Track};
   \node[anchor=north west,text width=630mm,align=left,text=white,inner sep=0mm,execute at begin node={\hyphenpenalty=10000\exhyphenpenalty=10000}]
     at ([yshift=-8mm]logos.south west) {%
-    {\fontsize{68}{76}\selectfont\bfseries pranshu29 at Dr.DocBench 2026: Consensus Selection over Prompt-Diverse VLM Transcriptions for \mbox{Expert-Level} Document Parsing}\\[9mm]
+    {\fontsize{74}{84}\selectfont\bfseries Consensus Selection over Prompt-Diverse VLM Transcriptions for \mbox{Expert-Level} Document Parsing}\\[9mm]
     \begin{tabular}{@{}l@{\hspace{40mm}}l@{}}
       {\fontsize{38}{44}\selectfont\bfseries Pranshu Rastogi} & {\fontsize{38}{44}\selectfont\bfseries Rajneesh Tiwari} \\[1mm]
       {\fontsize{30}{36}\selectfont Independent Researcher} & {\fontsize{30}{36}\selectfont Independent Researcher} \\[1mm]
@@ -100,7 +100,7 @@
     {Scan for the full report\\\texttt{pranshurastogi29.github.io/drdocbench}};
 \end{tikzpicture}
 
-\vspace*{220mm}
+\vspace*{204mm}
 
 %%%% Result strip
 \noindent\stat{7th}{final leaderboard}\hfill\stat{84.54}{Overall}\hfill\stat{0.1641}{Text\_ED}\hfill\stat{85.65}{Reading order}\hfill\stat{81.84}{Formula CDM}\hfill\stat{71.86}{Table TEDS}
@@ -286,7 +286,7 @@ Kimi K2.5 \citep{kimik25} reads text best but orders worse; proofreading our pag
 {\fontsize{21}{27}\selectfont
 \textbf{\textcolor{accent}{Models and tools.}} Base transcriber: a free OpenRouter model \citep{stealthmodel}. Also in the final submission: GPT-6.1 sol-pro \citep{gpt61solpro}, as a source of formula and table candidates. Tested: GPT-6 sol-pro and luna-pro \citep{gpt6solpro,gpt6lunapro}, Gemini 3.8 Flash \citep{gemini38flash}, Claude Sonnet 5.5 \citep{claudesonnet55}, Kimi K2.6 \citep{kimik26}, Qwen3.8 \citep{qwen38}, GLM-5.3 Flash \citep{glm53flash}, DeepSeek V4.1 Flash \citep{deepseekv41}, MiMo v2.6 Pro \citep{mimo26pro} and dots-3-note-preview \citep{dots3note}, through OpenRouter \citep{openrouter} and Hugging Face Inference Providers \citep{hfinference}. Training-free: no fine-tuning, no external annotated data.\par}
 \vspace{2mm}
-{\fontsize{22}{27}\selectfont\textbf{\textcolor{accent}{Links.}} Report: \url{https://pranshurastogi29.github.io/drdocbench/}\enspace·\enspace Paper: \url{https://pranshurastogi29.github.io/drdocbench/paper.pdf}\enspace·\enspace Code (MIT): \url{https://github.com/pranshurastogi29/drdocbench-challenge}\par}
+{\fontsize{22}{27}\selectfont\raggedright\textbf{\textcolor{accent}{Links.}} Final ranking: \url{https://drdocbench-challenge.abaka-pages.com/\#leaderboard}\enspace·\enspace Report: \url{https://pranshurastogi29.github.io/drdocbench/}\enspace·\enspace Paper: \url{https://pranshurastogi29.github.io/drdocbench/paper.pdf}\enspace·\enspace Code (MIT): \url{https://github.com/pranshurastogi29/drdocbench-challenge}\par}
 \vspace{3mm}
 {\fontsize{26}{30}\selectfont\bfseries\textcolor{accent}{References}}\par\vspace{-2mm}
 \setlength{\columnsep}{12mm}

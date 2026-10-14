@@ -49,7 +49,7 @@ p.rw b { font-family: var(--sans); font-size: .92rem; }
 <main>
 <header>
   <div class="venue">DocInsights 2026 Shared Task · Dr.DocBench track · System description</div>
-  <h1>pranshu29 at Dr.DocBench 2026: Consensus Selection over Prompt-Diverse VLM Transcriptions for Expert-Level Document Parsing</h1>
+  <h1>Consensus Selection over Prompt-Diverse VLM Transcriptions for Expert-Level Document Parsing</h1>
   <p class="authors">Pranshu Rastogi and Rajneesh Tiwari, Independent Researchers · Team pranshu29 · Final rank 7 · Overall 84.54</p>
 </header>
 
@@ -59,7 +59,7 @@ p.rw b { font-family: var(--sans); font-size: .92rem; }
 </section>
 
 <h2>1. Introduction</h2>
-<p>This report describes our system for the Dr.DocBench track of the DocInsights 2026 shared task (<a class="cite" href="#r-docinsights2026">DocInsights Workshop Organizers, 2026</a>), held with the Workshop on Document Intelligence and Understanding at EMNLP 2026. The shared task has two tracks: DocSem, document-grounded quantitative reasoning with evidence attribution (<a class="cite" href="#r-docsem">Oracle, 2026</a>), and Dr.DocBench, expert-level parsing of complex document pages (<a class="cite" href="#r-drdocbench">Yang et al., 2026</a>; <a class="cite" href="#r-drdocbenchchallenge">2077AI and Abaka AI, 2026</a>). Teams were ranked on the Dr.DocBench leaderboard hosted on EvalAI (<a class="cite" href="#r-evalai">EvalAI, 2026</a>).</p>
+<p>This report describes our system for the Dr.DocBench track of the DocInsights 2026 shared task (<a class="cite" href="#r-docinsights2026">DocInsights Workshop Organizers, 2026</a>), held with the Workshop on Document Intelligence and Understanding at EMNLP 2026. The shared task has two tracks: DocSem, document-grounded quantitative reasoning with evidence attribution (<a class="cite" href="#r-docsem">Oracle, 2026</a>), and Dr.DocBench, expert-level parsing of complex document pages (<a class="cite" href="#r-drdocbench">Yang et al., 2026</a>; <a class="cite" href="#r-drdocbenchchallenge">2077AI and Abaka AI, 2026a</a>). Submissions were scored on EvalAI (<a class="cite" href="#r-evalai">EvalAI, 2026</a>), and the organizers confirmed the final top-20 ranking on October 13, 2026 (<a class="cite" href="#r-drdocbenchfinal">2077AI and Abaka AI, 2026b</a>); our system (team pranshu29) ranked seventh with an Overall score of 84.54.</p>
 <p>Dr.DocBench (<a class="cite" href="#r-drdocbench">Yang et al., 2026</a>) selects book pages on which current parsers disagree, and its references follow annotator conventions that vary from book to book: which lines form one block, whether text inside a picture is transcribed, whether a list is a table, and where running headers and page numbers sit in the reading order. Our approach treats the problem as selection under uncertainty. Instead of training a parser, we generate many plausible transcriptions with one capable model and choose among them with minimum-Bayes-risk selection (<a class="cite" href="#r-kumar-byrne-2004-minimum">Kumar and Byrne, 2004</a>), using the metric itself as the utility. All tuning used the development set (986 pages, 66 books) scored with a local copy of the official md2md scorer; the 509 test pages were used only through leaderboard submissions.</p>
 
 <h2>2. Related work</h2>
@@ -185,7 +185,8 @@ p.rw b { font-family: var(--sans); font-size: .92rem; }
 
 <h2>References</h2>
 <ol class="refs">
-  <li id="r-drdocbenchchallenge">2077AI and Abaka AI. 2026. Dr.DocBench challenge 2026. <a href="https://drdocbench-challenge.abaka-pages.com/">https://drdocbench-challenge.abaka-pages.com/</a>; data: <a href="https://huggingface.co/datasets/2077AIDataFoundation/DrDocBench">https://huggingface.co/datasets/2077AIDataFoundation/DrDocBench</a>.</li>
+  <li id="r-drdocbenchchallenge">2077AI and Abaka AI. 2026a. Dr.DocBench challenge 2026. <a href="https://drdocbench-challenge.abaka-pages.com/">https://drdocbench-challenge.abaka-pages.com/</a>; data: <a href="https://huggingface.co/datasets/2077AIDataFoundation/DrDocBench">https://huggingface.co/datasets/2077AIDataFoundation/DrDocBench</a>.</li>
+  <li id="r-drdocbenchfinal">2077AI and Abaka AI. 2026b. Dr.DocBench challenge 2026: Final rankings. Confirmed final top 20, October 13, 2026. <a href="https://drdocbench-challenge.abaka-pages.com/#leaderboard">https://drdocbench-challenge.abaka-pages.com/#leaderboard</a>.</li>
   <li id="r-claudesonnet55">Anthropic. 2026. Claude Sonnet 5.5. Model <code>anthropic/claude-sonnet-5.5</code>, accessed through OpenRouter, October 2026.</li>
   <li id="r-docling">Christoph Auer, Maksym Lysak, Ahmed Nassar, Michele Dolfi, Nikolaos Livathinos, Panos Vagenas, et al. 2024. Docling technical report. <i>arXiv preprint <a href="https://arxiv.org/abs/2408.09869">arXiv:2408.09869</a></i>.</li>
   <li id="r-rapidfuzz">Max Bachmann. 2026. RapidFuzz: Rapid fuzzy string matching in Python. <a href="https://github.com/rapidfuzz/RapidFuzz">https://github.com/rapidfuzz/RapidFuzz</a>.</li>
@@ -196,7 +197,7 @@ p.rw b { font-family: var(--sans); font-size: .92rem; }
   <li id="r-docinsights2026">DocInsights Workshop Organizers. 2026. DocInsights 2026 shared task: DocSem and Dr.DocBench tracks. Workshop on Document Intelligence and Understanding at EMNLP 2026. <a href="https://docinsights-workshop.github.io/docinsights-2026/shared-task/">https://docinsights-workshop.github.io/docinsights-2026/shared-task/</a>.</li>
   <li id="r-dots3note">dots studio. 2026. dots-3-note-preview. Model <code>dots-studio/dots-3-note-preview</code>, accessed through OpenRouter, October 2026.</li>
   <li id="r-glmocr">Shuaiqi Duan, Yadong Xue, Weihan Wang, Zhe Su, Huan Liu, Sheng Yang, et al. 2026. GLM-OCR technical report. <i>arXiv preprint <a href="https://arxiv.org/abs/2603.10910">arXiv:2603.10910</a></i>.</li>
-  <li id="r-evalai">EvalAI. 2026. Dr.DocBench challenge on EvalAI. <a href="https://eval.ai/web/challenges/challenge-page/2717/overview">https://eval.ai/web/challenges/challenge-page/2717/overview</a>.</li>
+  <li id="r-evalai">EvalAI. 2026. Dr.DocBench challenge on EvalAI. <a href="https://eval.ai/web/challenges/challenge-page/2717/overview">https://eval.ai/web/challenges/challenge-page/2717/overview</a>; leaderboard of public submissions: <a href="https://eval.ai/web/challenges/challenge-page/2717/leaderboard/7035">https://eval.ai/web/challenges/challenge-page/2717/leaderboard/7035</a>.</li>
   <li id="r-fiscus1997rover">Jonathan G. Fiscus. 1997. A post-processing system to yield reduced word error rates: Recognizer output voting error reduction (ROVER). In <i>Proceedings of the IEEE Workshop on Automatic Speech Recognition and Understanding</i>, pages 347–354.</li>
   <li id="r-ocrbenchv2">Ling Fu, Zhebin Kuang, Jiajun Song, Mingxin Huang, Biao Yang, Yuzhe Li, et al. 2025. OCRBench v2: An improved benchmark for evaluating large multimodal models on visual text localization and reasoning. In <i>The Thirty-ninth Annual Conference on Neural Information Processing Systems Datasets and Benchmarks Track</i>.</li>
   <li id="r-gemini38flash">Google. 2026. Gemini 3.8 Flash. Model <code>google/gemini-3.8-flash</code>, accessed through OpenRouter, October 2026.</li>

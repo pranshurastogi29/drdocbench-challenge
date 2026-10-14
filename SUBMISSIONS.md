@@ -31,6 +31,9 @@ The leaderboard's evaluation changed between the October 4 and October 5 uploads
 
 ## Final confirmed leaderboard (2026-10-13)
 
+Source: https://drdocbench-challenge.abaka-pages.com/#leaderboard (organizers' confirmed final top 20). The live EvalAI
+leaderboard (https://eval.ai/web/challenges/challenge-page/2717/leaderboard/7035) lists only public submissions.
+
 | Rank | Team | Text_ED | Table_TEDS | Formula_CDM | Reading_Order | Overall |
 |---|---|---|---|---|---|---|
 | 1 | ohmyyuan | 0.1395 | 65.51 | 75.91 | 89.91 | 87.28 |

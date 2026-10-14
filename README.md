@@ -1,6 +1,6 @@
 # Dr.DocBench Challenge 2026: page image -> Markdown
 
-Team **pranshu29** (Pranshu Rastogi, Rajneesh Tiwari). Final confirmed leaderboard (2026-10-13): **rank 7, Overall 84.54**
+Team **pranshu29** (Pranshu Rastogi, Rajneesh Tiwari). [Final confirmed leaderboard](https://drdocbench-challenge.abaka-pages.com/#leaderboard) (2026-10-13): **rank 7, Overall 84.54**
 (Text_ED 0.1641, Table TEDS 71.86, Formula CDM 81.84, Reading Order 85.65) on the 509 test pages.
 
 The task: turn each page image of the Dr.DocBench test set into Markdown; the challenge scores text edit distance, table
@@ -9,6 +9,7 @@ TEDS, formula CDM and reading order per page (md2md pipeline of the official sco
 - **Technical report**: read it online at <https://pranshurastogi29.github.io/drdocbench/>
   ([paper PDF](https://pranshurastogi29.github.io/drdocbench/paper.pdf)). Sources: `report/acl/paper.tex` (ACL format; see
   `report/acl/README.md` to compile) and `report/technical_report.html`.
+- **arXiv package**: `report/arxiv/` (upload tarball, metadata and steps).
 - **Poster** (A0, ACL typography): <https://pranshurastogi29.github.io/drdocbench/poster.pdf>; source in `report/poster/`.
 - **Development summary**: `MILESTONES.md` (kept changes, ablations, what transferred, models, scorer findings) and
   `SUBMISSIONS.md` (leaderboard submissions). The commit history follows the same path, milestone by milestone.

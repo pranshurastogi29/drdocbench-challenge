@@ -1,4 +1,5 @@
-% Dr.DocBench Challenge 2026 -- technical report, team pranshu29
+\ifdefined\pdftexversion\pdfoutput=1\fi
+% Consensus selection for expert-level document parsing (Dr.DocBench Challenge 2026), Pranshu Rastogi and Rajneesh Tiwari
 % Compile with the official ACL style files (acl.sty, acl_natbib.bst from https://github.com/acl-org/acl-style-files,
 % or the ACL template on Overleaf): pdflatex paper && bibtex paper && pdflatex paper && pdflatex paper
 \documentclass[11pt]{article}
@@ -25,7 +26,7 @@
 \newcommand{\up}[1]{\textcolor{green!45!black}{#1}}
 \newcommand{\dn}[1]{\textcolor{red!65!black}{#1}}
 
-\title{pranshu29 at Dr.DocBench 2026: Consensus Selection over\\Prompt-Diverse VLM Transcriptions for Expert-Level Document Parsing}
+\title{Consensus Selection over Prompt-Diverse VLM Transcriptions\\for Expert-Level Document Parsing}
 
 \author{Pranshu Rastogi \\
   Independent Researcher \\
@@ -43,7 +44,7 @@ We describe a training-free system for the Dr.DocBench document-parsing challeng
 \end{abstract}
 
 \section{Introduction}
-This paper describes our system for the Dr.DocBench track of the DocInsights 2026 shared task \citep{docinsights2026}, held with the Workshop on Document Intelligence and Understanding at EMNLP 2026. The shared task has two tracks: DocSem, document-grounded quantitative reasoning with evidence attribution \citep{docsem}, and Dr.DocBench, expert-level parsing of complex document pages \citep{drdocbench, drdocbenchchallenge}; teams were ranked on the Dr.DocBench leaderboard hosted on EvalAI \citep{evalai}.
+This paper describes our system for the Dr.DocBench track of the DocInsights 2026 shared task \citep{docinsights2026}, held with the Workshop on Document Intelligence and Understanding at EMNLP 2026. The shared task has two tracks: DocSem, document-grounded quantitative reasoning with evidence attribution \citep{docsem}, and Dr.DocBench, expert-level parsing of complex document pages \citep{drdocbench, drdocbenchchallenge}; submissions were scored on EvalAI \citep{evalai}, and the organizers confirmed the final top-20 ranking on October 13, 2026 \citep{drdocbenchfinal}. Our system (team pranshu29) ranked seventh with an Overall score of 84.54.
 
 Dr.DocBench \citep{drdocbench} collects book pages on which current parsers disagree and annotates them with block-level references. The references follow conventions that vary from book to book: which lines form one block, whether text inside a picture is kept, whether a list is a table, and where running headers and page numbers sit in the reading order. A single strong model therefore loses points on pages it reads correctly.
 

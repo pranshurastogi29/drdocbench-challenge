@@ -1,0 +1,272 @@
+\begin{thebibliography}{40}
+\providecommand{\natexlab}[1]{#1}
+
+\bibitem[{{2077AI} and {Abaka AI}(2026{\natexlab{a}})}]{drdocbenchchallenge}
+{2077AI} and {Abaka AI}. 2026{\natexlab{a}}.
+\newblock {Dr.DocBench} challenge 2026.
+\newblock \url{https://drdocbench-challenge.abaka-pages.com/}; data:
+  \url{https://huggingface.co/datasets/2077AIDataFoundation/DrDocBench}.
+
+\bibitem[{{2077AI} and {Abaka AI}(2026{\natexlab{b}})}]{drdocbenchfinal}
+{2077AI} and {Abaka AI}. 2026{\natexlab{b}}.
+\newblock {Dr.DocBench} challenge 2026: Final rankings.
+\newblock Confirmed final top 20, October 13, 2026.
+  \url{https://drdocbench-challenge.abaka-pages.com/\#leaderboard}.
+
+\bibitem[{{Anthropic}(2026)}]{claudesonnet55}
+{Anthropic}. 2026.
+\newblock {Claude Sonnet} 5.5.
+\newblock Model \texttt{anthropic/claude-sonnet-5.5}, accessed through
+  OpenRouter, October 2026.
+
+\bibitem[{Auer et~al.(2024)Auer, Lysak, Nassar, Dolfi, Livathinos, Vagenas
+  et~al.}]{docling}
+Christoph Auer, Maksym Lysak, Ahmed Nassar, Michele Dolfi, Nikolaos Livathinos,
+  Panos Vagenas, et~al. 2024.
+\newblock Docling technical report.
+\newblock \emph{arXiv preprint arXiv:2408.09869}.
+
+\bibitem[{Bachmann(2026)}]{rapidfuzz}
+Max Bachmann. 2026.
+\newblock {RapidFuzz}: Rapid fuzzy string matching in {Python}.
+\newblock \url{https://github.com/rapidfuzz/RapidFuzz}.
+
+\bibitem[{Cheng et~al.(2023)Cheng, Zhang, Wu, Zhang, Zhu, Xie, Li, Ding, and
+  Jin}]{m6doc}
+Hiuyi Cheng, Peirong Zhang, Sihang Wu, Jiaxin Zhang, Qiyuan Zhu, Zecheng Xie,
+  Jing Li, Kai Ding, and Lianwen Jin. 2023.
+\newblock {M$^6$Doc}: A large-scale multi-format, multi-type, multi-layout,
+  multi-language, multi-annotation category dataset for modern document layout
+  analysis.
+\newblock In \emph{Proceedings of the IEEE/CVF Conference on Computer Vision
+  and Pattern Recognition (CVPR)}, pages 15138--15147.
+
+\bibitem[{Cui et~al.(2025)Cui, Sun, Liang, Gao, Zhang, Liu
+  et~al.}]{paddleocrvl}
+Cheng Cui, Ting Sun, Suyin Liang, Tingquan Gao, Zelun Zhang, Jiaxuan Liu,
+  et~al. 2025.
+\newblock {PaddleOCR-VL}: Boosting multilingual document parsing via a 0.9{B}
+  ultra-compact vision-language model.
+\newblock \emph{arXiv preprint arXiv:2510.14528}.
+
+\bibitem[{Cui et~al.(2026)Cui, Sun, Liang, Gao, Zhang, Liu
+  et~al.}]{paddleocrvl15}
+Cheng Cui, Ting Sun, Suyin Liang, Tingquan Gao, Zelun Zhang, Jiaxuan Liu,
+  et~al. 2026.
+\newblock {PaddleOCR-VL-1.5}: Towards a multi-task 0.9{B} {VLM} for robust
+  in-the-wild document parsing.
+\newblock \emph{arXiv preprint arXiv:2601.21957}.
+
+\bibitem[{{DeepSeek}(2026)}]{deepseekv41}
+{DeepSeek}. 2026.
+\newblock {DeepSeek} {V4.1} {Flash}.
+\newblock Model \texttt{deepseek/deepseek-v4.1-flash}, accessed through
+  OpenRouter, October 2026.
+
+\bibitem[{{DocInsights Workshop Organizers}(2026)}]{docinsights2026}
+{DocInsights Workshop Organizers}. 2026.
+\newblock {DocInsights} 2026 shared task: {DocSem} and {Dr.DocBench} tracks.
+\newblock Workshop on Document Intelligence and Understanding at EMNLP 2026.
+  \url{https://docinsights-workshop.github.io/docinsights-2026/shared-task/}.
+
+\bibitem[{{dots studio}(2026)}]{dots3note}
+{dots studio}. 2026.
+\newblock dots-3-note-preview.
+\newblock Model \texttt{dots-studio/dots-3-note-preview}, accessed through
+  OpenRouter, October 2026.
+
+\bibitem[{Duan et~al.(2026)Duan, Xue, Wang, Su, Liu, Yang et~al.}]{glmocr}
+Shuaiqi Duan, Yadong Xue, Weihan Wang, Zhe Su, Huan Liu, Sheng Yang, et~al.
+  2026.
+\newblock {GLM-OCR} technical report.
+\newblock \emph{arXiv preprint arXiv:2603.10910}.
+
+\bibitem[{{EvalAI}(2026)}]{evalai}
+{EvalAI}. 2026.
+\newblock {Dr.DocBench} challenge on {EvalAI}.
+\newblock \url{https://eval.ai/web/challenges/challenge-page/2717/overview};
+  leaderboard of public submissions:
+  \url{https://eval.ai/web/challenges/challenge-page/2717/leaderboard/7035}.
+
+\bibitem[{Fiscus(1997)}]{fiscus1997rover}
+Jonathan~G. Fiscus. 1997.
+\newblock A post-processing system to yield reduced word error rates:
+  Recognizer output voting error reduction ({ROVER}).
+\newblock In \emph{Proceedings of the IEEE Workshop on Automatic Speech
+  Recognition and Understanding}, pages 347--354.
+
+\bibitem[{Fu et~al.(2025)Fu, Kuang, Song, Huang, Yang, Li et~al.}]{ocrbenchv2}
+Ling Fu, Zhebin Kuang, Jiajun Song, Mingxin Huang, Biao Yang, Yuzhe Li, et~al.
+  2025.
+\newblock {OCRBench} v2: An improved benchmark for evaluating large multimodal
+  models on visual text localization and reasoning.
+\newblock In \emph{The Thirty-ninth Annual Conference on Neural Information
+  Processing Systems Datasets and Benchmarks Track}.
+
+\bibitem[{{Google}(2026)}]{gemini38flash}
+{Google}. 2026.
+\newblock {Gemini} 3.8 {Flash}.
+\newblock Model \texttt{google/gemini-3.8-flash}, accessed through OpenRouter,
+  October 2026.
+
+\bibitem[{{Hugging Face}(2026)}]{hfinference}
+{Hugging Face}. 2026.
+\newblock Inference providers.
+\newblock \url{https://huggingface.co/docs/inference-providers}.
+
+\bibitem[{{Kimi Team} et~al.(2026){Kimi Team}, Bai, Bai, Bao, Cai, Cao
+  et~al.}]{kimik25}
+{Kimi Team}, Tongtong Bai, Yifan Bai, Yiping Bao, S.~H. Cai, Yuan Cao, et~al.
+  2026.
+\newblock Kimi {K2.5}: Visual agentic intelligence.
+\newblock \emph{arXiv preprint}.
+
+\bibitem[{Kumar and Byrne(2004)}]{kumar-byrne-2004-minimum}
+Shankar Kumar and William Byrne. 2004.
+\newblock Minimum {B}ayes-risk decoding for statistical machine translation.
+\newblock In \emph{Proceedings of the Human Language Technology Conference of
+  the North {A}merican Chapter of the Association for Computational
+  Linguistics: {HLT-NAACL} 2004}, pages 169--176.
+
+\bibitem[{Levenshtein(1966)}]{levenshtein1966}
+Vladimir~I. Levenshtein. 1966.
+\newblock Binary codes capable of correcting deletions, insertions, and
+  reversals.
+\newblock \emph{Soviet Physics Doklady}, 10(8):707--710.
+
+\bibitem[{{Moonshot AI}(2026)}]{kimik26}
+{Moonshot AI}. 2026.
+\newblock Kimi {K2.6}.
+\newblock Model \texttt{moonshotai/Kimi-K2.6}, accessed through Hugging Face
+  Inference Providers, October 2026.
+
+\bibitem[{Niu et~al.(2025)Niu, Liu, Gu, Wang, Ouyang, Zhao et~al.}]{mineru25}
+Junbo Niu, Zheng Liu, Zhuangcheng Gu, Bin Wang, Linke Ouyang, Zhiyuan Zhao,
+  et~al. 2025.
+\newblock {MinerU2.5}: A decoupled vision-language model for efficient
+  high-resolution document parsing.
+\newblock \emph{arXiv preprint arXiv:2509.22186}.
+
+\bibitem[{{OpenAI}(2026{\natexlab{a}})}]{gpt6lunapro}
+{OpenAI}. 2026{\natexlab{a}}.
+\newblock {GPT-6} luna-pro.
+\newblock Model \texttt{openai/gpt-6-luna-pro}, accessed through OpenRouter,
+  September 2026.
+
+\bibitem[{{OpenAI}(2026{\natexlab{b}})}]{gpt6solpro}
+{OpenAI}. 2026{\natexlab{b}}.
+\newblock {GPT-6} sol-pro.
+\newblock Model \texttt{openai/gpt-6-sol-pro}, accessed through OpenRouter,
+  October 2026.
+
+\bibitem[{{OpenAI}(2026{\natexlab{c}})}]{gpt61solpro}
+{OpenAI}. 2026{\natexlab{c}}.
+\newblock {GPT-6.1} sol-pro.
+\newblock Model \texttt{openai/gpt-6.1-sol-pro}, accessed through OpenRouter,
+  October 2026.
+
+\bibitem[{{OpenRouter}(2026{\natexlab{a}})}]{openrouter}
+{OpenRouter}. 2026{\natexlab{a}}.
+\newblock {OpenRouter}.
+\newblock \url{https://openrouter.ai}.
+
+\bibitem[{{OpenRouter}(2026{\natexlab{b}})}]{stealthmodel}
+{OpenRouter}. 2026{\natexlab{b}}.
+\newblock space-bunny-alpha (stealth model).
+\newblock Model \texttt{stealth/space-bunny-alpha}, offered free on OpenRouter
+  until October 2026; developer not disclosed.
+
+\bibitem[{{Oracle}(2026)}]{docsem}
+{Oracle}. 2026.
+\newblock {DocSem}: Document-grounded quantitative reasoning with evidence
+  attribution.
+\newblock Shared-task data:
+  \url{https://huggingface.co/datasets/amitbcp/docinsights-2026-shared-task-data};
+  source: \url{https://github.com/oracle-samples/gsm-sem}.
+
+\bibitem[{Ouyang et~al.(2025)Ouyang, Qu, Zhou, Zhu, Zhang, Lin
+  et~al.}]{omnidocbench}
+Linke Ouyang, Yuan Qu, Hongbin Zhou, Jiawei Zhu, Rui Zhang, Qunshu Lin, et~al.
+  2025.
+\newblock {OmniDocBench}: Benchmarking diverse {PDF} document parsing with
+  comprehensive annotations.
+\newblock In \emph{Proceedings of the IEEE/CVF Conference on Computer Vision
+  and Pattern Recognition (CVPR)}.
+
+\bibitem[{Pfitzmann et~al.(2022)Pfitzmann, Auer, Dolfi, Nassar, and
+  Staar}]{doclaynet}
+Birgit Pfitzmann, Christoph Auer, Michele Dolfi, Ahmed~S. Nassar, and Peter
+  Staar. 2022.
+\newblock {DocLayNet}: A large human-annotated dataset for document-layout
+  analysis.
+\newblock In \emph{Proceedings of the 28th ACM SIGKDD Conference on Knowledge
+  Discovery and Data Mining}, pages 3743--3751.
+
+\bibitem[{{Qwen Team}(2026)}]{qwen38}
+{Qwen Team}. 2026.
+\newblock {Qwen3.8} models.
+\newblock Models \texttt{qwen/qwen3.8-flash} and \texttt{qwen/qwen3.8-27b},
+  accessed through OpenRouter, September 2026.
+
+\bibitem[{Virtanen et~al.(2020)Virtanen, Gommers, Oliphant, Haberland, Reddy,
+  Cournapeau et~al.}]{scipy}
+Pauli Virtanen, Ralf Gommers, Travis~E. Oliphant, Matt Haberland, Tyler Reddy,
+  David Cournapeau, et~al. 2020.
+\newblock {SciPy} 1.0: Fundamental algorithms for scientific computing in
+  {Python}.
+\newblock \emph{Nature Methods}, 17:261--272.
+
+\bibitem[{Wang et~al.(2026)Wang, He, Ouyang, Wu, Zhao, Chu
+  et~al.}]{mineru25pro}
+Bin Wang, Tianyao He, Linke Ouyang, Fan Wu, Zhiyuan Zhao, Tao Chu, et~al. 2026.
+\newblock {MinerU2.5-Pro}: Pushing the limits of data-centric document parsing
+  at scale.
+\newblock \emph{arXiv preprint arXiv:2604.04771}.
+
+\bibitem[{Wang et~al.(2025)Wang, Wu, Ouyang, Gu, Zhang, Xia, Shi, Zhang, and
+  He}]{cdm}
+Bin Wang, Fan Wu, Linke Ouyang, Zhuangcheng Gu, Rui Zhang, Renqiu Xia, Botian
+  Shi, Bo~Zhang, and Conghui He. 2025.
+\newblock Image over text: Transforming formula recognition evaluation with
+  character detection matching.
+\newblock In \emph{Proceedings of the IEEE/CVF Conference on Computer Vision
+  and Pattern Recognition (CVPR)}, pages 19681--19690.
+
+\bibitem[{Wang et~al.(2024)Wang, Xu, Zhao, Ouyang, Wu, Zhao et~al.}]{mineru}
+Bin Wang, Chao Xu, Xiaomeng Zhao, Linke Ouyang, Fan Wu, Zhiyuan Zhao, et~al.
+  2024.
+\newblock {MinerU}: An open-source solution for precise document content
+  extraction.
+\newblock \emph{arXiv preprint arXiv:2409.18839}.
+
+\bibitem[{Wei et~al.(2026)Wei, Sun, and Li}]{deepseekocr2}
+Haoran Wei, Yaofeng Sun, and Yukun Li. 2026.
+\newblock {DeepSeek-OCR} 2: Visual causal flow.
+\newblock \emph{arXiv preprint arXiv:2601.20552}.
+
+\bibitem[{{Xiaomi}(2026)}]{mimo26pro}
+{Xiaomi}. 2026.
+\newblock {MiMo} v2.6 {Pro}.
+\newblock Model \texttt{xiaomi/mimo-v2.6-pro}, accessed through OpenRouter,
+  October 2026.
+
+\bibitem[{Yang et~al.(2026)Yang, Yu, Li, Guo, Qi, Kim et~al.}]{drdocbench}
+Minglai Yang, Xinyan~Velocity Yu, Pengyuan Li, Xinyu Guo, Zhenting Qi, Konwoo
+  Kim, et~al. 2026.
+\newblock {Dr.DocBench}: A comprehensive benchmark for expert-level and
+  difficult document parsing.
+\newblock \emph{arXiv preprint arXiv:2606.01393}.
+
+\bibitem[{{Z.ai}(2026)}]{glm53flash}
+{Z.ai}. 2026.
+\newblock {GLM-5.3} {Flash}.
+\newblock Model \texttt{z-ai/glm-5.3-flash}, accessed through OpenRouter,
+  October 2026.
+
+\bibitem[{Zhong et~al.(2020)Zhong, ShafieiBavani, and Jimeno~Yepes}]{teds}
+Xu~Zhong, Elaheh ShafieiBavani, and Antonio Jimeno~Yepes. 2020.
+\newblock Image-based table recognition: Data, model, and evaluation.
+\newblock In \emph{European Conference on Computer Vision (ECCV)}, pages
+  564--580.
+
+\end{thebibliography}
