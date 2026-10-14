@@ -22,3 +22,6 @@ kaggle/manifest.csv
 bucket_stage/
 secrets/
 viz/
+
+# local tool that builds the filtered public copy (not published)
+public_export.sh
