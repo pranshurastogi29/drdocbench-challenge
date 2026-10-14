@@ -1,39 +1,47 @@
-# Dr.DocBench challenge: page image -> Markdown
+# Dr.DocBench Challenge 2026: page image -> Markdown
 
-Local record of the pipeline behind our submissions. Task: turn each page image of the Dr.DocBench test set (509 pages)
-into Markdown; the challenge scores text edit distance, table TEDS, formula CDM and reading order per page (md2md).
+Team **pranshu29**. Final confirmed leaderboard (2026-10-13): **rank 7, Overall 84.54**
+(Text_ED 0.1641, Table TEDS 71.86, Formula CDM 81.84, Reading Order 85.65) on the 509 test pages.
 
-**Best leaderboard result so far: 78.66** (`submissions/submission_final5.zip`). See `SUBMISSIONS.md` and `MILESTONES.md`.
+The task: turn each page image of the Dr.DocBench test set into Markdown; the challenge scores text edit distance, table
+TEDS, formula CDM and reading order per page (md2md pipeline of the official scorer).
 
-## What is reproducible here
+- **Technical report**: `report/acl/paper.tex` (ACL format; see `report/acl/README.md` to compile) and `report/technical_report.html`.
+- **Every experiment and upload**: `MILESTONES.md` (what worked, measured negative results, findings) and `SUBMISSIONS.md` (every
+  submission with its leaderboard score). The commit history follows the same path, milestone by milestone.
 
-| Layer | Reproducible? | How |
-|---|---|---|
-| Everything after the model outputs (ensemble, snapping, table add, formula candidates, packaging) | **Yes, byte-for-byte** | `python build_submission.py final5_wd --verify` rebuilds from `artifacts/candidates_*.tar.gz` and compares to the uploaded zip (verified 509/509 pages for medoid4_snap, best, final5, final5_wd) |
-| Scoring on dev | Yes | `run_md2md_eval.py` runs the official md2md scorer (`SCORER_PIN.txt`); reproduced our first leaderboard result within ~1 point (text 0.2001 vs 0.2257) |
-| Kaggle image package | Yes | `python kaggle/build_package.py` (manifest and every image identical to what was uploaded) |
-| LLM candidate outputs (`runs/*_all_*.jsonl`) | **No** (archived, not regenerable) | free alpha model `stealth/space-bunny-alpha` via OpenRouter, sampled; the model may change. The outputs are archived in `artifacts/` |
-| PaddleOCR-VL 1.6 / MinerU 2.7.6 outputs | Rerunnable on Kaggle, not byte-identical | notebooks in `kaggle/`, driven by `kaggle/run_kaggle.py`; hashes in `ARTIFACTS.md` |
-| First submissions (`v3*`, `v6`, `v7*`, `medoid*`) | Recorded artifacts only | produced by earlier code states; kept as files with hashes in `SUBMISSIONS.md` |
+## The system in one paragraph
+One general vision-language model transcribes every page several times (prompts v6-v11, contrast preprocessing, one- and
+two-page windows). PaddleOCR-VL and the MinerU pipeline add layout blocks, tables, formulas and word evidence. Each candidate
+goes through the same rules (layout snap, Paddle tables, furniture merge), a minimum-Bayes-risk selector picks one candidate
+per page using the official text + reading-order matching as utility (`mbr_refs_choose.py`, stack `sel=mbr8`), then spill
+drop, boundary votes, cleanup and a gated word-level consensus (`rover.py`) refine it. Formula and
+table candidate blocks are appended for the best-match formula and table metrics (technical report, Section 3). The whole post-model
+pipeline is `stack.py`; it rebuilds every uploaded file byte-identically from the archived model outputs.
 
-Scripts are at their **final** version. The commit history is organised by milestone, not by each individual edit, so an
-early commit is not a runnable snapshot of what the code looked like at that moment.
+## Public release: what is not included
+The model transcriptions of the development and test pages (`artifacts/`, `submissions/`, `runs/*.jsonl`) are not in this
+repository: the pages come from copyrighted books. They were removed from the whole history. The dataset itself is on
+Hugging Face (below). Without the archived outputs the model calls must be rerun; the free model we used
+(`stealth/space-bunny-alpha` on OpenRouter) has since been withdrawn, so results will differ.
 
 ## Layout
-- `predict.py`, `common.py`, `postprocess.py`, `prompts/v0..v9.txt`: model calls (OpenRouter), windows of 2 pages, prompts, cleanup
-- `run_md2md_eval.py`, `compare_runs.py`, `evaluate.py`, `reading_order.py`: official scorer wrapper, paired comparisons, early proxy scorer
-- `snap.py`, `tablefix.py`, `wrapdup.py`, `variants.py`, `fill.py`, `normalize.py`, `furniture.py`: post-processing steps (kept and rejected ones)
+- `predict.py`, `common.py`, `postprocess.py`, `prompts/`: model calls (OpenRouter or Hugging Face Inference Providers), 2-page windows, prompts
+- `stack.py`, `build_submission.py`: deterministic post-model pipeline and submission builder (`python stack.py --split test --steps ...`)
+- `mbr*.py`, `sel_lab.py`, `rover.py`: selection and consensus
+- `snap.py`, `tablefix.py`, `furnmerge.py`, `spilldrop.py`, `bvote.py`, `artclean.py`, `wrapdup*.py`, `formula_pool.py`, `table_pool.py`: rules and candidate blocks
+- `md2md_eval.py`, `ablate.py`, `ablate_vs.py`, `run_md2md_eval.py`: dev scoring with the official matcher, ablations with book-clustered bootstrap
+- `probe_decode.py`, `lb_decode.py`, `group_merge.py`: decoding leaderboard A/B uploads
+- `text_anatomy2.py`, `ro_anatomy3.py`, `cdm_anatomy.py` and other `*_eval.py` / `*_anatomy*.py`: analyses behind the report
 - `paddle_ingest.py`, `mineru_ingest.py`, `kaggle/`: PaddleOCR-VL and MinerU on Kaggle GPUs
-- `build_submission.py`: deterministic submission builder; `difficulty.py`, `predict_test.py`, `error_analysis*.py`, `contrast_check.py`, `formula_check.py`: analyses
-- `chain_*.sh`, `sub*.sh`, `run*.sh`: the exact background jobs that were run
-- `runs/*.txt`: score and comparison reports (the bulk `.jsonl` outputs are not tracked)
+- `runs/*.txt`, `runs/*.usage.json`: score reports and API usage (no transcriptions)
 
-## Reproduce from a clean checkout
+## Running it
 1. `python -m venv .venv && .venv/bin/pip install -r requirements.txt`
 2. `hf download 2077AIDataFoundation/DrDocBench --repo-type dataset --local-dir data`
 3. `git clone https://github.com/2077AI/DrDocBench scorer && git -C scorer checkout <commit in SCORER_PIN.txt>`
-4. `mkdir -p runs && tar xzf artifacts/candidates_test.tar.gz -C runs && tar xzf artifacts/candidates_dev.tar.gz -C runs`
-5. Paddle layout blocks (needed by snapping and table add): unzip the Kaggle output to `kaggle/results/paddle/out/`
-   (hash in `ARTIFACTS.md`) or rerun `kaggle/paddleocr_vl.ipynb`.
-6. `python build_submission.py final5_wd --verify` (test) and `python run_md2md_eval.py runs/<file>.jsonl --name X -q` (dev scoring).
-Model calls need `OPENROUTER_API_KEY` in `.env` (never committed); Kaggle calls need your own `~/.kaggle/access_token`.
+4. Transcribe: `python predict.py --split dev --prompt v7 --max-side 1600 --tag v7` (and the other prompts); PaddleOCR-VL / MinerU via `kaggle/`.
+5. Build and score: `python stack.py --split dev --steps "sel=mbr8,rules,fm,sd,bv,rv=free,ac" --out runs/dev_pipeline.jsonl`,
+   then `python run_md2md_eval.py runs/dev_pipeline.jsonl --name pipeline -q`; ablations with `python ablate.py --variants "name=steps;..."`.
+
+Model calls need `OPENROUTER_API_KEY` (or `HF_TOKEN` with `--api hf`) in `.env`, which is never committed.
