@@ -6,7 +6,9 @@ Team **pranshu29** (Pranshu Rastogi, Rajneesh Tiwari). Final confirmed leaderboa
 The task: turn each page image of the Dr.DocBench test set into Markdown; the challenge scores text edit distance, table
 TEDS, formula CDM and reading order per page (md2md pipeline of the official scorer).
 
-- **Technical report**: `report/acl/paper.tex` (ACL format; see `report/acl/README.md` to compile) and `report/technical_report.html`.
+- **Technical report**: read it online at <https://pranshurastogi29.github.io/drdocbench/>
+  ([paper PDF](https://pranshurastogi29.github.io/drdocbench/paper.pdf)). Sources: `report/acl/paper.tex` (ACL format; see
+  `report/acl/README.md` to compile) and `report/technical_report.html`.
 - **Development summary**: `MILESTONES.md` (kept changes, ablations, what transferred, models, scorer findings) and
   `SUBMISSIONS.md` (leaderboard submissions). The commit history follows the same path, milestone by milestone.
 
@@ -16,7 +18,7 @@ two-page windows). PaddleOCR-VL and the MinerU pipeline add layout blocks, table
 goes through the same rules (layout snap, Paddle tables, furniture merge), a minimum-Bayes-risk selector picks one candidate
 per page using the official text + reading-order matching as utility (`mbr_refs_choose.py`, stack `sel=mbr8`), then spill
 drop, boundary votes, cleanup and a gated word-level consensus (`rover.py`) refine it. Formula and
-table candidate blocks are appended for the best-match formula and table metrics (technical report, Section 3). The whole post-model
+table candidate blocks are appended for the best-match formula and table metrics (technical report, Section 4). The whole post-model
 pipeline is `stack.py`; it rebuilds every uploaded file byte-identically from the archived model outputs.
 
 ## Public release: what is not included
