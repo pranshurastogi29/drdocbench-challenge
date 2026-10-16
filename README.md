@@ -8,7 +8,7 @@ TEDS, formula CDM and reading order per page (md2md pipeline of the official sco
 
 - **Paper (DOI)**: [10.5281/zenodo.23421062](https://doi.org/10.5281/zenodo.23421062) on Zenodo (preprint, CC BY 4.0; paper and poster PDFs).
 - **Technical report**: read it online at <https://pranshurastogi29.github.io/drdocbench/>
-  ([paper PDF](https://pranshurastogi29.github.io/drdocbench/paper.pdf)). Sources: `report/acl/paper.tex` (ACL format; see
+  ([paper on Zenodo](https://doi.org/10.5281/zenodo.23421062)). Sources: `report/acl/paper.tex` (ACL format; see
   `report/acl/README.md` to compile) and `report/technical_report.html`.
 - **LaTeX source package**: `report/arxiv/` (self-contained source: `paper.tex`, `paper.bbl`, `acl.sty`).
 - **Poster** (A0, ACL typography): <https://pranshurastogi29.github.io/drdocbench/poster.pdf>; source in `report/poster/`.
