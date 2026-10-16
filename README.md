@@ -6,10 +6,11 @@ Team **pranshu29** (Pranshu Rastogi, Rajneesh Tiwari). [Final confirmed leaderbo
 The task: turn each page image of the Dr.DocBench test set into Markdown; the challenge scores text edit distance, table
 TEDS, formula CDM and reading order per page (md2md pipeline of the official scorer).
 
+- **Paper (DOI)**: [10.5281/zenodo.23421062](https://doi.org/10.5281/zenodo.23421062) on Zenodo (preprint, CC BY 4.0; paper and poster PDFs).
 - **Technical report**: read it online at <https://pranshurastogi29.github.io/drdocbench/>
   ([paper PDF](https://pranshurastogi29.github.io/drdocbench/paper.pdf)). Sources: `report/acl/paper.tex` (ACL format; see
   `report/acl/README.md` to compile) and `report/technical_report.html`.
-- **arXiv package**: `report/arxiv/` (upload tarball, metadata and steps).
+- **LaTeX source package**: `report/arxiv/` (self-contained source: `paper.tex`, `paper.bbl`, `acl.sty`).
 - **Poster** (A0, ACL typography): <https://pranshurastogi29.github.io/drdocbench/poster.pdf>; source in `report/poster/`.
 - **Development summary**: `MILESTONES.md` (kept changes, ablations, what transferred, models, scorer findings) and
   `SUBMISSIONS.md` (leaderboard submissions). The commit history follows the same path, milestone by milestone.
@@ -49,6 +50,20 @@ Hugging Face (below). Without the archived outputs the model calls must be rerun
    then `python run_md2md_eval.py runs/dev_pipeline.jsonl --name pipeline -q`; ablations with `python ablate.py --variants "name=steps;..."`.
 
 Model calls need `OPENROUTER_API_KEY` (or `HF_TOKEN` with `--api hf`) in `.env`, which is never committed.
+
+## Citation
+
+```bibtex
+@misc{rastogi2026consensus,
+  title     = {Consensus Selection over Prompt-Diverse {VLM} Transcriptions for Expert-Level Document Parsing},
+  author    = {Rastogi, Pranshu and Tiwari, Rajneesh},
+  year      = {2026},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.23421062},
+  url       = {https://doi.org/10.5281/zenodo.23421062},
+  note      = {System description, Dr.DocBench track of the DocInsights 2026 shared task (EMNLP 2026)}
+}
+```
 
 ## License
 MIT, see `LICENSE`. The Dr.DocBench data and the official scorer are not part of this repository and keep their own licenses.
